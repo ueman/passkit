@@ -20,5 +20,3 @@ flutter:
     platforms:
       ios:
         pluginClass: ApplePasskitPlugin
-      macos:
-        pluginClass: ApplePasskitPlugin
