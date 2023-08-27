@@ -1,0 +1,49 @@
+import 'package:json_annotation/json_annotation.dart';
+import 'package:passkit/src/passkit/field_dict.dart';
+
+part 'pass_structure.g.dart';
+
+/// Keys that define the structure of the pass.
+/// These keys are used for all pass styles and partition the fields into the
+/// various parts of the pass.
+@JsonSerializable()
+class PassStructure {
+  PassStructure({
+    this.auxiliaryFields,
+    this.backFields,
+    this.headerFields,
+    this.primaryFields,
+    this.secondaryFields,
+    this.transitType,
+  });
+
+  factory PassStructure.fromJson(Map<String, dynamic> json) =>
+      _$PassStructureFromJson(json);
+
+  /// Optional. Additional fields to be displayed on the front of the pass.
+  // array of field dictionaries
+  final List<FieldDict>? auxiliaryFields;
+
+  /// Optional. Fields to be on the back of the pass.
+  // array of field dictionaries
+  final List<FieldDict>? backFields;
+
+  /// Optional. Fields to be displayed in the header on the front of the pass.
+  /// Use header fields sparingly; unlike all other fields, they remain visible
+  /// when a stack of passes are displayed.
+  // array of field dictionaries
+  final List<FieldDict>? headerFields;
+
+  /// Optional. Fields to be displayed prominently on the front of the pass.
+  // array of field dictionaries
+  final List<FieldDict>? primaryFields;
+
+  /// Optional. Fields to be displayed on the front of the pass.
+  // array of field dictionaries
+  final List<FieldDict>? secondaryFields;
+
+  /// Required for boarding passes; otherwise not allowed. Type of transit.
+  /// Must be one of the following values: PKTransitTypeAir, PKTransitTypeBoat,
+  /// PKTransitTypeBus, PKTransitTypeGeneric,PKTransitTypeTrain.
+  final String? transitType;
+}

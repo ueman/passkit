@@ -1,0 +1,26 @@
+name: apple_passkit_example
+description: Demonstrates how to use the apple_passkit plugin.
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.7 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  apple_passkit:
+    path: ../
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/coupon.pkpass

@@ -1,0 +1,24 @@
+name: apple_passkit
+description: Plugin to deal with PKPass files on iOS. You can check for availabililty and add them.
+version: 0.0.1
+
+environment:
+  sdk: '>=3.0.7 <4.0.0'
+  flutter: ">=3.3.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: ApplePasskitPlugin
+      macos:
+        pluginClass: ApplePasskitPlugin
