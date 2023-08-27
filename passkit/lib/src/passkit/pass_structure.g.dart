@@ -23,7 +23,9 @@ PassStructure _$PassStructureFromJson(Map<String, dynamic> json) =>
       secondaryFields: (json['secondaryFields'] as List<dynamic>?)
           ?.map((e) => FieldDict.fromJson(e as Map<String, dynamic>))
           .toList(),
-      transitType: json['transitType'] as String?,
+      transitType:
+          $enumDecodeNullable(_$TransitTypeEnumMap, json['transitType']) ??
+              TransitType.generic,
     );
 
 Map<String, dynamic> _$PassStructureToJson(PassStructure instance) =>
@@ -33,5 +35,13 @@ Map<String, dynamic> _$PassStructureToJson(PassStructure instance) =>
       'headerFields': instance.headerFields,
       'primaryFields': instance.primaryFields,
       'secondaryFields': instance.secondaryFields,
-      'transitType': instance.transitType,
+      'transitType': _$TransitTypeEnumMap[instance.transitType]!,
     };
+
+const _$TransitTypeEnumMap = {
+  TransitType.air: 'PKTransitTypeAir',
+  TransitType.boat: 'PKTransitTypeBoat',
+  TransitType.bus: 'PKTransitTypeBus',
+  TransitType.generic: 'PKTransitTypeGeneric',
+  TransitType.train: 'PKTransitTypeTrain',
+};

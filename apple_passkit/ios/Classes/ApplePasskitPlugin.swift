@@ -38,7 +38,19 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
     
     private func getPasses(_ result: @escaping FlutterResult) {
         let passNames = PKPassLibrary().passes().map {
-            return $0.localizedName
+            return [
+                "passType": $0.passType,
+                "serialNumber": $0.serialNumber,
+                "passTypeIdentifier": $0.passTypeIdentifier,
+                "deviceName": $0.deviceName,
+                "localizedName": $0.localizedName,
+                "localizedDescription": $0.localizedDescription,
+                "isRemotePass": $0.isRemotePass,
+                "passURL": $0.passURL?.absoluteString,
+                "organizationName": $0.organizationName,
+                "icon": $0.icon.pngData(),
+            ] as [String : Any?]
+            
         }
         result(passNames)
     }

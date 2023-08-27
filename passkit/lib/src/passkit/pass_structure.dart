@@ -14,7 +14,7 @@ class PassStructure {
     this.headerFields,
     this.primaryFields,
     this.secondaryFields,
-    this.transitType,
+    this.transitType = TransitType.generic,
   });
 
   factory PassStructure.fromJson(Map<String, dynamic> json) =>
@@ -45,5 +45,19 @@ class PassStructure {
   /// Required for boarding passes; otherwise not allowed. Type of transit.
   /// Must be one of the following values: PKTransitTypeAir, PKTransitTypeBoat,
   /// PKTransitTypeBus, PKTransitTypeGeneric,PKTransitTypeTrain.
-  final String? transitType;
+  @JsonKey(defaultValue: TransitType.generic)
+  final TransitType transitType;
+}
+
+enum TransitType {
+  @JsonValue('PKTransitTypeAir')
+  air,
+  @JsonValue('PKTransitTypeBoat')
+  boat,
+  @JsonValue('PKTransitTypeBus')
+  bus,
+  @JsonValue('PKTransitTypeGeneric')
+  generic,
+  @JsonValue('PKTransitTypeTrain')
+  train
 }

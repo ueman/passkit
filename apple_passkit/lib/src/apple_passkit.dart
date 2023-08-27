@@ -1,3 +1,4 @@
+import 'package:apple_passkit/src/apple_pk_pass.dart';
 import 'package:apple_passkit/src/exception_converter.dart';
 import 'package:apple_passkit/src/pk_pass_library_add_passes_status.dart';
 import 'package:flutter/foundation.dart';
@@ -31,13 +32,16 @@ class ApplePassKit {
         .first;
   }
 
-  Future<List<String>> passes() async =>
-      await wrapWithException(() async {
-        return (await methodChannel.invokeMethod<List<Object?>>('getPasses'))
-            ?.map((e) => e.toString())
-            .toList();
-      }()) ??
-      [];
+  Future<List<ApplePkPass>> passes() async {
+    final list = await wrapWithException(
+        methodChannel.invokeMethod<List<Object>>('getPasses'));
+
+    return list
+            ?.cast<Map<Object, Object?>>()
+            .map(ApplePkPass.fromMap)
+            .toList() ??
+        [];
+  }
 
   // ========== Methods of PKAddPassesViewController
 

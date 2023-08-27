@@ -1,0 +1,55 @@
+{
+    "organizationName": "Paw Planet",
+    "backgroundColor": "rgb(255,161,0)",
+    "foregroundColor": "rgb(255,255,255)",
+    "labelColor": "rgb(0,0,0)",
+    "logoText": "Paw Planet",
+    "barcode": {
+        "format": "PKBarcodeFormatQR",
+        "messageEncoding": "iso-8859-1",
+        "message": "https:\/\/www.passsource.com\/pass\/create.php?hashedSerialNumber=eNortjIysVIK9jcuqMpy1TfwzwvIyS0pd48yyAkMtLVVsgZcMKB2CcQ,"
+    },
+    "coupon": {
+        "primaryFields": [
+            {
+                "key": "offer",
+                "label": "Everything you can carry",
+                "value": "20% off",
+                "changeMessage": "Changed to %@"
+            }
+        ],
+        "auxiliaryFields": [
+            {
+                "key": "expires",
+                "label": "EXPIRES",
+                "value": "2 weeks",
+                "changeMessage": "Changed to %@"
+            }
+        ],
+        "backFields": [
+            {
+                "key": "terms",
+                "label": "TERMS AND CONDITIONS",
+                "value": "Generico offers this pass, including all information, software, products and services available from this pass or offered as part of or in conjunction with this pass (the \"pass\"), to you, the user, conditioned upon your acceptance of all of the terms, conditions, policies and notices stated here. Generico reserves the right to make changes to these Terms and Conditions immediately by posting the changed Terms and Conditions in this location.\n\nUse the pass at your own risk. This pass is provided to you \"asis\" without warranty of any kind either express or implied. Neither Generico nor its employees, agents, third-party information providers, merchants, licensors or the like warrant that the pass or its operation will be accurate, reliable, uninterrupted or error-free. No agent or representative has the authority to create any warranty regarding the pass on behalf of Generico. Generico reserves the right to change or discontinue at any time any aspect or feature of the pass.",
+                "changeMessage": "Changed to %@"
+            },
+            {
+                "key": "passSourceUpdate",
+                "label": "update this pass",
+                "value": "https:\/\/www.passsource.com\/pass\/register.php?hashedSerialNumber=eNortjIysVIK9jcuqMpy1TfwzwvIyS0pd48yyAkMtLVVsgZcMKB2CcQ,&"
+            },
+            {
+                "key": "passSourceSignature",
+                "label": "created by PassSource",
+                "value": "For more information or to create your own passes, visit: https:\/\/www.passsource.com\nThis pass may contain trademarks that are not licensed or affiliated with PassSource.  The trademarks are owned by their respective entities.  This pass is for personal convenience and is not guaranteed to function or be usable at a merchant.  Please direct any concerns or questions to support+passback@kudit.com."
+            }
+        ]
+    },
+    "serialNumber": "64eb80e0130bf",
+    "formatVersion": 1,
+    "description": "*Coupon",
+    "passTypeIdentifier": "pass.com.kudit.generic",
+    "teamIdentifier": "3QPV894C33",
+    "webServiceURL": "https:\/\/www.passsource.com\/passhandler",
+    "authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc"
+}

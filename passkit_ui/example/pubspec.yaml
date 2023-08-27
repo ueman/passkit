@@ -1,0 +1,31 @@
+name: example
+description: example project
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.7 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  passkit_ui:
+    path: ../
+  passkit:
+    path: ../../passkit
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+dependency_overrides:
+  passkit_ui:
+    path: ../
+  passkit:
+    path: ../../passkit
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/

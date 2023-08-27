@@ -21,7 +21,7 @@ if(isAvailable && canAddPasses) {
 
 # View your app's passes
 
-> This is Work in progress
+Setup your Xcode project in accordance of the [documentation](https://help.apple.com/xcode/mac/current/#/devfc3f493bb).
 
-See
-https://help.apple.com/xcode/mac/current/#/devfc3f493bb
+After that, use `ApplePassKit().passes()` to load your installed passes. 
+Use [https://pub.dev/packages/passkit](`package:passkit`) to compare them to `.pkpass` files.

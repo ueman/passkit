@@ -1,5 +1,5 @@
 name: passkit
-description: A starting point for Dart libraries or applications.
+description: Pure Dart library which can read Apple's PKPass files
 version: 0.0.1
 repository: https://github.com/ueman/passkit
 
@@ -10,7 +10,7 @@ dependencies:
   archive: ^3.3.5
   barcode: ^2.2.3
   csslib: ^0.17.2
-  json_annotation: ^4.7.0
+  json_annotation: ^4.8.1
 
 dev_dependencies:
   lints: ^2.0.0

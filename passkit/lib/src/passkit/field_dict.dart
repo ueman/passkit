@@ -47,7 +47,7 @@ class FieldDict {
   ///
   /// Data detectors are applied only to back fields.
   // array of strings
-  final List<String>? dataDetectorTypes;
+  final List<DataDetectorTypes>? dataDetectorTypes;
 
   /// Required. The key must be unique within the scope of the entire pass.
   /// For example, “departure-gate.”
@@ -69,9 +69,31 @@ class FieldDict {
   /// appropriately based on its script direction.
   ///
   /// This key is not allowed for primary fields or back fields.
-  final String? textAlignment;
+  final PkTextAlignment? textAlignment;
 
   /// Required. Value of the field, for example, 42.
   // localizable string, ISO 8601 date as a string, or number
   final String value;
+}
+
+enum PkTextAlignment {
+  @JsonValue('PKTextAlignmentLeft')
+  left,
+  @JsonValue('PKTextAlignmentCenter')
+  center,
+  @JsonValue('PKTextAlignmentRight')
+  right,
+  @JsonValue('PKTextAlignmentNatural')
+  natural,
+}
+
+enum DataDetectorTypes {
+  @JsonValue('PKDataDetectorTypePhoneNumber')
+  phoneNumber,
+  @JsonValue('PKDataDetectorTypeLink')
+  link,
+  @JsonValue('PKDataDetectorTypeAddress')
+  typeAddress,
+  @JsonValue('PKDataDetectorTypeCalendarEvent')
+  calendarEvent,
 }
