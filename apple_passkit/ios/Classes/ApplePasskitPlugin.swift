@@ -23,6 +23,8 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
           addPassFlow(call, result)
       case "getPasses":
           getPasses(result)
+      case "containsPass":
+          containsPasses(call, result)
       default:
         result(FlutterMethodNotImplemented)
       }
@@ -55,6 +57,15 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
         result(passNames)
     }
     
+    private func containsPass(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let pkPass = pkPassFromData(call, result: result)
+        guard let pkPass else {
+            result(ErrorCodes.empty)
+            return
+        }
+        result(PKPassLibrary().containsPass(pkPass))
+    }
+
     private func addPassFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let pkPass = pkPassFromData(call, result: result)
         guard let pkPass else {

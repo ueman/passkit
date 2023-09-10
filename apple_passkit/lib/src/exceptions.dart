@@ -2,6 +2,9 @@ import 'package:flutter/services.dart';
 
 import 'error_codes.dart';
 
+class PkPassEmptyException implements Exception {}
+
+/// Indicates an issue during adding of a PkPass
 class ApplePassKitException extends PlatformException {
   ApplePassKitException({
     required super.code,

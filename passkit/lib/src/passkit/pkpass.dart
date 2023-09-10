@@ -29,6 +29,7 @@ class PkPass {
   PkPass({
     required this.pass,
     required this.manifest,
+    required this.sourceData,
     this.background,
     this.footer,
     this.icon,
@@ -102,6 +103,7 @@ class PkPass {
       manifest: manifestJson!,
       logo: logo,
       footer: footer,
+      sourceData: bytes,
     );
   }
 
@@ -159,4 +161,6 @@ class PkPass {
   /// The URL that opens the pass in the Wallet app.
   /// Use the openURL(_:) method to open the pass in the Wallet app.
   // final Uri? passURL;
+
+  final List<int> sourceData;
 }

@@ -1,3 +1,4 @@
+/// Represents a PkPass
 class ApplePkPass {
   ApplePkPass({
     required this.passType,
@@ -59,7 +60,7 @@ class ApplePkPass {
   final List<int> icon;
 }
 
-// TODO
+/// Status after trying to add multiple passes.
 enum PkPassType {
   /// A nonspecific pass type.
   any,
