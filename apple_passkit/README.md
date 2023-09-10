@@ -29,7 +29,7 @@ if(isAvailable && canAddPasses) {
 }
 ```
 
-# View your app's passes
+## View your app's passes
 
 Setup your Xcode project as described in the [documentation](https://help.apple.com/xcode/mac/current/#/devfc3f493bb).
 
