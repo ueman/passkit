@@ -5,14 +5,14 @@
 [![popularity](https://img.shields.io/pub/popularity/apple_passkit)](https://pub.dev/packages/apple_passkit/score)
 [![pub points](https://img.shields.io/pub/points/apple_passkit)](https://pub.dev/packages/apple_passkit/score)
 
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/ue_man?style=social)](https://twitter.com/ue_man)
+[![GitHub followers](https://img.shields.io/github/followers/ueman?style=social)](https://github.com/ueman)
+
+
 This is a Flutter binding for [Apple's PassKit](https://developer.apple.com/documentation/passkit).
 
 This library allows you to add and and read `PkPass` files.
-
-## 📣 About the author
-
-- [![Twitter Follow](https://img.shields.io/twitter/follow/ue_man?style=social)](https://twitter.com/ue_man)
-- [![GitHub followers](https://img.shields.io/github/followers/ueman?style=social)](https://github.com/ueman)
 
 ## How to use it
 
@@ -28,6 +28,8 @@ if(isAvailable && canAddPasses) {
     await passKit.addPass(pass);
 }
 ```
+
+To view all methods, take a look at the [API docs](https://pub.dev/documentation/apple_passkit/latest/apple_passkit/ApplePassKit-class.html).
 
 ## View your app's passes
 
