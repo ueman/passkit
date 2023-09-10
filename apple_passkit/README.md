@@ -1,11 +1,21 @@
 # Apple PassKit
 
-This is Flutter binding for [Apple's PassKit](https://developer.apple.com/documentation/passkit).
+[![pub package](https://img.shields.io/pub/v/apple_passkit.svg)](https://pub.dev/packages/apple_passkit)
+[![likes](https://img.shields.io/pub/likes/apple_passkit)](https://pub.dev/packages/apple_passkit/score)
+[![popularity](https://img.shields.io/pub/popularity/apple_passkit)](https://pub.dev/packages/apple_passkit/score)
+[![pub points](https://img.shields.io/pub/points/apple_passkit)](https://pub.dev/packages/apple_passkit/score)
 
-Right now, this library allows you to check whether your app is able to deal with passes at all, whether your app can add passes, and then of course it also allows you to add passes.
+This is a Flutter binding for [Apple's PassKit](https://developer.apple.com/documentation/passkit).
 
+This library allows you to add and and read `PkPass` files.
+
+## 📣 About the author
+
+- [![Twitter Follow](https://img.shields.io/twitter/follow/ue_man?style=social)](https://twitter.com/ue_man)
+- [![GitHub followers](https://img.shields.io/github/followers/ueman?style=social)](https://github.com/ueman)
 
 ## How to use it
+
 ```dart
 final passKit = ApplePassKit();
 // first check whether PassKit is available
@@ -21,7 +31,6 @@ if(isAvailable && canAddPasses) {
 
 # View your app's passes
 
-Setup your Xcode project in accordance of the [documentation](https://help.apple.com/xcode/mac/current/#/devfc3f493bb).
+Setup your Xcode project as described in the [documentation](https://help.apple.com/xcode/mac/current/#/devfc3f493bb).
 
-After that, use `ApplePassKit().passes()` to load your installed passes. 
-Use [https://pub.dev/packages/passkit](`package:passkit`) to compare them to `.pkpass` files.
+After that, use `await ApplePassKit().passes()` to load your installed passes.
