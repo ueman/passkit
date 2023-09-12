@@ -1,3 +1,12 @@
+## 0.0.4-beta
+
+* Reduce Dart requirement
+* Add more details if adding a pass fails
+
+## 0.0.3-beta
+
+* Fix iOS implementation
+
 ## 0.0.2-beta
 
 * Improve pubspec.yaml

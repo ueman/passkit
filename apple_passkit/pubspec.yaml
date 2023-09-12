@@ -1,6 +1,6 @@
 name: apple_passkit
 description: Plugin to deal with PKPass files on iOS. You can check for availabililty and add them.
-version: 0.0.2-beta
+version: 0.0.4-beta
 repository: https://github.com/ueman/passkit/
 issue_tracker: https://github.com/ueman/passkit/issues
 topics:
@@ -8,7 +8,7 @@ topics:
   - pkpass
 
 environment:
-  sdk: '>=3.0.7 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
   flutter: ">=3.3.0"
 
 dependencies:

@@ -24,7 +24,7 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
       case "getPasses":
           getPasses(result)
       case "containsPass":
-          containsPasses(call, result)
+          containsPass(call, result)
       default:
         result(FlutterMethodNotImplemented)
       }
@@ -119,7 +119,7 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
         do {
             return try PKPass(data: data)
         } catch {
-            result(ErrorCodes.invalidData)
+            result(FlutterError(code: "invalid", message: "Received data is not a valid PKPass", details: error.localizedDescription))
             return nil
         }
         
@@ -161,5 +161,4 @@ class PassKitDelegate : NSObject, PKAddPassesViewControllerDelegate {
 
 enum ErrorCodes {
     static let empty = FlutterError(code: "empty", message: "Received data for PKPass was empty", details: nil)
-    static let invalidData = FlutterError(code: "invalid", message: "Received data is not a valid PKPass", details: nil)
 }
