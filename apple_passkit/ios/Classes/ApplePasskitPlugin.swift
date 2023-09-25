@@ -73,9 +73,8 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
             return
         }
         let vc = PKAddPassesViewController(pass: pkPass)!
-        let delegate = PassKitDelegate(result)
-        vc.delegate = delegate
         present(vc)
+        result(nil)
     }
     
     private func addPassesFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -85,9 +84,8 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
             return
         }
         let vc = PKAddPassesViewController(passes: pkPasses)!
-        let delegate = PassKitDelegate(result)
-        vc.delegate = delegate
         present(vc)
+        result(nil)
     }
     
     private func addPassesWithoutFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -143,19 +141,6 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
         }
         .filter { $0 != nil }
         .compactMap{ $0 }
-    }
-}
-
-class PassKitDelegate : NSObject, PKAddPassesViewControllerDelegate {
-    
-    let result: FlutterResult
-    
-    init(_ result: @escaping FlutterResult){
-        self.result = result
-    }
-    
-    public func addPassesViewControllerDidFinish(_ vc: PKAddPassesViewController) {
-        result(nil)
     }
 }
 
