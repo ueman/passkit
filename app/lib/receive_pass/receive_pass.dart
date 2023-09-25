@@ -15,7 +15,7 @@ Future<void> initReceiveIntent() async {
 
 // Does not need to be cancelled, since it's running for the lifetime of the app
 // ignore: unused_element
-StreamSubscription? _sub;
+StreamSubscription<Intent?>? _sub;
 
 Future<void> initReceiveIntentWhileRunning() async {
   _sub = ReceiveIntent.receivedIntentStream.listen((Intent? intent) {
