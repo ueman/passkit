@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Add privacy manifest
+
 ## 0.0.5-beta
 
 * Fix an issue where a native call never returned.
