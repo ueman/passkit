@@ -6,6 +6,11 @@ import 'package:passkit/src/passkit/pass_data.dart';
 import 'package:passkit/src/passkit/pass_type.dart';
 import 'package:passkit/src/passkit/pk_pass_image.dart';
 
+/// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
+/// This speeds up decoding.
+/// See https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
+final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
+
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Reference/PassKit_Bundle/Chapters/Introduction.html
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195
 ///
@@ -51,14 +56,14 @@ class PkPass {
     // Manifest
     final manifestFile = archive.findFile('manifest.json');
     if (manifestFile != null) {
-      manifestJson = jsonDecode(utf8.decode(manifestFile.content as List<int>))
+      manifestJson = _utf8JsonDecoder.convert(manifestFile.content as List<int>)
           as Map<String, dynamic>;
     }
 
     // pass.json
     final passFile = archive.findFile('pass.json');
     if (passFile != null) {
-      passJson = jsonDecode(utf8.decode(passFile.content as List<int>))
+      passJson = _utf8JsonDecoder.convert(passFile.content as List<int>)
           as Map<String, dynamic>;
     }
 
