@@ -33,3 +33,4 @@ Feel free to submit PRs for them
 - Localization: https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54 (as seen at the bottom of the page)
     - .strings file format description https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/LoadingResources/Strings/Strings.html
 - Passkit creation: https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54 (as seen at the bottom of the page)
+- checksum verification
