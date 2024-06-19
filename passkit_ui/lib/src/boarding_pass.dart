@@ -24,7 +24,7 @@ class BoardingPass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio.toInt();
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context).toInt();
     final passTheme = pass.toTheme();
 
     return Card(
@@ -142,23 +142,21 @@ class BoardingPass extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) {
-                        return SimpleDialog(
-                          children: [
-                            for (final entry
-                                in pass.pass.boardingPass!.backFields!)
-                              ListTile(
-                                title: Text(entry.label ?? ''),
-                                subtitle: Text(entry.value),
-                              ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (_) {
+                      return SimpleDialog(
+                        children: [
+                          for (final entry
+                              in pass.pass.boardingPass!.backFields!)
+                            ListTile(
+                              title: Text(entry.label ?? ''),
+                              subtitle: Text(entry.value),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,

@@ -8,8 +8,8 @@ topics:
   - pkpass
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=3.3.0"
+  sdk: '>=3.4.3 <4.0.0'
+  flutter: 3.22.2
 
 dependencies:
   flutter:
@@ -25,6 +25,3 @@ flutter:
     platforms:
       ios:
         pluginClass: ApplePasskitPlugin
-
-platforms:
-  ios:
