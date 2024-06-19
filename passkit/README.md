@@ -2,6 +2,17 @@
 
 PassKit allows you to work with Apple's PkPass files. This is a pure Dart library. No Flutter needed.
 
+## How to read a PassKit file?
+
+```dart
+import 'package:passkit/passkit.dart';
+
+void main() {
+  final passKitBytes = ... // get bytes for the PassKit from somewhere
+  final pkPass = PkPass.fromBytes(passKitBytes);
+}
+```
+
 ## Currently unsupported functionality
 
 Feel free to submit PRs for them
