@@ -7,8 +7,8 @@ part of 'beacon.dart';
 // **************************************************************************
 
 Beacon _$BeaconFromJson(Map<String, dynamic> json) => Beacon(
-      major: json['major'] as int?,
-      minor: json['minor'] as int?,
+      major: (json['major'] as num?)?.toInt(),
+      minor: (json['minor'] as num?)?.toInt(),
       proximityUUID: json['proximityUUID'] as String,
       relevantText: json['relevantText'] as String?,
     );

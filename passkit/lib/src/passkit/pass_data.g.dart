@@ -8,7 +8,7 @@ part of 'pass_data.dart';
 
 PassData _$PassDataFromJson(Map<String, dynamic> json) => PassData(
       description: json['description'] as String,
-      formatVersion: json['formatVersion'] as int,
+      formatVersion: (json['formatVersion'] as num).toInt(),
       organizationName: json['organizationName'] as String,
       passTypeIdentifier: json['passTypeIdentifier'] as String,
       serialNumber: json['serialNumber'] as String,
@@ -16,7 +16,7 @@ PassData _$PassDataFromJson(Map<String, dynamic> json) => PassData(
       appLaunchURL: json['appLaunchURL'] as String?,
       associatedStoreIdentifiers:
           (json['associatedStoreIdentifiers'] as List<dynamic>?)
-              ?.map((e) => e as int)
+              ?.map((e) => (e as num).toInt())
               .toList(),
       userInfo: json['userInfo'] as Map<String, dynamic>?,
       expirationDate: json['expirationDate'] == null
