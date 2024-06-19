@@ -36,7 +36,7 @@ class PkPass {
     this.logo,
     this.strip,
     this.thumbnail,
-    this.langageData,
+    this.languageData,
   });
 
   static PkPass fromBytes(final List<int> bytes) {
@@ -153,9 +153,9 @@ class PkPass {
   final PkPassImage? thumbnail;
 
   /// List of available languages
-  Iterable<String> get availableLanguages => langageData?.keys ?? [];
+  Iterable<String> get availableLanguages => languageData?.keys ?? [];
 
-  final Map<String, Map<String, dynamic>>? langageData;
+  final Map<String, Map<String, dynamic>>? languageData;
 
   // TODO
   /// The URL that opens the pass in the Wallet app.
