@@ -2,6 +2,7 @@
 
 - Make package with latest dependencies
 - Improves documentation and readme
+- Rename `langageData` to `languageData`
 
 ## 0.0.1
 
