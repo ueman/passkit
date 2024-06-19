@@ -1,6 +1,17 @@
 # PassKit
 
+[![pub package](https://img.shields.io/pub/v/passkit.svg)](https://pub.dev/packages/passkit)
+[![likes](https://img.shields.io/pub/likes/passkit)](https://pub.dev/packages/passkit/score)
+[![popularity](https://img.shields.io/pub/popularity/passkit)](https://pub.dev/packages/passkit/score)
+[![pub points](https://img.shields.io/pub/points/passkit)](https://pub.dev/packages/passkit/score)
+
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/ue_man?style=social)](https://twitter.com/ue_man)
+[![GitHub followers](https://img.shields.io/github/followers/ueman?style=social)](https://github.com/ueman)
+
 PassKit allows you to work with Apple's PkPass files. This is a pure Dart library. No Flutter needed.
+
+Want to work with Apple's PassKit APIs? Consider using [`apple_passkit`](https://pub.dev/packages/apple_passkit).
 
 ## How to read a PassKit file?
 
