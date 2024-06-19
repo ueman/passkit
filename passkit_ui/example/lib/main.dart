@@ -13,21 +13,19 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: _Body(),
+      home: AppBody(),
     );
   }
 }
 
-class _Body extends StatefulWidget {
-  const _Body({
-    super.key,
-  });
+class AppBody extends StatefulWidget {
+  const AppBody({super.key});
 
   @override
-  State<_Body> createState() => _BodyState();
+  State<AppBody> createState() => _AppBodyState();
 }
 
-class _BodyState extends State<_Body> {
+class _AppBodyState extends State<AppBody> {
   List<PkPass>? pkPasses;
 
   @override
@@ -71,7 +69,9 @@ class _BodyState extends State<_Body> {
 
 Future<PkPass> loadPass(String path) async {
   final passData = await rootBundle.load(path);
-  final list = passData.buffer
-      .asUint8List(passData.offsetInBytes, passData.lengthInBytes);
+  final list = passData.buffer.asUint8List(
+    passData.offsetInBytes,
+    passData.lengthInBytes,
+  );
   return PkPass.fromBytes(list);
 }

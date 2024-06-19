@@ -1,13 +1,14 @@
 name: app
-description: App which manages PassKit files
+description: App which manages PassKit files.
 publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=3.0.7 <4.0.0'
+  sdk: '>=3.4.3 <4.0.0'
+  flutter: 3.22.2
 
 dependencies:
-  content_resolver: ^0.3.0
+  content_resolver: ^0.3.1
   flutter:
     sdk: flutter
   receive_intent: ^0.2.4
@@ -35,7 +36,7 @@ dependency_overrides:
   content_resolver:
     git:
       url: git@github.com:ueman/flutter_content_resolver.git
-      ref: update-gradle
+      ref: main
 
 dev_dependencies:
   flutter_test:

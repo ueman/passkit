@@ -113,23 +113,20 @@ class StoreCard extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) {
-                        return SimpleDialog(
-                          children: [
-                            for (final entry
-                                in pass.pass.storeCard!.backFields!)
-                              ListTile(
-                                title: Text(entry.label ?? ''),
-                                subtitle: Text(entry.value),
-                              ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (_) {
+                      return SimpleDialog(
+                        children: [
+                          for (final entry in pass.pass.storeCard!.backFields!)
+                            ListTile(
+                              title: Text(entry.label ?? ''),
+                              subtitle: Text(entry.value),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,

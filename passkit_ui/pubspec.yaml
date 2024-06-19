@@ -1,18 +1,17 @@
 name: passkit_ui
-description: A new Flutter package project.
+description: A UI kit for PassKit files.
 version: 0.0.1
-homepage:
 
 environment:
-  sdk: '>=3.0.7 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=3.4.3 <4.0.0'
+  flutter: 3.22.2
 
 dependencies:
   flutter:
     sdk: flutter
   barcode_widget: ^2.0.4
-  csslib: ^0.17.2
   passkit: ^0.0.1
+  csslib: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -22,5 +21,3 @@ dev_dependencies:
 dependency_overrides:
   passkit:
     path: ../passkit
-
-flutter:

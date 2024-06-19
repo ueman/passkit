@@ -2,7 +2,6 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
-import 'package:passkit_ui/src/widgets/transit_type_widget.dart';
 
 /// A coupon looks like the following:
 ///
@@ -113,22 +112,20 @@ class Coupon extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) {
-                        return SimpleDialog(
-                          children: [
-                            for (final entry in pass.pass.coupon!.backFields!)
-                              ListTile(
-                                title: Text(entry.label ?? ''),
-                                subtitle: Text(entry.value),
-                              ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (_) {
+                      return SimpleDialog(
+                        children: [
+                          for (final entry in pass.pass.coupon!.backFields!)
+                            ListTile(
+                              title: Text(entry.label ?? ''),
+                              subtitle: Text(entry.value),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,
