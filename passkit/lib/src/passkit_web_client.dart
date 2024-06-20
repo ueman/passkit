@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
@@ -8,7 +9,7 @@ import 'package:passkit/passkit.dart';
 /// allows it.
 ///
 /// Docs:
-/// https://developer.apple.com/documentation/walletpasses/send_an_updated_pass
+/// [https://developer.apple.com/documentation/walletpasses/send_an_updated_pass]
 class PassKitWebClient {
   /// If a [client] is passed to the constructor it will be used, otherwise a
   /// default instance will be used. This is useful for testing, or for using
@@ -65,6 +66,22 @@ class PassKitWebClient {
         throw Exception(
             'Unrecognized status code returned: ${response.statusCode}');
     }
+  }
+
+  /// Record a message on the server.
+  ///
+  /// Docs:
+  /// [https://developer.apple.com/documentation/walletpasses/log_a_message]
+  Future<void> logMessages(PkPass pass, List<String> messages) async {
+    final webServiceUrl = pass.pass.webServiceURL;
+    if (webServiceUrl == null) {
+      throw PassWebServiceUnsupported();
+    }
+
+    final endpoint =
+        Uri.parse(webServiceUrl).resolveUri(Uri(pathSegments: ['v1', 'log']));
+
+    await _client.post(endpoint, body: jsonEncode(messages));
   }
 }
 
