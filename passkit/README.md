@@ -24,6 +24,21 @@ void main() {
 }
 ```
 
+## How to get the latest version of a given PkPass?
+
+```dart
+import 'package:passkit/passkit.dart';
+
+void main() {
+  final passKitBytes = ... // get bytes for the PassKit from somewhere
+  final pkPass = PkPass.fromBytes(passKitBytes);
+
+  if(pkPass.isWebServiceAvailable()) {
+    final pkPassBytes = PassKitWebClient().getLatestVersion(pkPass);
+  }
+}
+```
+
 ## Currently unsupported functionality
 
 Feel free to submit PRs for them

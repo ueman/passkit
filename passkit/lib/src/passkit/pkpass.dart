@@ -169,6 +169,5 @@ class PkPass {
 
   final List<int> sourceData;
 
-  bool isWebServiceAvailable() =>
-      pass.webServiceURL != null && pass.authenticationToken != null;
+  bool isWebServiceAvailable() => pass.webServiceURL != null;
 }
