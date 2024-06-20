@@ -10,6 +10,10 @@ import 'package:passkit/passkit.dart';
 /// Docs:
 /// https://developer.apple.com/documentation/walletpasses/send_an_updated_pass
 class PassKitWebClient {
+  /// If a [client] is passed to the constructor it will be used, otherwise a
+  /// default instance will be used. This is useful for testing, or for using
+  /// other implementations like [https://pub.dev/packages/cupertino_http] or
+  /// [https://pub.dev/packages/cronet_http].
   PassKitWebClient({Client? client}) : _client = client ?? Client();
 
   final Client _client;
