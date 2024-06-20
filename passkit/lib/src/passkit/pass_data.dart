@@ -40,6 +40,7 @@ class PassData {
     this.labelColor,
     this.logoText,
     this.suppressStripShine,
+    this.sharingProhibited,
     this.authenticationToken,
     this.webServiceURL,
     this.nfc,
@@ -199,6 +200,12 @@ class PassData {
   /// The default value prior to iOS 7.0 is false.
   /// In iOS 7.0, a shine effect is never applied, and this key is deprecated.
   final bool? suppressStripShine;
+
+  /// A Boolean value introduced in iOS 11 that controls whether to show the
+  /// Share button on the back of a pass. A value of true removes the button.
+  /// The default value is false. This flag has no effect in earlier versions of
+  /// iOS, nor does it prevent sharing the pass in some other way.
+  final bool? sharingProhibited;
 
   /// The authentication token to use with the web service. The token must be 16
   /// characters or longer.

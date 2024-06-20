@@ -61,6 +61,7 @@ PassData _$PassDataFromJson(Map<String, dynamic> json) => PassData(
       labelColor: parseColor(json['labelColor'] as String?),
       logoText: json['logoText'] as String?,
       suppressStripShine: json['suppressStripShine'] as bool?,
+      sharingProhibited: json['sharingProhibited'] as bool?,
       authenticationToken: json['authenticationToken'] as String?,
       webServiceURL: json['webServiceURL'] as String?,
       nfc: json['nfc'] == null
@@ -97,6 +98,7 @@ Map<String, dynamic> _$PassDataToJson(PassData instance) => <String, dynamic>{
       'labelColor': colorToString(instance.labelColor),
       'logoText': instance.logoText,
       'suppressStripShine': instance.suppressStripShine,
+      'sharingProhibited': instance.sharingProhibited,
       'authenticationToken': instance.authenticationToken,
       'webServiceURL': instance.webServiceURL,
       'nfc': instance.nfc,
