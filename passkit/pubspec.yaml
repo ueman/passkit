@@ -11,7 +11,7 @@ environment:
   sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
-  archive: ^3.3.5
+  archive: ^3.6.1
   barcode: ^2.2.3
   csslib: ^1.0.0
   json_annotation: ^4.9.0
