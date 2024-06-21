@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
+import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
 
 /// A store card looks like the following:
 ///
@@ -113,20 +114,8 @@ class StoreCard extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (_) {
-                      return SimpleDialog(
-                        children: [
-                          for (final entry in pass.pass.storeCard!.backFields!)
-                            ListTile(
-                              title: Text(entry.label ?? ''),
-                              subtitle: Text(entry.value),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                  onPressed: () => showBackFieldsDialog(
+                      context, pass.pass.storeCard!.backFields!),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,

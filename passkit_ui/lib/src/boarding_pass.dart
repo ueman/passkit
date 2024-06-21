@@ -2,6 +2,7 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
+import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
 import 'package:passkit_ui/src/widgets/transit_type_widget.dart';
 
 /// A boarding pass looks like the following:
@@ -142,21 +143,8 @@ class BoardingPass extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (_) {
-                      return SimpleDialog(
-                        children: [
-                          for (final entry
-                              in pass.pass.boardingPass!.backFields!)
-                            ListTile(
-                              title: Text(entry.label ?? ''),
-                              subtitle: Text(entry.value),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                  onPressed: () => showBackFieldsDialog(
+                      context, pass.pass.boardingPass!.backFields!),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,
