@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:passkit/passkit.dart';
+import 'package:passkit/src/passkit_web_client_exceptions.dart';
 
 /// This class allows you to update a [PkPass] the latest version, if the pass
 /// allows it.
@@ -33,7 +34,7 @@ class PassKitWebClient {
     DateTime? modifiedSince,
   }) async {
     if (!pass.isWebServiceAvailable) {
-      throw PassWebServiceUnsupported();
+      throw PassKitWebServiceUnsupported();
     }
 
     final webServiceUrl = pass.pass.webServiceURL!;
@@ -56,11 +57,8 @@ class PassKitWebClient {
     return switch (response.statusCode) {
       200 => response.bodyBytes,
       304 => null,
-      // TODO: This should probably be a custom exception
-      401 => throw Exception('Authorization error'),
-      // TODO: This should probably be a custom exception
-      _ => throw Exception(
-          'Unrecognized status code returned: ${response.statusCode}'),
+      401 => throw PassKitWebServiceAuthenticationError(),
+      _ => throw PassKitWebServiceUnrecognizedStatusCode(response.statusCode),
     };
   }
 
@@ -71,7 +69,7 @@ class PassKitWebClient {
   Future<void> logMessages(PkPass pass, List<String> messages) async {
     final webServiceUrl = pass.pass.webServiceURL;
     if (webServiceUrl == null) {
-      throw PassWebServiceUnsupported();
+      throw PassKitWebServiceUnsupported();
     }
 
     final endpoint =
@@ -80,5 +78,3 @@ class PassKitWebClient {
     await _client.post(endpoint, body: jsonEncode(messages));
   }
 }
-
-class PassWebServiceUnsupported implements Exception {}
