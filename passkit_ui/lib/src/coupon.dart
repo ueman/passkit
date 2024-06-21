@@ -1,9 +1,10 @@
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
+import 'package:passkit_ui/src/extension/formatting_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
 import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
+import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
 
 /// A coupon looks like the following:
 ///
@@ -90,32 +91,21 @@ class Coupon extends StatelessWidget {
                 width: 286,
                 height: 15,
               ),
-            if (pass.pass.barcode != null)
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                ),
-                child: BarcodeWidget(
-                  width: 200,
-                  height: 200,
-                  barcode: pass.pass.barcode!.formatType,
-                  data: pass.pass.barcode!.message,
-                  drawText: true,
-                ),
-              ),
-            if (pass.pass.barcode!.altText != null)
-              Text(
-                pass.pass.barcode!.altText!,
-                style: passTheme.foregroundTextStyle,
+            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
+              PasskitBarcode(
+                barcode:
+                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                passTheme: passTheme,
               ),
             if (coupon.backFields != null)
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () =>
-                      showBackFieldsDialog(context, coupon.backFields!),
+                  onPressed: () => showBackFieldsDialog(
+                    context,
+                    coupon.backFields!,
+                    pass.pass.associatedStoreIdentifiers,
+                  ),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,
@@ -148,10 +138,12 @@ class _AuxiliaryRow extends StatelessWidget {
             Text(
               item.label ?? '',
               style: passTheme.labelTextStyle,
+              textAlign: item.textAlignment?.flutterTextAlign(context),
             ),
             Text(
               item.value.toString(),
               style: passTheme.foregroundTextStyle,
+              textAlign: item.textAlignment?.flutterTextAlign(context),
             ),
           ],
         );

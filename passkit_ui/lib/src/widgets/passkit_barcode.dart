@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart' as passkit;
 import 'package:passkit_ui/src/pass_theme.dart';
 
+/// PassKit displays the first supported barcode in this array.
+/// Note that the `PKBarcodeFormatQR`, `PKBarcodeFormatPDF417`,
+/// `PKBarcodeFormatAztec`, and `PKBarcodeFormatCode128` formats are all valid
+/// on iOS 9 and later; therefore, they do not need fallbacks.
 class PasskitBarcode extends StatelessWidget {
   const PasskitBarcode({
     super.key,
@@ -17,8 +21,9 @@ class PasskitBarcode extends StatelessWidget {
   Widget build(BuildContext context) {
     double? height;
     double? width;
-    if ({'PKBarcodeFormatQR', 'PKBarcodeFormatAztec'}
-        .contains(barcode.format)) {
+    if ({
+      'PKBarcodeFormatQR', /* 'PKBarcodeFormatAztec' */
+    }.contains(barcode.format)) {
       // These two formats are quadratic, meaning they have the same height and width.
       height = 200;
       width = 200;

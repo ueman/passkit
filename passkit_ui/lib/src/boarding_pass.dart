@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
+import 'package:collection/collection.dart';
+import 'package:passkit_ui/src/extension/formatting_extensions.dart';
 import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
 import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
+import 'package:passkit_ui/src/widgets/footer.dart';
 import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
 import 'package:passkit_ui/src/widgets/transit_types/transit_type_widget.dart';
 
@@ -108,30 +111,32 @@ class BoardingPass extends StatelessWidget {
             Text(
               boardingPass.secondaryFields!.first.label ?? '',
               style: passTheme.labelTextStyle,
+              textAlign: boardingPass.secondaryFields!.first.textAlignment
+                  ?.flutterTextAlign(context),
             ),
             Text(
               boardingPass.secondaryFields!.first.value.toString(),
               style: passTheme.foregroundTextStyle,
+              textAlign: boardingPass.secondaryFields!.first.textAlignment
+                  ?.flutterTextAlign(context),
             ),
             const SizedBox(height: 16),
-            if (pass.footer != null)
-              Image.memory(
-                pass.footer!.forCorrectPixelRatio(context),
-                fit: BoxFit.contain,
-                width: 286,
-                height: 15,
-              ),
-            if (pass.pass.barcode != null)
+            Footer(footer: pass.footer),
+            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
               PasskitBarcode(
-                barcode: pass.pass.barcode!,
+                barcode:
+                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
                 passTheme: passTheme,
               ),
             if (boardingPass.backFields != null)
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () =>
-                      showBackFieldsDialog(context, boardingPass.backFields!),
+                  onPressed: () => showBackFieldsDialog(
+                    context,
+                    boardingPass.backFields!,
+                    pass.pass.associatedStoreIdentifiers,
+                  ),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,
@@ -203,10 +208,12 @@ class _AuxiliaryRow extends StatelessWidget {
             Text(
               item.label ?? '',
               style: passTheme.labelTextStyle,
+              textAlign: item.textAlignment?.flutterTextAlign(context),
             ),
             Text(
               item.value.toString(),
               style: passTheme.foregroundTextStyle,
+              textAlign: item.textAlignment?.flutterTextAlign(context),
             ),
           ],
         );

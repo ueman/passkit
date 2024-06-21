@@ -4,6 +4,7 @@ import 'package:passkit/passkit.dart';
 Future<void> showBackFieldsDialog(
   BuildContext context,
   List<FieldDict> backFields,
+  List<int>? associatedStoreIdentifiers,
 ) async {
   showAdaptiveDialog<void>(
     context: context,
@@ -23,6 +24,17 @@ Future<void> showBackFieldsDialog(
                   title: Text(entry.label ?? ''),
                   subtitle: Text(entry.value.toString()),
                 ),
+              if (associatedStoreIdentifiers?.isNotEmpty ?? false)
+                const ListTile(
+                  title: Text('Associated iOS Apps'),
+                ),
+              for (final appId in associatedStoreIdentifiers ?? [])
+                ListTile(
+                  title: Text(
+                    'https://itunes.apple.com/us/app/keynote/id$appId',
+                  ),
+                  onTap: () {},
+                )
             ],
           ),
         ),

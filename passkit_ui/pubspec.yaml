@@ -11,8 +11,10 @@ dependencies:
     sdk: flutter
   barcode: ^2.2.3
   barcode_widget: ^2.0.4
+  collection: ^1.18.0
   passkit: ^0.0.1
   csslib: ^1.0.0
+  http: ^1.2.1
 
 dev_dependencies:
   flutter_test:
