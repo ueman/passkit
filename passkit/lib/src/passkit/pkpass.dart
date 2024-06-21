@@ -47,9 +47,6 @@ class PkPass {
   static PkPass fromBytes(final List<int> bytes) {
     Map<String, dynamic>? manifestJson;
     Map<String, dynamic>? passJson;
-    PkPassImage? logo;
-    PkPassImage? icon;
-    PkPassImage? footer;
 
     ZipDecoder decoder = ZipDecoder();
     final archive = decoder.decodeBytes(bytes);
@@ -73,9 +70,15 @@ class PkPass {
     }
 
     // images
-    logo = _loadImage(archive, 'logo');
-    icon = _loadImage(archive, 'icon');
-    footer = _loadImage(archive, 'footer');
+    // TODO: Images can be localized, too
+    //       Maybe it's better to have an on-demand API, something like
+    //       PkPass().getLogo(resolution: 3, languageCode: 'en_EN').
+    final logo = _loadImage(archive, 'logo');
+    final icon = _loadImage(archive, 'icon');
+    final footer = _loadImage(archive, 'footer');
+    final thumbnail = _loadImage(archive, 'thumbnail');
+    final strip = _loadImage(archive, 'strip');
+    final background = _loadImage(archive, 'background');
 
     Map<String, Map<String, String>> availableTranslations = {};
 
@@ -90,7 +93,10 @@ class PkPass {
       logo: logo,
       icon: icon,
       footer: footer,
+      thumbnail: thumbnail,
       sourceData: bytes,
+      strip: strip,
+      background: background,
     );
   }
 
