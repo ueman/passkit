@@ -1,6 +1,7 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
+import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
 import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
 
@@ -20,8 +21,8 @@ class Coupon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio.toInt();
     final passTheme = pass.toTheme();
+    final coupon = pass.pass.coupon!;
 
     return Card(
       color: passTheme.backgroundColor,
@@ -46,7 +47,7 @@ class Coupon extends StatelessWidget {
                     maxHeight: 50,
                   ),
                   child: Image.memory(
-                    pass.logo!.fromMultiplier(pixelRatio),
+                    pass.logo!.forCorrectPixelRatio(context),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -57,12 +58,11 @@ class Coupon extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      pass.pass.coupon!.headerFields?.first.label ?? '',
+                      coupon.headerFields?.first.label ?? '',
                       style: passTheme.labelTextStyle,
                     ),
                     Text(
-                      pass.pass.coupon!.headerFields?.first.value?.toString() ??
-                          '',
+                      coupon.headerFields?.first.value?.toString() ?? '',
                       style: passTheme.foregroundTextStyle,
                     ),
                   ],
@@ -72,20 +72,20 @@ class Coupon extends StatelessWidget {
             const SizedBox(height: 16),
             _AuxiliaryRow(
               passTheme: passTheme,
-              auxiliaryRow: pass.pass.coupon!.primaryFields!,
+              auxiliaryRow: coupon.primaryFields!,
             ),
             const SizedBox(height: 16),
             _AuxiliaryRow(
               passTheme: passTheme,
               auxiliaryRow: [
-                ...?pass.pass.coupon!.secondaryFields,
-                ...?pass.pass.coupon!.auxiliaryFields
+                ...?coupon.secondaryFields,
+                ...?coupon.auxiliaryFields
               ],
             ),
             const SizedBox(height: 16),
             if (pass.footer != null)
               Image.memory(
-                pass.footer!.fromMultiplier(pixelRatio),
+                pass.footer!.forCorrectPixelRatio(context),
                 fit: BoxFit.contain,
                 width: 286,
                 height: 15,
@@ -110,12 +110,12 @@ class Coupon extends StatelessWidget {
                 pass.pass.barcode!.altText!,
                 style: passTheme.foregroundTextStyle,
               ),
-            if (pass.pass.coupon?.backFields != null)
+            if (coupon.backFields != null)
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () => showBackFieldsDialog(
-                      context, pass.pass.coupon!.backFields!),
+                  onPressed: () =>
+                      showBackFieldsDialog(context, coupon.backFields!),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
 import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
 
@@ -21,8 +22,8 @@ class StoreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio.toInt();
     final passTheme = pass.toTheme();
+    final storeCard = pass.pass.storeCard!;
 
     return Card(
       color: passTheme.backgroundColor,
@@ -47,7 +48,7 @@ class StoreCard extends StatelessWidget {
                     maxHeight: 50,
                   ),
                   child: Image.memory(
-                    pass.logo!.fromMultiplier(pixelRatio),
+                    pass.logo!.forCorrectPixelRatio(context),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -58,13 +59,11 @@ class StoreCard extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      pass.pass.storeCard!.headerFields?.first.label ?? '',
+                      storeCard.headerFields?.first.label ?? '',
                       style: passTheme.labelTextStyle,
                     ),
                     Text(
-                      pass.pass.storeCard!.headerFields?.first.value
-                              ?.toString() ??
-                          '',
+                      storeCard.headerFields?.first.value?.toString() ?? '',
                       style: passTheme.foregroundTextStyle,
                     ),
                   ],
@@ -74,20 +73,20 @@ class StoreCard extends StatelessWidget {
             const SizedBox(height: 16),
             _AuxiliaryRow(
               passTheme: passTheme,
-              auxiliaryRow: pass.pass.storeCard!.primaryFields ?? [],
+              auxiliaryRow: storeCard.primaryFields ?? [],
             ),
             const SizedBox(height: 16),
             _AuxiliaryRow(
               passTheme: passTheme,
               auxiliaryRow: [
-                ...?pass.pass.storeCard!.secondaryFields,
-                ...?pass.pass.storeCard!.auxiliaryFields
+                ...?storeCard.secondaryFields,
+                ...?storeCard.auxiliaryFields
               ],
             ),
             const SizedBox(height: 16),
             if (pass.footer != null)
               Image.memory(
-                pass.footer!.fromMultiplier(pixelRatio),
+                pass.footer!.forCorrectPixelRatio(context),
                 fit: BoxFit.contain,
                 width: 286,
                 height: 15,
@@ -112,12 +111,12 @@ class StoreCard extends StatelessWidget {
                 pass.pass.barcode!.altText!,
                 style: passTheme.foregroundTextStyle,
               ),
-            if (pass.pass.storeCard?.backFields != null)
+            if (storeCard.backFields != null)
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
-                  onPressed: () => showBackFieldsDialog(
-                      context, pass.pass.storeCard!.backFields!),
+                  onPressed: () =>
+                      showBackFieldsDialog(context, storeCard.backFields!),
                   icon: Icon(
                     Icons.info_outline,
                     color: passTheme.foregroundColor,
