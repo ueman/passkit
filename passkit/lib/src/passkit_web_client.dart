@@ -53,19 +53,14 @@ class PassKitWebClient {
       },
     );
 
-    switch (response.statusCode) {
-      case 200:
-        return response.bodyBytes;
-      case 304:
-        return null;
-      case 401:
-        // TODO: This should probably be a custom exception
-        throw Exception('Authorization error');
-      default:
-        // TODO: This should probably be a custom exception
-        throw Exception(
-            'Unrecognized status code returned: ${response.statusCode}');
-    }
+    return switch (response.statusCode) {
+      200 => response.bodyBytes,
+      304 => null,
+      // TODO: This should probably be a custom exception
+      401 => throw Exception('Authorization error'),
+      // TODO: This should probably be a custom exception
+      _ => throw Exception('Unrecognized status code returned: ${response.statusCode}'),
+    };
   }
 
   /// Record a message on the server.
