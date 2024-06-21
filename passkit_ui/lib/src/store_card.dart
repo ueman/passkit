@@ -62,7 +62,9 @@ class StoreCard extends StatelessWidget {
                       style: passTheme.labelTextStyle,
                     ),
                     Text(
-                      pass.pass.storeCard!.headerFields?.first.value ?? '',
+                      pass.pass.storeCard!.headerFields?.first.value
+                              ?.toString() ??
+                          '',
                       style: passTheme.foregroundTextStyle,
                     ),
                   ],
@@ -150,7 +152,7 @@ class _AuxiliaryRow extends StatelessWidget {
               style: passTheme.labelTextStyle,
             ),
             Text(
-              item.value,
+              item.value.toString(),
               style: passTheme.foregroundTextStyle,
             ),
           ],

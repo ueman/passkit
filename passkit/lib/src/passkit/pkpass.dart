@@ -58,6 +58,8 @@ class PkPass {
     if (manifestFile != null) {
       manifestJson = _utf8JsonDecoder.convert(manifestFile.content as List<int>)
           as Map<String, dynamic>;
+    } else {
+      // TODO throw
     }
 
     // pass.json
@@ -65,6 +67,8 @@ class PkPass {
     if (passFile != null) {
       passJson = _utf8JsonDecoder.convert(passFile.content as List<int>)
           as Map<String, dynamic>;
+    } else {
+      // TODO throw
     }
 
     // Logo

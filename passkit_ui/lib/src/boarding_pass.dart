@@ -66,7 +66,8 @@ class BoardingPass extends StatelessWidget {
                       style: passTheme.labelTextStyle,
                     ),
                     Text(
-                      pass.pass.boardingPass!.headerFields!.first.value,
+                      pass.pass.boardingPass!.headerFields!.first.value
+                          .toString(),
                       style: passTheme.foregroundTextStyle,
                     ),
                   ],
@@ -108,7 +109,7 @@ class BoardingPass extends StatelessWidget {
               style: passTheme.labelTextStyle,
             ),
             Text(
-              pass.pass.boardingPass!.secondaryFields!.first.value,
+              pass.pass.boardingPass!.secondaryFields!.first.value.toString(),
               style: passTheme.foregroundTextStyle,
             ),
             const SizedBox(height: 16),
@@ -179,7 +180,7 @@ class _FromTo extends StatelessWidget {
           ),
         ),
         Text(
-          data.value,
+          data.value.toString(),
           style: TextStyle(
             color: passTheme.foregroundColor,
             fontSize: 40,
@@ -211,7 +212,7 @@ class _AuxiliaryRow extends StatelessWidget {
               style: passTheme.labelTextStyle,
             ),
             Text(
-              item.value,
+              item.value.toString(),
               style: passTheme.foregroundTextStyle,
             ),
           ],

@@ -21,7 +21,7 @@ Future<void> showBackFieldsDialog(
               for (final entry in backFields)
                 ListTile(
                   title: Text(entry.label ?? ''),
-                  subtitle: Text(entry.value),
+                  subtitle: Text(entry.value.toString()),
                 ),
             ],
           ),

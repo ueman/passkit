@@ -9,6 +9,6 @@ class EventTicket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    return const Text('Event Ticket passes are still not implemented');
   }
 }

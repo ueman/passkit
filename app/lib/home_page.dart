@@ -1,5 +1,6 @@
 import 'package:app/db/database.dart';
 import 'package:app/import_pass/pick_pass.dart';
+import 'package:app/router.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -45,6 +46,10 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+            onPressed: () => router.push('/examples'),
+            icon: const Icon(Icons.card_giftcard),
+          ),
           IconButton(
             onPressed: () => pickPass(context),
             icon: const Icon(Icons.file_open),

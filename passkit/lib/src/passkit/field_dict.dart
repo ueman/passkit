@@ -72,8 +72,9 @@ class FieldDict {
   final PkTextAlignment? textAlignment;
 
   /// Required. Value of the field, for example, 42.
-  // localizable string, ISO 8601 date as a string, or number
-  final String value;
+  /// This can contain a localizable string, ISO 8601 date as a string,
+  /// or a number (double/int)
+  final Object? value;
 }
 
 enum PkTextAlignment {
