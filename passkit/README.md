@@ -33,7 +33,7 @@ void main() {
   final passKitBytes = ... // get bytes for the PassKit from somewhere
   final pkPass = PkPass.fromBytes(passKitBytes);
 
-  if(pkPass.isWebServiceAvailable()) {
+  if(pkPass.isWebServiceAvailable) {
     final pkPassBytes = PassKitWebClient().getLatestVersion(pkPass);
   }
 }

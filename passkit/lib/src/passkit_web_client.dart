@@ -32,7 +32,7 @@ class PassKitWebClient {
     PkPass pass, {
     DateTime? modifiedSince,
   }) async {
-    if (!pass.isWebServiceAvailable()) {
+    if (!pass.isWebServiceAvailable) {
       throw PassWebServiceUnsupported();
     }
 
@@ -59,7 +59,8 @@ class PassKitWebClient {
       // TODO: This should probably be a custom exception
       401 => throw Exception('Authorization error'),
       // TODO: This should probably be a custom exception
-      _ => throw Exception('Unrecognized status code returned: ${response.statusCode}'),
+      _ => throw Exception(
+          'Unrecognized status code returned: ${response.statusCode}'),
     };
   }
 
