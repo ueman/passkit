@@ -173,4 +173,6 @@ class PkPass {
   // final Uri? passURL;
 
   final List<int> sourceData;
+
+  bool get isWebServiceAvailable => pass.webServiceURL != null;
 }
