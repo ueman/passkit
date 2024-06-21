@@ -1,9 +1,9 @@
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
 import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
+import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
 import 'package:passkit_ui/src/widgets/transit_types/transit_type_widget.dart';
 
 /// A boarding pass looks like the following:
@@ -122,24 +122,9 @@ class BoardingPass extends StatelessWidget {
                 height: 15,
               ),
             if (pass.pass.barcode != null)
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                ),
-                child: BarcodeWidget(
-                  width: 200,
-                  height: 200,
-                  barcode: pass.pass.barcode!.formatType,
-                  data: pass.pass.barcode!.message,
-                  drawText: true,
-                ),
-              ),
-            if (pass.pass.barcode!.altText != null)
-              Text(
-                pass.pass.barcode!.altText!,
-                style: passTheme.foregroundTextStyle,
+              PasskitBarcode(
+                barcode: pass.pass.barcode!,
+                passTheme: passTheme,
               ),
             if (boardingPass.backFields != null)
               Align(

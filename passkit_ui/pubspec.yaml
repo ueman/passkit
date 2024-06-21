@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  barcode: ^2.2.3
   barcode_widget: ^2.0.4
   passkit: ^0.0.1
   csslib: ^1.0.0
