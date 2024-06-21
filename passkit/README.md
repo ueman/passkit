@@ -9,6 +9,9 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/ue_man?style=social)](https://twitter.com/ue_man)
 [![GitHub followers](https://img.shields.io/github/followers/ueman?style=social)](https://github.com/ueman)
 
+> 🚧 API is subject to change! 🚧
+> The API should become a lot more stable once this package fully supports localization.
+
 PassKit allows you to work with Apple's PkPass files. This is a pure Dart library. No Flutter needed.
 
 Want to work with Apple's PassKit APIs? Consider using [`apple_passkit`](https://pub.dev/packages/apple_passkit).
