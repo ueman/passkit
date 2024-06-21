@@ -1,7 +1,6 @@
-import 'package:file_picker/file_picker.dart';
+import 'package:app/import_pass/pick_pass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -20,7 +19,7 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => _openFile(context),
+            onPressed: () => pickPass(context),
             icon: const Icon(Icons.file_open),
           ),
           IconButton(
@@ -35,26 +34,5 @@ class HomePage extends StatelessWidget {
       ),
       body: const Center(child: Text('Cards')),
     );
-  }
-}
-
-void _openFile(BuildContext context) async {
-  final localizations = AppLocalizations.of(context);
-  final result = await FilePicker.platform.pickFiles(
-    allowMultiple: true,
-    allowedExtensions: ['pkpass', 'pass'],
-    dialogTitle: localizations.pickPasses,
-    type: FileType.any,
-  );
-
-  if (result == null) {
-    return;
-  }
-
-  if (!context.mounted) {
-    return;
-  }
-  if (result.count == 1) {
-    await context.push('/import', extra: result.files.first.path);
   }
 }
