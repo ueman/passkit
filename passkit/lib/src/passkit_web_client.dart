@@ -28,7 +28,7 @@ class PassKitWebClient {
   ///
   /// If [modifiedSince] is present, only updates after [modifiedSince] will be
   /// considered.
-  // TODO: This could return a PkPass object instead
+  // TODO(ueman): This could return a PkPass object instead
   Future<Uint8List?> getLatestVersion(
     PkPass pass, {
     DateTime? modifiedSince,

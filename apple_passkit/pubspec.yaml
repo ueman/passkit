@@ -8,8 +8,8 @@ topics:
   - pkpass
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
-  flutter: 3.22.2
+  sdk: ">=3.4.3 <4.0.0"
+  flutter: ">=3.22.2"
 
 dependencies:
   flutter:
@@ -18,7 +18,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
   plugin:

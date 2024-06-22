@@ -1,6 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:collection/collection.dart';
 import 'package:passkit_ui/src/extension/formatting_extensions.dart';
 import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
@@ -57,7 +57,7 @@ class BoardingPass extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 if (pass.pass.logoText != null)
                   Text(
                     pass.pass.logoText!,
@@ -65,7 +65,7 @@ class BoardingPass extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                Spacer(),
+                const Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
