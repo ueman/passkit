@@ -36,17 +36,22 @@ class _ExamplePassesState extends State<ExamplePasses> {
               itemCount: passes.length,
               itemBuilder: (context, index) {
                 final pass = passes[index];
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: InkWell(
-                    child: PkPassWidget(pass: pass),
-                    onTap: () {
-                      router.push(
-                        '/backside',
-                        extra: PassBackSidePageArgs(pass, false),
-                      );
-                    },
-                  ),
+                return Column(
+                  children: [
+                    Text(pass.type.toString()),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: InkWell(
+                        child: PkPassWidget(pass: pass),
+                        onTap: () {
+                          router.push(
+                            '/backside',
+                            extra: PassBackSidePageArgs(pass, false),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 );
               },
             ),

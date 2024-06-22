@@ -67,6 +67,9 @@ class _ImportPassPageState extends State<ImportPassPage> {
                     ),
                   );
               if (context.mounted) {
+                // If this page is opened via a file open intent, it can't be
+                // popped via the navigator. Instead the button should be hidden.
+                // When launched via the file selector, this page can be popped.
                 final couldPop = await Navigator.maybePop(context);
                 if (couldPop == false) {
                   // TODO(ueman): hide the import button

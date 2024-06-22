@@ -70,9 +70,15 @@ class Coupon extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: coupon.primaryFields!,
+            Stack(
+              children: [
+                if (pass.strip != null)
+                  Image.memory(pass.strip!.forCorrectPixelRatio(context)),
+                _AuxiliaryRow(
+                  passTheme: passTheme,
+                  auxiliaryRow: coupon.primaryFields!,
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             _AuxiliaryRow(
