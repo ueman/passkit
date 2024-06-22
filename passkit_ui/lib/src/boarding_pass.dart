@@ -43,7 +43,6 @@ class BoardingPass extends StatelessWidget {
           children: [
             Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 /// The logo image (logo.png) is displayed in the top left corner
                 /// of the pass, next to the logo text. The allotted space is
@@ -58,11 +57,17 @@ class BoardingPass extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                Text(
-                  pass.pass.logoText!,
-                  style: passTheme.foregroundTextStyle,
-                ),
+                SizedBox(width: 8),
+                if (pass.pass.logoText != null)
+                  Text(
+                    pass.pass.logoText!,
+                    style: passTheme.foregroundTextStyle.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                Spacer(),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       boardingPass.headerFields!.first.label ?? '',
@@ -154,6 +159,7 @@ class _FromTo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           data.label ?? '',

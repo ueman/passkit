@@ -66,6 +66,12 @@ class _ImportPassPageState extends State<ImportPassPage> {
                       binaryPass: Uint8List.fromList(pass!.sourceData),
                     ),
                   );
+              if (context.mounted) {
+                final couldPop = await Navigator.maybePop(context);
+                if (couldPop == false) {
+                  // TODO(ueman): hide the import button
+                }
+              }
             },
             child: Text(AppLocalizations.of(context).importPass),
           ),

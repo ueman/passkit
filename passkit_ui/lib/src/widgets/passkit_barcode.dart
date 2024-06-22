@@ -33,27 +33,31 @@ class PasskitBarcode extends StatelessWidget {
       // Apples designs make it seem they should be as wide as possible.
     }
 
-    return Container(
-      padding: const EdgeInsets.all(10.0),
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.white,
       ),
-      child: Column(
-        children: [
-          BarcodeWidget(
-            width: width,
-            height: height,
-            barcode: barcode.formatType,
-            data: barcode.message,
-            drawText: true,
-          ),
-          if (barcode.altText != null)
-            Text(
-              barcode.altText!,
-              style: passTheme.foregroundTextStyle,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            BarcodeWidget(
+              height: height,
+              width: width,
+              data: barcode.message,
+              barcode: barcode.formatType,
+              drawText: true,
+              margin: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
             ),
-        ],
+            if (barcode.altText != null)
+              Text(
+                barcode.altText!,
+                style: passTheme.foregroundTextStyle,
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -16,14 +16,11 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     final footerImage = footer;
     if (footerImage != null) {
-      return FittedBox(
-        clipBehavior: Clip.hardEdge,
-        child: Image.memory(
-          footerImage.forCorrectPixelRatio(context),
-          fit: BoxFit.cover,
-          width: 286,
-          height: 15,
-        ),
+      return Image.memory(
+        footerImage.forCorrectPixelRatio(context),
+        fit: BoxFit.contain,
+        width: 286,
+        height: 15,
       );
     }
     return const SizedBox.shrink();
