@@ -1,6 +1,22 @@
 # passkit_ui
 
+[![pub package](https://img.shields.io/pub/v/passkit_ui.svg)](https://pub.dev/packages/passkit_ui)
+[![likes](https://img.shields.io/pub/likes/passkit_ui)](https://pub.dev/packages/passkit_ui/score)
+[![popularity](https://img.shields.io/pub/popularity/passkit_ui)](https://pub.dev/packages/passkit_ui/score)
+[![pub points](https://img.shields.io/pub/points/passkit_ui)](https://pub.dev/packages/passkit_ui/score)
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/ue_man?style=social)](https://twitter.com/ue_man)
+[![GitHub followers](https://img.shields.io/github/followers/ueman?style=social)](https://github.com/ueman)
+
+> 🚧 API is subject to change! 🚧
+> Not all pass types are yet supported. Not ready for production use.
+
 Package with widgets to visualize `PkPass` files with the help of [`passkit`](https://pub.dev/packages/passkit).
+
+This package does intentionally not support showing the "backside" of a `PkPass` file, since there are a lot of features that depend on the application logic.
+Those include among other things: sharing a pass, deleting a pass, having the ability to open URLs, emails and phone numbers.
+
+# Development related docs
 
 Design docs: 
 - https://developer.apple.com/design/human-interface-guidelines/wallet

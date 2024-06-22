@@ -3,7 +3,6 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/extension/formatting_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
-import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
 import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
 
 /// A coupon looks like the following:
@@ -96,21 +95,6 @@ class Coupon extends StatelessWidget {
                 barcode:
                     (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
                 passTheme: passTheme,
-              ),
-            if (coupon.backFields != null)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  onPressed: () => showBackFieldsDialog(
-                    context,
-                    coupon.backFields!,
-                    pass.pass.associatedStoreIdentifiers,
-                  ),
-                  icon: Icon(
-                    Icons.info_outline,
-                    color: passTheme.foregroundColor,
-                  ),
-                ),
               ),
           ],
         ),

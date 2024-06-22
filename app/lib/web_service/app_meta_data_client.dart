@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'dart:ui';
 
+import 'package:app/web_service/app_metadata.dart';
 import 'package:http/http.dart';
-import 'package:passkit_ui/src/web_service/app_metadata.dart';
 
 /// Could be moved to `passkit` package, since it could be useful for its consumers too.
 class AppMetadataClient {
@@ -9,21 +10,22 @@ class AppMetadataClient {
 
   final Client _client;
 
-  Uri _itunesLookupUrl(List<int> associatedUrls, String lang, String country) {
-    return Uri.parse('https://itunes.apple.com/')
-        .replace(path: 'lookup', queryParameters: {
-      'id': associatedUrls.join(','),
-      'lang': lang,
-      'country': country,
-    });
+  Uri _itunesLookupUrl(List<int> associatedUrls, Locale locale) {
+    return Uri.parse('https://itunes.apple.com/').replace(
+      path: 'lookup',
+      queryParameters: {
+        'id': associatedUrls.join(','),
+        'lang': locale.languageCode,
+        'country': locale.countryCode,
+      },
+    );
   }
 
   Future<List<AppMetadata>> loadAppMetaData(
     List<int> ids, {
-    String? lang,
-    String? country,
+    Locale? locale,
   }) async {
-    final url = _itunesLookupUrl(ids, lang ?? 'en', country ?? 'us');
+    final url = _itunesLookupUrl(ids, locale ?? const Locale('en', 'US'));
     final response = await _client.get(url);
     final responseJson = jsonDecode(response.body);
     final list = responseJson['results'] as List;

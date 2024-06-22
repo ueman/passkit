@@ -60,7 +60,7 @@ class _AppBodyState extends State<AppBody> {
         padding: const EdgeInsets.all(16),
         itemCount: passes.length,
         itemBuilder: (context, index) {
-          return PkPassWidget(pass: pkPasses![index], onPressed: () {});
+          return PkPassWidget(pass: pkPasses![index]);
         },
       ),
     );

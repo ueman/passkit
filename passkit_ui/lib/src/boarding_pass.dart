@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:passkit_ui/src/extension/formatting_extensions.dart';
 import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
-import 'package:passkit_ui/src/widgets/backfields_dialog.dart';
 import 'package:passkit_ui/src/widgets/footer.dart';
 import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
 import 'package:passkit_ui/src/widgets/transit_types/transit_type_widget.dart';
@@ -128,21 +127,7 @@ class BoardingPass extends StatelessWidget {
                     (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
                 passTheme: passTheme,
               ),
-            if (boardingPass.backFields != null)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  onPressed: () => showBackFieldsDialog(
-                    context,
-                    boardingPass.backFields!,
-                    pass.pass.associatedStoreIdentifiers,
-                  ),
-                  icon: Icon(
-                    Icons.info_outline,
-                    color: passTheme.foregroundColor,
-                  ),
-                ),
-              ),
+
             if (pass.icon != null)
               // TODO check whether this matches Apples design guidelines
               Image.memory(

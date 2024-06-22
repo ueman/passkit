@@ -1,5 +1,5 @@
+import 'package:app/web_service/app_metadata.dart';
 import 'package:flutter/material.dart';
-import 'package:passkit_ui/src/web_service/app_metadata.dart';
 
 class AppMetadataTile extends StatelessWidget {
   const AppMetadataTile({super.key, required this.metadata, this.onAppTap});
@@ -19,8 +19,8 @@ class AppMetadataTile extends StatelessWidget {
 
     return ListTile(
       title: Text(metadata.name),
-      subtitle: Text(metadata.genres.join(',')),
-      // TODO Icon should be an Apple typical squircle
+      subtitle: Text(metadata.genres.join(', ')),
+      // TODO(ueman): Icon should be an Apple typical squircle
       leading: Image.network(iconUri.toString()),
       onTap: onAppTap == null ? null : () => onAppTap!(metadata.url),
     );

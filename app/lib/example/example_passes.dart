@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:app/pass_backside/pass_backside_page.dart';
+import 'package:app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:passkit/passkit.dart';
@@ -36,7 +38,15 @@ class _ExamplePassesState extends State<ExamplePasses> {
                 final pass = passes[index];
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: PkPassWidget(pass: pass, onPressed: () {}),
+                  child: InkWell(
+                    child: PkPassWidget(pass: pass),
+                    onTap: () {
+                      router.push(
+                        '/backside',
+                        extra: PassBackSidePageArgs(pass, false),
+                      );
+                    },
+                  ),
                 );
               },
             ),
