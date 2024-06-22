@@ -1,5 +1,6 @@
 import 'package:app/db/database.dart';
 import 'package:app/import_pass/pick_pass.dart';
+import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/router.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                   AppLocalizations.of(context).appName.toUpperCase(),
             ),
             icon: const Icon(Icons.info),
-          )
+          ),
         ],
       ),
       body: passes.isEmpty
@@ -72,7 +73,15 @@ class _HomePageState extends State<HomePage> {
                 final pass = passes[index];
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: PkPassWidget(pass: pass, onPressed: () {}),
+                  child: InkWell(
+                    child: PkPassWidget(pass: pass),
+                    onTap: () {
+                      router.push(
+                        '/backside',
+                        extra: PassBackSidePageArgs(pass, true),
+                      );
+                    },
+                  ),
                 );
               },
             ),

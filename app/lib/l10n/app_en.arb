@@ -2,5 +2,7 @@
   "appName": "Cards",
   "import": "Import new card",
   "importPass": "Import this card",
-  "pickPasses": "Pick passes"
+  "pickPasses": "Pick passes",
+  "associatediOSApps": "Associated iOS Apps",
+  "associatediOSAppsDisclaimer": "Due to limitations of the Pass files, it's only possible to show iOS apps."
 }

@@ -11,11 +11,9 @@ class PkPassWidget extends StatelessWidget {
   const PkPassWidget({
     super.key,
     required this.pass,
-    required this.onPressed,
   });
 
   final PkPass pass;
-  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

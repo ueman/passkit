@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'css_color_extension.dart';
+import 'extension/css_color_extension.dart';
 
 class PassTheme {
   PassTheme({

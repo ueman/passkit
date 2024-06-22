@@ -38,6 +38,9 @@ class Barcode {
     if (format == 'PKBarcodeFormatAztec') {
       return barcode.Barcode.aztec();
     }
+    if (format == 'PKBarcodeFormatCode128') {
+      return barcode.Barcode.code128();
+    }
 
     throw UnsupportedError('$format is not supported for barcodes in PKPASS');
   }
