@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
+
 import 'extension/css_color_extension.dart';
 
 class PassTheme {
@@ -21,8 +22,9 @@ class PassTheme {
 extension PkPassThemeExtension on PkPass {
   PassTheme toTheme() {
     return PassTheme(
-        backgroundColor: pass.backgroundColor?.toDartUiColor() ?? Colors.white,
-        foregroundColor: pass.foregroundColor?.toDartUiColor() ?? Colors.black,
-        labelColor: pass.labelColor?.toDartUiColor() ?? Colors.black);
+      backgroundColor: pass.backgroundColor?.toDartUiColor() ?? Colors.white,
+      foregroundColor: pass.foregroundColor?.toDartUiColor() ?? Colors.black,
+      labelColor: pass.labelColor?.toDartUiColor() ?? Colors.black,
+    );
   }
 }

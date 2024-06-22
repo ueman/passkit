@@ -134,12 +134,12 @@ class BoardingPass extends StatelessWidget {
               ),
 
             if (pass.icon != null)
-              // TODO check whether this matches Apples design guidelines
+              // TODO(ueman): check whether this matches Apples design guidelines
               Image.memory(
                 pass.icon!.forCorrectPixelRatio(context),
                 fit: BoxFit.contain,
                 height: 15,
-              )
+              ),
           ],
         ),
       ),

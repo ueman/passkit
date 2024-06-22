@@ -29,26 +29,29 @@ class _RPSCustomPainter extends CustomPainter {
     path_0.moveTo(size.width * 0.9970354, size.height * 0.6100010);
     path_0.lineTo(size.width * 0.5601523, size.height * 0.2873877);
     path_0.cubicTo(
-        size.width * 0.5633857,
-        size.height * 0.2375484,
-        size.width * 0.5654886,
-        size.height * 0.1262595,
-        size.width * 0.5635951,
-        size.height * 0.1056010);
+      size.width * 0.5633857,
+      size.height * 0.2375484,
+      size.width * 0.5654886,
+      size.height * 0.1262595,
+      size.width * 0.5635951,
+      size.height * 0.1056010,
+    );
     path_0.cubicTo(
-        size.width * 0.5477227,
-        size.height * -0.06757571,
-        size.width * 0.4377938,
-        size.height * 0.007017402,
-        size.width * 0.4367740,
-        size.height * 0.08430588);
+      size.width * 0.5477227,
+      size.height * -0.06757571,
+      size.width * 0.4377938,
+      size.height * 0.007017402,
+      size.width * 0.4367740,
+      size.height * 0.08430588,
+    );
     path_0.cubicTo(
-        size.width * 0.4364948,
-        size.height * 0.1054448,
-        size.width * 0.4326853,
-        size.height * 0.2147829,
-        size.width * 0.4323240,
-        size.height * 0.2877826);
+      size.width * 0.4364948,
+      size.height * 0.1054448,
+      size.width * 0.4326853,
+      size.height * 0.2147829,
+      size.width * 0.4323240,
+      size.height * 0.2877826,
+    );
     path_0.lineTo(size.width * 0.001145103, size.height * 0.6178979);
     path_0.lineTo(0, size.height * 0.7212446);
     path_0.lineTo(size.width * 0.4451181, size.height * 0.5191857);
