@@ -17,7 +17,7 @@ dependencies:
   barcode: ^2.2.3
   barcode_widget: ^2.0.4
   collection: ^1.18.0
-  passkit: ^0.0.1
+  passkit: ^0.0.2
   csslib: ^1.0.0
 
 dev_dependencies:
