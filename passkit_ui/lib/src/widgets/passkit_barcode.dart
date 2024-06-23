@@ -25,12 +25,13 @@ class PasskitBarcode extends StatelessWidget {
       'PKBarcodeFormatQR', /* 'PKBarcodeFormatAztec' */
     }.contains(barcode.format)) {
       // These two formats are quadratic, meaning they have the same height and width.
-      height = 200;
-      width = 200;
+      height = 150;
+      width = 150;
     } else {
       // The other codes are much wider than tall.
       // Not too sure which dimension they should have, though.
       // Apples designs make it seem they should be as wide as possible.
+      height = 80;
     }
 
     return DecoratedBox(
@@ -41,20 +42,27 @@ class PasskitBarcode extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BarcodeWidget(
               height: height,
               width: width,
               data: barcode.message,
               barcode: barcode.formatType,
-              drawText: true,
+              drawText: false,
               margin: EdgeInsets.zero,
               padding: EdgeInsets.zero,
+              backgroundColor: Colors.white,
+              color: Colors.black,
+              textPadding: 0,
             ),
             if (barcode.altText != null)
               Text(
                 barcode.altText!,
-                style: passTheme.foregroundTextStyle,
+                style: passTheme.foregroundTextStyle.copyWith(
+                  color: Colors.black,
+                ),
               ),
           ],
         ),
