@@ -57,7 +57,7 @@ class BoardingPass extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 if (pass.pass.logoText != null)
                   // Should match the Headline text style from here for medium size devices
                   // https://developer.apple.com/design/human-interface-guidelines/typography
@@ -69,7 +69,7 @@ class BoardingPass extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                Spacer(),
+                const Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
