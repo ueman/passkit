@@ -1,10 +1,10 @@
 name: app
 description: App which manages PassKit files.
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: ">=3.4.3 <4.0.0"
   flutter: 3.22.2
 
 dependencies:
@@ -23,23 +23,25 @@ dependencies:
   http: ^1.2.1
   intl: any
   passkit: ^0.0.1
-  passkit_ui: 
+  passkit_ui:
     path: ../passkit_ui
   path: ^1.9.0
   path_provider: ^2.0.0
   receive_intent: ^0.2.4
+  screen_brightness: ^1.0.0
   share_plus: ^9.0.0
   sqlite3_flutter_libs: ^0.5.0
   url_launcher: ^6.3.0
+  wakelock_plus: ^1.2.5
 
 dependency_overrides:
   content_resolver:
     git:
       url: git@github.com:espresso3389/flutter_content_resolver.git
       ref: main
-  passkit: 
+  passkit:
     path: ../passkit
-  passkit_ui: 
+  passkit_ui:
     path: ../passkit_ui
 
 dev_dependencies:
