@@ -7,7 +7,7 @@ concurrency:
 on:
   pull_request:
     paths:
-      - "packages/passkit_ui/**"
+      - "passkit_ui/**"
       - ".github/workflows/passkit_ui.yaml"
     branches:
       - master
@@ -17,4 +17,4 @@ jobs:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_version: 3.22.2
-      working_directory: packages/passkit_ui
+      working_directory: passkit_ui
