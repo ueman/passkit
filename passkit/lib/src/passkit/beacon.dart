@@ -13,6 +13,7 @@ class Beacon {
     this.relevantText,
   });
 
+  /// Creates an instance of [Beacon] from a JSON object
   factory Beacon.fromJson(Map<String, dynamic> json) => _$BeaconFromJson(json);
 
   /// Optional. Major identifier of a Bluetooth Low Energy location beacon.
@@ -30,4 +31,7 @@ class Beacon {
   /// relevant. For example, a description of the nearby location such as
   /// “Store nearby on 1st and Main.”
   final String? relevantText;
+
+  /// Converts this instance to a JSON object
+  Map<String, dynamic> toJson() => _$BeaconToJson(this);
 }
