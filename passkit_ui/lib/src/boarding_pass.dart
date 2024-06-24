@@ -1,6 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:collection/collection.dart';
 import 'package:passkit_ui/src/extensions/extensions.dart';
 import 'package:passkit_ui/src/theme/theme.dart';
 import 'package:passkit_ui/src/widgets/widgets.dart';
@@ -143,12 +143,12 @@ class BoardingPass extends StatelessWidget {
               ),
 
             if (pass.icon != null)
-              // TODO check whether this matches Apples design guidelines
+              // TODO(ueman): check whether this matches Apples design guidelines
               Image.memory(
                 pass.icon!.forCorrectPixelRatio(devicePixelRatio),
                 fit: BoxFit.contain,
                 height: 15,
-              )
+              ),
           ],
         ),
       ),

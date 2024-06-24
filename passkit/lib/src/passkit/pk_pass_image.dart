@@ -15,11 +15,7 @@ class PkPassImage {
     if (image1 == null && image2 == null && image3 == null) {
       return null;
     }
-    return PkPassImage(
-      image1: image1,
-      image2: image2,
-      image3: image3,
-    );
+    return PkPassImage(image1: image1, image2: image2, image3: image3);
   }
 
   Uint8List fromMultiplier(int multiplier) {

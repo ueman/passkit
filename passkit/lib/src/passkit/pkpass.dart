@@ -57,7 +57,7 @@ class PkPass {
       manifestJson = _utf8JsonDecoder.convert(manifestFile.content as List<int>)
           as Map<String, dynamic>;
     } else {
-      // TODO throw
+      // TODO(ueman): throw
     }
 
     // pass.json
@@ -66,13 +66,13 @@ class PkPass {
       passJson = _utf8JsonDecoder.convert(passFile.content as List<int>)
           as Map<String, dynamic>;
     } else {
-      // TODO throw
+      // TODO(ueman): throw
     }
 
     // images
-    // TODO: Images can be localized, too
-    //       Maybe it's better to have an on-demand API, something like
-    //       PkPass().getLogo(resolution: 3, languageCode: 'en_EN').
+    // TODO(ueman): Images can be localized, too
+    //              Maybe it's better to have an on-demand API, something like
+    //              PkPass().getLogo(resolution: 3, languageCode: 'en_EN').
     final logo = _loadImage(archive, 'logo');
     final icon = _loadImage(archive, 'icon');
     final footer = _loadImage(archive, 'footer');
@@ -166,11 +166,6 @@ class PkPass {
   Iterable<String> get availableLanguages => languageData?.keys ?? [];
 
   final Map<String, Map<String, dynamic>>? languageData;
-
-  // TODO
-  /// The URL that opens the pass in the Wallet app.
-  /// Use the openURL(_:) method to open the pass in the Wallet app.
-  // final Uri? passURL;
 
   final List<int> sourceData;
 

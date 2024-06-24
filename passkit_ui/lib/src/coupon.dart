@@ -86,7 +86,7 @@ class Coupon extends StatelessWidget {
               passTheme: passTheme,
               auxiliaryRow: [
                 ...?coupon.secondaryFields,
-                ...?coupon.auxiliaryFields
+                ...?coupon.auxiliaryFields,
               ],
             ),
             const SizedBox(height: 16),
