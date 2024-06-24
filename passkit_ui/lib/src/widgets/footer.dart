@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
+import 'package:passkit_ui/src/extensions/pk_pass_image_extension.dart';
 
 /// The footer image (`footer.png`) is displayed near the barcode.
 /// The allotted space is 286 x 15 points.
@@ -14,15 +14,15 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final footerImage = footer;
-    if (footerImage != null) {
-      return Image.memory(
-        footerImage.forCorrectPixelRatio(context),
-        fit: BoxFit.contain,
-        width: 286,
-        height: 15,
-      );
-    }
-    return const SizedBox.shrink();
+    if (footer == null) return const SizedBox.shrink();
+
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+
+    return Image.memory(
+      footer!.forCorrectPixelRatio(devicePixelRatio),
+      fit: BoxFit.contain,
+      width: 286,
+      height: 15,
+    );
   }
 }

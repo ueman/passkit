@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
-import 'package:passkit_ui/src/extension/formatting_extensions.dart';
-import 'package:passkit_ui/src/pass_theme.dart';
-import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
+import 'package:passkit_ui/passkit_ui.dart';
 
 /// A store card looks like the following:
 ///
@@ -22,7 +19,9 @@ class StoreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final passTheme = pass.toTheme();
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+
+    final passTheme = pass.theme;
     final storeCard = pass.pass.storeCard!;
 
     return Card(
@@ -48,7 +47,7 @@ class StoreCard extends StatelessWidget {
                     maxHeight: 50,
                   ),
                   child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(context),
+                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -80,13 +79,13 @@ class StoreCard extends StatelessWidget {
               passTheme: passTheme,
               auxiliaryRow: [
                 ...?storeCard.secondaryFields,
-                ...?storeCard.auxiliaryFields
+                ...?storeCard.auxiliaryFields,
               ],
             ),
             const SizedBox(height: 16),
             if (pass.footer != null)
               Image.memory(
-                pass.footer!.forCorrectPixelRatio(context),
+                pass.footer!.forCorrectPixelRatio(devicePixelRatio),
                 fit: BoxFit.contain,
                 width: 286,
                 height: 15,
@@ -115,6 +114,7 @@ class _AuxiliaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final directionality = Directionality.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
@@ -123,12 +123,16 @@ class _AuxiliaryRow extends StatelessWidget {
             Text(
               item.label ?? '',
               style: passTheme.labelTextStyle,
-              textAlign: item.textAlignment?.flutterTextAlign(context),
+              textAlign: item.textAlignment?.flutterTextAlign(
+                textDirection: directionality,
+              ),
             ),
             Text(
               item.value.toString(),
               style: passTheme.foregroundTextStyle,
-              textAlign: item.textAlignment?.flutterTextAlign(context),
+              textAlign: item.textAlignment?.flutterTextAlign(
+                textDirection: directionality,
+              ),
             ),
           ],
         );
