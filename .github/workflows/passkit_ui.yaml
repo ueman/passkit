@@ -10,7 +10,7 @@ on:
       - "packages/passkit_ui/**"
       - ".github/workflows/passkit_ui.yaml"
     branches:
-      - main
+      - master
 
 jobs:
   build:
