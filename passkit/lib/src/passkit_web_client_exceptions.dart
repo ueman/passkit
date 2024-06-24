@@ -7,9 +7,9 @@ class PassKitWebServiceUnsupported implements Exception {
 class PassKitWebServiceAuthenticationError implements Exception {}
 
 class PassKitWebServiceUnrecognizedStatusCode implements Exception {
-  final int statusCode;
-
   PassKitWebServiceUnrecognizedStatusCode(this.statusCode);
+
+  final int statusCode;
 
   @override
   String toString() =>

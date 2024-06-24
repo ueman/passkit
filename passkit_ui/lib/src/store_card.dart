@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/extension/formatting_extensions.dart';
+import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
 import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
 
@@ -80,7 +80,7 @@ class StoreCard extends StatelessWidget {
               passTheme: passTheme,
               auxiliaryRow: [
                 ...?storeCard.secondaryFields,
-                ...?storeCard.auxiliaryFields
+                ...?storeCard.auxiliaryFields,
               ],
             ),
             const SizedBox(height: 16),
