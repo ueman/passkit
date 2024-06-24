@@ -18,7 +18,7 @@ class PassTheme {
   TextStyle get labelTextStyle => TextStyle(color: labelColor);
 }
 
-extension PkPassThemeExtension on PkPass {
+extension PkPassThemeX on PkPass {
   PassTheme get theme {
     return PassTheme(
       backgroundColor: pass.backgroundColor?.toDartUiColor() ?? Colors.white,

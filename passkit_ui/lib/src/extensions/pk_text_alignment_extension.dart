@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:passkit/passkit.dart';
 
 extension PkTextAlignmentX on PkTextAlignment {
-  TextAlign flutterTextAlign({required TextDirection textDirection}) {
+  TextAlign toFlutterTextAlign({TextDirection? textDirection}) {
     return switch (this) {
       PkTextAlignment.left => TextAlign.left,
       PkTextAlignment.center => TextAlign.center,

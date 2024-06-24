@@ -221,7 +221,7 @@ class _AuxiliaryRow extends StatelessWidget {
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                   ),
-                  textAlign: item.textAlignment?.flutterTextAlign(
+                  textAlign: item.textAlignment?.toFlutterTextAlign(
                     textDirection: directionality,
                   ),
                 ),
@@ -231,7 +231,7 @@ class _AuxiliaryRow extends StatelessWidget {
                     fontSize: 16,
                     height: 0.9,
                   ),
-                  textAlign: item.textAlignment?.flutterTextAlign(
+                  textAlign: item.textAlignment?.toFlutterTextAlign(
                     textDirection: directionality,
                   ),
                 ),

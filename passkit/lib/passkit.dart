@@ -10,6 +10,7 @@ export 'src/passkit/location.dart';
 export 'src/passkit/nfc.dart';
 export 'src/passkit/parse_utils.dart';
 export 'src/passkit/pass_structure.dart';
+export 'src/passkit/pass_data.dart';
 export 'src/passkit/pass_type.dart';
 export 'src/passkit/pk_pass_image.dart';
 export 'src/passkit/pkpass.dart';
