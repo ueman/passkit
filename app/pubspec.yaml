@@ -15,21 +15,24 @@ dependencies:
     sdk: flutter
   flutter_displaymode: ^0.6.0
   flutter_linkify: ^6.0.0
+  flutter_local_notifications: ^17.1.2
   flutter_localizations:
     sdk: flutter
   geocoding: ^3.0.0
+  geolocator: ^12.0.0
   go_router: ^14.2.0
   google_fonts: ^6.2.1
   http: ^1.2.1
   intl: any
-  passkit: ^0.0.1
-  passkit_ui:
-    path: ../passkit_ui
+  package_info_plus: ^8.0.0
+  passkit: ^0.0.2
+  passkit_ui: ^0.0.1
   path: ^1.9.0
   path_provider: ^2.0.0
   receive_intent: ^0.2.4
   screen_brightness: ^1.0.0
   share_plus: ^9.0.0
+  shared_preferences: ^2.2.3
   sqlite3_flutter_libs: ^0.5.0
   url_launcher: ^6.3.0
   wakelock_plus: ^1.2.5
