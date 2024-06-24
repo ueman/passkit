@@ -2,5 +2,19 @@
   "appName": "Cards",
   "import": "Import new card",
   "importPass": "Import this card",
-  "pickPasses": "Pick passes"
+  "pickPasses": "Pick passes",
+  "associatediOSApps": "Associated iOS Apps",
+  "associatediOSAppsDisclaimer": "Due to limitations of the Pass files, it's only possible to show iOS apps.",
+  "appDescription": "Cards is an app which manages your passes. It's completely open source and does not track any personal information.",
+  "appVersion": "Version: {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1 (23)"
+      }
+    }
+  },
+  "settings": "Settings",
+  "overrideShareProhibitedFlag": "Share passes even if they disallow it"
 }

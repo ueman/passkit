@@ -1,8 +1,12 @@
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
+import 'package:collection/collection.dart';
+import 'package:passkit_ui/src/extension/formatting_extensions.dart';
+import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
 import 'package:passkit_ui/src/pass_theme.dart';
-import 'package:passkit_ui/src/widgets/transit_type_widget.dart';
+import 'package:passkit_ui/src/widgets/footer.dart';
+import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
+import 'package:passkit_ui/src/widgets/transit_types/transit_type_widget.dart';
 
 /// A boarding pass looks like the following:
 ///
@@ -24,22 +28,21 @@ class BoardingPass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pixelRatio = MediaQuery.devicePixelRatioOf(context).toInt();
     final passTheme = pass.toTheme();
+    final boardingPass = pass.pass.boardingPass!;
 
     return Card(
       color: passTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(14.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 /// The logo image (logo.png) is displayed in the top left corner
                 /// of the pass, next to the logo text. The allotted space is
@@ -50,23 +53,44 @@ class BoardingPass extends StatelessWidget {
                     maxHeight: 50,
                   ),
                   child: Image.memory(
-                    pass.logo!.fromMultiplier(pixelRatio),
+                    pass.logo!.forCorrectPixelRatio(context),
                     fit: BoxFit.contain,
                   ),
                 ),
-                Text(
-                  pass.pass.logoText!,
-                  style: passTheme.foregroundTextStyle,
-                ),
+                const SizedBox(width: 8),
+                if (pass.pass.logoText != null)
+                  // Should match the Headline text style from here for medium size devices
+                  // https://developer.apple.com/design/human-interface-guidelines/typography
+                  // Fontweight semibold (w600), font size 16
+                  Text(
+                    pass.pass.logoText!,
+                    style: passTheme.foregroundTextStyle.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                const Spacer(),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    // Should match the Headline text style from here for medium size devices
+                    // https://developer.apple.com/design/human-interface-guidelines/typography
+                    // Fontweight semibold (w600), font size 16
                     Text(
-                      pass.pass.boardingPass!.headerFields!.first.label ?? '',
-                      style: passTheme.labelTextStyle,
+                      boardingPass.headerFields!.first.label ?? '',
+                      style: passTheme.labelTextStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Text(
-                      pass.pass.boardingPass!.headerFields!.first.value,
-                      style: passTheme.foregroundTextStyle,
+                      boardingPass.headerFields!.first.value.toString(),
+                      style: passTheme.foregroundTextStyle.copyWith(
+                        fontSize: 19,
+                        height: 0.9,
+                      ),
                     ),
                   ],
                 ),
@@ -77,92 +101,56 @@ class BoardingPass extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _FromTo(
-                  data: pass.pass.boardingPass!.primaryFields!.first,
+                  data: boardingPass.primaryFields!.first,
                   passTheme: passTheme,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TransitTypeWidget(
-                    transitType: pass.pass.boardingPass!.transitType,
+                    transitType: boardingPass.transitType,
                     width: 40,
+                    height: 40,
                     color: passTheme.foregroundColor,
                   ),
                 ),
                 _FromTo(
-                  data: pass.pass.boardingPass!.primaryFields![1],
+                  data: boardingPass.primaryFields![1],
                   passTheme: passTheme,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            if (pass.pass.boardingPass?.auxiliaryFields != null)
+            if (boardingPass.auxiliaryFields != null)
               _AuxiliaryRow(
                 auxiliaryRow: pass.pass.boardingPass!.auxiliaryFields!,
                 passTheme: passTheme,
               ),
             const SizedBox(height: 16),
             // secondary fields
-            Text(
-              pass.pass.boardingPass!.secondaryFields!.first.label ?? '',
-              style: passTheme.labelTextStyle,
+            _AuxiliaryRow(
+              auxiliaryRow: pass.pass.boardingPass!.secondaryFields!,
+              passTheme: passTheme,
             ),
-            Text(
-              pass.pass.boardingPass!.secondaryFields!.first.value,
-              style: passTheme.foregroundTextStyle,
-            ),
+
             const SizedBox(height: 16),
-            if (pass.footer != null)
+            Footer(footer: pass.footer),
+            const SizedBox(height: 2),
+            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
+              PasskitBarcode(
+                barcode:
+                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                passTheme: passTheme,
+              ),
+
+            if (pass.icon != null)
+              // TODO check whether this matches Apples design guidelines
               Image.memory(
-                pass.footer!.fromMultiplier(pixelRatio),
+                pass.icon!.forCorrectPixelRatio(context),
                 fit: BoxFit.contain,
-                width: 286,
                 height: 15,
-              ),
-            if (pass.pass.barcode != null)
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                ),
-                child: BarcodeWidget(
-                  width: 200,
-                  height: 200,
-                  barcode: pass.pass.barcode!.formatType,
-                  data: pass.pass.barcode!.message,
-                  drawText: true,
-                ),
-              ),
-            if (pass.pass.barcode!.altText != null)
-              Text(
-                pass.pass.barcode!.altText!,
-                style: passTheme.foregroundTextStyle,
-              ),
-            if (pass.pass.boardingPass?.backFields != null)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (_) {
-                      return SimpleDialog(
-                        children: [
-                          for (final entry
-                              in pass.pass.boardingPass!.backFields!)
-                            ListTile(
-                              title: Text(entry.label ?? ''),
-                              subtitle: Text(entry.value),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                  icon: Icon(
-                    Icons.info_outline,
-                    color: passTheme.foregroundColor,
-                  ),
-                ),
-              ),
+              )
           ],
         ),
       ),
@@ -174,27 +162,33 @@ class _FromTo extends StatelessWidget {
   const _FromTo({
     required this.data,
     required this.passTheme,
+    required this.crossAxisAlignment,
   });
 
   final FieldDict data;
   final PassTheme passTheme;
+  final CrossAxisAlignment crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: crossAxisAlignment,
       children: [
         Text(
           data.label ?? '',
           style: TextStyle(
             color: passTheme.labelColor,
-            fontSize: 12,
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
           ),
         ),
         Text(
-          data.value,
+          data.value.toString(),
           style: TextStyle(
             color: passTheme.foregroundColor,
             fontSize: 40,
+            height: 0.9,
           ),
         ),
       ],
@@ -215,18 +209,30 @@ class _AuxiliaryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
       children: auxiliaryRow.map((item) {
-        return Column(
-          children: [
-            Text(
-              item.label ?? '',
-              style: passTheme.labelTextStyle,
-            ),
-            Text(
-              item.value,
-              style: passTheme.foregroundTextStyle,
-            ),
-          ],
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                item.label ?? '',
+                style: passTheme.labelTextStyle.copyWith(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: item.textAlignment?.flutterTextAlign(context),
+              ),
+              Text(
+                item.value.toString(),
+                style: passTheme.foregroundTextStyle.copyWith(
+                  fontSize: 16,
+                  height: 0.9,
+                ),
+                textAlign: item.textAlignment?.flutterTextAlign(context),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );

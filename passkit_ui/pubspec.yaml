@@ -1,16 +1,23 @@
 name: passkit_ui
-description: A UI kit for PassKit files.
+description: A UI kit for PassKit files. Uses the `passkit` package under the hood
 version: 0.0.1
+repository: https://github.com/ueman/passkit
+issue_tracker: https://github.com/ueman/passkit/issues
+topics:
+  - passkit
+  - pkpass
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
-  flutter: 3.22.2
+  flutter: '>=3.22.2'
 
 dependencies:
   flutter:
     sdk: flutter
+  barcode: ^2.2.3
   barcode_widget: ^2.0.4
-  passkit: ^0.0.1
+  collection: ^1.18.0
+  passkit: ^0.0.2
   csslib: ^1.0.0
 
 dev_dependencies:

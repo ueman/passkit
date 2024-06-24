@@ -2,7 +2,6 @@ import 'package:app/router.dart';
 import 'package:app/scaffold_messenger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MainApp extends StatelessWidget {
@@ -18,12 +17,7 @@ class MainApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
     );
   }
 }

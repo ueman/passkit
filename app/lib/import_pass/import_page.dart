@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:app/db/database.dart';
 import 'package:app/db/db.dart';
+import 'package:app/pass_backside/pass_backside_page.dart';
+import 'package:app/router.dart';
 import 'package:content_resolver/content_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -45,8 +47,17 @@ class _ImportPassPageState extends State<ImportPassPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: PkPassWidget(pass: pass!, onPressed: () {}),
+            child: InkWell(
+              child: PkPassWidget(pass: pass!),
+              onTap: () {
+                router.push(
+                  '/backside',
+                  extra: PassBackSidePageArgs(pass!, false),
+                );
+              },
+            ),
           ),
+          // TODO(ueman): only offer this button if the pass isn't yet added
           ElevatedButton(
             onPressed: () async {
               await database.into(database.pass).insert(
@@ -55,11 +66,18 @@ class _ImportPassPageState extends State<ImportPassPage> {
                       binaryPass: Uint8List.fromList(pass!.sourceData),
                     ),
                   );
+              if (context.mounted) {
+                // If this page is opened via a file open intent, it can't be
+                // popped via the navigator. Instead the button should be hidden.
+                // When launched via the file selector, this page can be popped.
+                final couldPop = await Navigator.maybePop(context);
+                if (couldPop == false) {
+                  // TODO(ueman): hide the import button
+                }
+              }
             },
-            child: Text(
-              AppLocalizations.of(context).importPass,
-            ),
-          )
+            child: Text(AppLocalizations.of(context).importPass),
+          ),
         ],
       );
     }
@@ -69,10 +87,10 @@ class _ImportPassPageState extends State<ImportPassPage> {
         title: Text(AppLocalizations.of(context).import),
         actions: [
           IconButton(
-            // TODO Maybe show confirmation dialog here
+            // TODO(ueman): Maybe show confirmation dialog here
             onPressed: () => context.pop(),
             icon: const Icon(Icons.delete),
-          )
+          ),
         ],
       ),
       body: child,
