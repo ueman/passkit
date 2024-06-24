@@ -8,18 +8,17 @@ topics:
   - pkpass
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
-  flutter: '>=3.22.2'
+  sdk: ">=3.4.3 <4.0.0"
+  flutter: ">=3.22.2"
 
 dependencies:
   barcode: ^2.2.3
   barcode_widget: ^2.0.4
   collection: ^1.18.0
-  passkit: ^0.0.2
   csslib: ^1.0.0
   flutter:
     sdk: flutter
-  passkit: ^0.0.1
+  passkit: ^0.0.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0
