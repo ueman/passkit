@@ -2,11 +2,12 @@ import 'package:app/db/database.dart';
 import 'package:app/import_pass/pick_pass.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/router.dart';
+import 'package:app/widgets/app_icon.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,30 +39,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context).appName.toUpperCase(),
-          style: const TextStyle(
-            fontWeight: FontWeight.w900,
-            fontSize: 30,
-          ),
-        ),
+        title: const AppIcon(),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () => router.push('/examples'),
-            icon: const Icon(Icons.card_giftcard),
-          ),
           IconButton(
             onPressed: () => pickPass(context),
             icon: const Icon(Icons.file_open),
           ),
           IconButton(
-            onPressed: () => showAboutDialog(
-              context: context,
-              applicationName:
-                  AppLocalizations.of(context).appName.toUpperCase(),
-            ),
-            icon: const Icon(Icons.info),
+            onPressed: () => router.push('/settings'),
+            icon: const Icon(Icons.settings),
+            tooltip: AppLocalizations.of(context).settings,
           ),
         ],
       ),

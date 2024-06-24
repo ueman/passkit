@@ -34,10 +34,10 @@ class BoardingPass extends StatelessWidget {
     return Card(
       color: passTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(14.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -59,23 +59,38 @@ class BoardingPass extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 if (pass.pass.logoText != null)
+                  // Should match the Headline text style from here for medium size devices
+                  // https://developer.apple.com/design/human-interface-guidelines/typography
+                  // Fontweight semibold (w600), font size 16
                   Text(
                     pass.pass.logoText!,
                     style: passTheme.foregroundTextStyle.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
                     ),
                   ),
                 const Spacer(),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    // Should match the Headline text style from here for medium size devices
+                    // https://developer.apple.com/design/human-interface-guidelines/typography
+                    // Fontweight semibold (w600), font size 16
                     Text(
                       boardingPass.headerFields!.first.label ?? '',
-                      style: passTheme.labelTextStyle,
+                      style: passTheme.labelTextStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Text(
                       boardingPass.headerFields!.first.value.toString(),
-                      style: passTheme.foregroundTextStyle,
+                      style: passTheme.foregroundTextStyle.copyWith(
+                        fontSize: 19,
+                        height: 0.9,
+                      ),
                     ),
                   ],
                 ),
@@ -88,6 +103,7 @@ class BoardingPass extends StatelessWidget {
                 _FromTo(
                   data: boardingPass.primaryFields!.first,
                   passTheme: passTheme,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -101,6 +117,7 @@ class BoardingPass extends StatelessWidget {
                 _FromTo(
                   data: boardingPass.primaryFields![1],
                   passTheme: passTheme,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                 ),
               ],
             ),
@@ -112,20 +129,14 @@ class BoardingPass extends StatelessWidget {
               ),
             const SizedBox(height: 16),
             // secondary fields
-            Text(
-              boardingPass.secondaryFields!.first.label ?? '',
-              style: passTheme.labelTextStyle,
-              textAlign: boardingPass.secondaryFields!.first.textAlignment
-                  ?.flutterTextAlign(context),
+            _AuxiliaryRow(
+              auxiliaryRow: pass.pass.boardingPass!.secondaryFields!,
+              passTheme: passTheme,
             ),
-            Text(
-              boardingPass.secondaryFields!.first.value.toString(),
-              style: passTheme.foregroundTextStyle,
-              textAlign: boardingPass.secondaryFields!.first.textAlignment
-                  ?.flutterTextAlign(context),
-            ),
+
             const SizedBox(height: 16),
             Footer(footer: pass.footer),
+            const SizedBox(height: 2),
             if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
               PasskitBarcode(
                 barcode:
@@ -151,21 +162,25 @@ class _FromTo extends StatelessWidget {
   const _FromTo({
     required this.data,
     required this.passTheme,
+    required this.crossAxisAlignment,
   });
 
   final FieldDict data;
   final PassTheme passTheme;
+  final CrossAxisAlignment crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: crossAxisAlignment,
       children: [
         Text(
           data.label ?? '',
           style: TextStyle(
             color: passTheme.labelColor,
-            fontSize: 12,
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
           ),
         ),
         Text(
@@ -173,6 +188,7 @@ class _FromTo extends StatelessWidget {
           style: TextStyle(
             color: passTheme.foregroundColor,
             fontSize: 40,
+            height: 0.9,
           ),
         ),
       ],
@@ -193,20 +209,30 @@ class _AuxiliaryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
       children: auxiliaryRow.map((item) {
-        return Column(
-          children: [
-            Text(
-              item.label ?? '',
-              style: passTheme.labelTextStyle,
-              textAlign: item.textAlignment?.flutterTextAlign(context),
-            ),
-            Text(
-              item.value.toString(),
-              style: passTheme.foregroundTextStyle,
-              textAlign: item.textAlignment?.flutterTextAlign(context),
-            ),
-          ],
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                item.label ?? '',
+                style: passTheme.labelTextStyle.copyWith(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: item.textAlignment?.flutterTextAlign(context),
+              ),
+              Text(
+                item.value.toString(),
+                style: passTheme.foregroundTextStyle.copyWith(
+                  fontSize: 16,
+                  height: 0.9,
+                ),
+                textAlign: item.textAlignment?.flutterTextAlign(context),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );

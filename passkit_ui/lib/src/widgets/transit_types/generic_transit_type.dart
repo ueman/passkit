@@ -15,7 +15,7 @@ class GenericTransitType extends StatelessWidget {
     return Icon(
       Icons.arrow_right_alt_rounded,
       color: color,
-      size: size,
+      size: size + 10,
     );
   }
 }
