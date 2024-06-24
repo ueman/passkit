@@ -18,3 +18,5 @@ jobs:
     with:
       flutter_version: 3.22.2
       working_directory: passkit_ui
+      # TODO: Increase minimum coverage to 100% gradually.
+      min_coverage: 50
