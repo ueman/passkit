@@ -5,9 +5,9 @@ import 'package:app/router.dart';
 import 'package:app/widgets/app_icon.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,23 +55,26 @@ class _HomePageState extends State<HomePage> {
       ),
       body: passes.isEmpty
           ? const Center(child: Text('No passes'))
-          : ListView.builder(
-              itemCount: passes.length,
-              itemBuilder: (context, index) {
-                final pass = passes[index];
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: InkWell(
-                    child: PkPassWidget(pass: pass),
-                    onTap: () {
-                      router.push(
-                        '/backside',
-                        extra: PassBackSidePageArgs(pass, true),
-                      );
-                    },
-                  ),
-                );
-              },
+          : RefreshIndicator(
+              onRefresh: () => loadPasses(),
+              child: ListView.builder(
+                itemCount: passes.length,
+                itemBuilder: (context, index) {
+                  final pass = passes[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: InkWell(
+                      child: PkPassWidget(pass: pass),
+                      onTap: () {
+                        router.push(
+                          '/backside',
+                          extra: PassBackSidePageArgs(pass, true),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
     );
   }

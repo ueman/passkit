@@ -6,12 +6,12 @@ import 'package:app/pass_backside/placemark_tile.dart';
 import 'package:app/web_service/app_meta_data_client.dart';
 import 'package:app/web_service/app_metadata.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:passkit/passkit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PassBackSidePageArgs {
   PassBackSidePageArgs(this.pass, this.showDelete);
@@ -105,12 +105,14 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            if (widget.pass.icon != null)
-              Image.memory(widget.pass.icon!.fromMultiplier(3)),
-          ],
-        ),
+        title: widget.pass.icon != null
+            ? Image.memory(
+                widget.pass.icon!.fromMultiplier(3),
+                fit: BoxFit.contain,
+                height: kToolbarHeight *
+                    (2 / 3), // unscientific calculation, but looks good
+              )
+            : null,
         actions: [
           if (sharingAllowed)
             IconButton(
@@ -145,6 +147,18 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
               AppMetadataTile(
                 metadata: app,
                 onAppTap: _onAppClick,
+              ),
+            if (widget.pass.pass.appLaunchURL != null)
+              ListTile(
+                title: Text(AppLocalizations.of(context).associatediOSApps),
+                subtitle: Text(
+                  AppLocalizations.of(context).associatediOSAppsDisclaimer,
+                ),
+                onTap: () {
+                  final appLaunchUrl = widget.pass.pass.appLaunchURL!;
+                  final url = Uri.parse(appLaunchUrl);
+                  launchUrl(url);
+                },
               ),
           ],
           if (widget.pass.pass.locations != null &&
