@@ -67,6 +67,9 @@ PassData _$PassDataFromJson(Map<String, dynamic> json) => PassData(
       nfc: json['nfc'] == null
           ? null
           : Nfc.fromJson(json['nfc'] as Map<String, dynamic>),
+      semantics: json['semantics'] == null
+          ? null
+          : Semantics.fromJson(json['semantics'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PassDataToJson(PassData instance) => <String, dynamic>{
@@ -102,4 +105,5 @@ Map<String, dynamic> _$PassDataToJson(PassData instance) => <String, dynamic>{
       'authenticationToken': instance.authenticationToken,
       'webServiceURL': instance.webServiceURL,
       'nfc': instance.nfc,
+      'semantics': instance.semantics,
     };

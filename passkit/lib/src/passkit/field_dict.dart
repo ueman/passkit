@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:passkit/src/passkit/semantics.dart';
 
 part 'field_dict.g.dart';
 
@@ -15,6 +16,13 @@ class FieldDict {
     this.label,
     this.textAlignment,
     required this.value,
+    this.currencyCode,
+    this.dateStyle,
+    this.timeStyle,
+    this.numberStyle,
+    this.ignoresTimeZone,
+    this.isRelative,
+    this.semantics,
   });
 
   /// Optional. Attributed value of the field.
@@ -38,15 +46,14 @@ class FieldDict {
   /// Optional. Data detectors that are applied to the field’s value.
   /// Valid values are:
   ///
-  /// - `PKDataDetectorTypePhoneNumber`
-  /// - `PKDataDetectorTypeLink`
-  /// - `PKDataDetectorTypeAddress`
-  /// - `PKDataDetectorTypeCalendarEvent`
+  /// - [DataDetectorTypes.phoneNumber]
+  /// - [DataDetectorTypes.link]
+  /// - [DataDetectorTypes.typeAddress]
+  /// - [DataDetectorTypes.calendarEvent]
   /// - The default value is all data detectors. Provide an empty array to use
   ///   no data detectors.
   ///
   /// Data detectors are applied only to back fields.
-  // array of strings
   final List<DataDetectorTypes>? dataDetectorTypes;
 
   /// Required. The key must be unique within the scope of the entire pass.
@@ -60,10 +67,10 @@ class FieldDict {
   /// Optional. Alignment for the field’s contents.
   /// Must be one of the following values:
   ///
-  /// - PKTextAlignmentLeft
-  /// - PKTextAlignmentCenter
-  /// - PKTextAlignmentRight
-  /// - PKTextAlignmentNatural
+  /// - [PkTextAlignment.left]
+  /// - [PkTextAlignment.center]
+  /// - [PkTextAlignment.right]
+  /// - [PkTextAlignment.natural]
   ///
   /// The default value is natural alignment, which aligns the text
   /// appropriately based on its script direction.
@@ -75,6 +82,43 @@ class FieldDict {
   /// This can contain a localizable string, ISO 8601 date as a string,
   /// or a number (double/int)
   final Object? value;
+
+  /// The currency code to use for the value of the field.
+  /// ISO 4217 currency code as a string
+  final String? currencyCode;
+
+  /// The style of the date to display in the field.
+  final DateStyle? dateStyle;
+
+  /// The style of the time displayed in the field.
+  final DateStyle? timeStyle;
+
+  /// The style of the number to display in the field. Formatter styles have the same meaning as the formats with corresponding names in NumberFormatter.Style.
+  /// Possible Values: PKNumberStyleDecimal, PKNumberStylePercent, PKNumberStyleScientific, PKNumberStyleSpellOut
+  final NumberStyle? numberStyle;
+
+  /// A Boolean value that controls the time zone for the time and date to
+  /// display in the field. The default value is false, which displays the time
+  /// and date using the current device’s time zone. Otherwise, the time and
+  /// date appear in the time zone associated with the date and time of value.
+  ///
+  /// This key doesn’t affect the pass relevance calculation.
+  final bool? ignoresTimeZone;
+
+  /// A Boolean value that controls whether the date appears as a relative date.
+  /// The default value is false, which displays the date as an absolute date.
+  ///
+  /// This key doesn’t affect the pass relevance calculation.
+  final bool? isRelative;
+
+  /// You can augment the user-visible information on Wallet passes with
+  /// machine-readable metadata known as semantic tags. The metadata in semantic
+  /// tags helps the system better understand Wallet passes and suggest relevant
+  /// actions for the user to take on their installed passes.
+  ///
+  /// An object that contains machine-readable metadata the system uses to offer
+  /// a pass and suggest related actions.
+  final Semantics? semantics;
 }
 
 enum PkTextAlignment {
@@ -112,4 +156,36 @@ enum DataDetectorTypes {
   /// Indicates the value is a calendar event
   @JsonValue('PKDataDetectorTypeCalendarEvent')
   calendarEvent,
+}
+
+enum DateStyle {
+  @JsonValue('PKDateStyleNone')
+  none,
+
+  @JsonValue('PKDateStyleShort')
+  short,
+
+  @JsonValue('PKDateStyleMedium')
+  medium,
+
+  @JsonValue('PKDateStyleLong')
+  long,
+
+  @JsonValue('PKDateStyleFull')
+  full,
+}
+
+/// https://developer.apple.com/documentation/foundation/numberformatter/style
+enum NumberStyle {
+  @JsonValue('PKNumberStyleDecimal')
+  decimal,
+
+  @JsonValue('PKNumberStylePercent')
+  percent,
+
+  @JsonValue('PKNumberStyleScientific')
+  scientific,
+
+  @JsonValue('PKNumberStyleSpellOut')
+  spellOut,
 }
