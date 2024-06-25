@@ -13,4 +13,6 @@ export 'src/passkit/pass_structure.dart';
 export 'src/passkit/pass_type.dart';
 export 'src/passkit/pk_pass_image.dart';
 export 'src/passkit/pkpass.dart';
+export 'src/passkit/semantic_tag_type.dart';
+export 'src/passkit/semantics.dart';
 export 'src/passkit_web_client.dart';
