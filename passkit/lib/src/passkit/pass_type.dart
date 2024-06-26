@@ -2,7 +2,7 @@ enum PassType {
   boardingPass,
   coupon,
   eventTicket,
-  generic,
   storeCard,
+  generic,
   unknown,
 }

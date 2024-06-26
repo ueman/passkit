@@ -1,0 +1,22 @@
+name: passkit_ui
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - "passkit_ui/**"
+      - ".github/workflows/passkit_ui.yaml"
+    branches:
+      - master
+
+jobs:
+  build:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      flutter_version: 3.22.2
+      working_directory: passkit_ui
+      # TODO: Increase minimum coverage to 100% gradually.
+      min_coverage: 50

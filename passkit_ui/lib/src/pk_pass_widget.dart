@@ -17,18 +17,13 @@ class PkPassWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (pass.type) {
-      case PassType.boardingPass:
-        return BoardingPass(pass: pass);
-      case PassType.coupon:
-        return Coupon(pass: pass);
-      case PassType.eventTicket:
-        return EventTicket(pass: pass);
-      case PassType.storeCard:
-        return StoreCard(pass: pass);
-      case PassType.unknown:
-      case PassType.generic:
-        return Generic(pass: pass);
-    }
+    return switch (pass.type) {
+      PassType.boardingPass => BoardingPass(pass: pass),
+      PassType.coupon => Coupon(pass: pass),
+      PassType.eventTicket => EventTicket(pass: pass),
+      PassType.storeCard => StoreCard(pass: pass),
+      PassType.generic => Generic(pass: pass),
+      PassType.unknown => Generic(pass: pass),
+    };
   }
 }
