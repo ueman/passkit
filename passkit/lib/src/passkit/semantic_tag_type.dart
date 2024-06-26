@@ -2,27 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'semantic_tag_type.g.dart';
 
-/*
-@JsonSerializable()
-class SemanticTagType {
-  currencyAmount
-SemanticTagType.CurrencyAmount
-An object that represents an amount of money and type of currency.
-location
-SemanticTagType.Location
-An object that represents the coordinates of a location.
-personNameComponents
-SemanticTagType.PersonNameComponents
-An object that represents the parts of a person’s name.
-seat
-SemanticTagType.Seat
-An object that represents the identification of a seat for a transit journey or an event.
-wifiNetwork
-SemanticTagType.WifiNetwork
-An object that contains information required to connect to a WiFi network.
-}
-*/
-
 /// An object that contains information required to connect to a WiFi network.
 @JsonSerializable()
 class SemanticTagTypeWifiNetwork {
