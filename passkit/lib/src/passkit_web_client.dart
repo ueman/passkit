@@ -68,10 +68,8 @@ class PassKitWebClient {
   ///
   /// Docs:
   /// [https://developer.apple.com/documentation/walletpasses/log_a_message]
-  Future<void> logMessages({
-    String? webServiceUrl,
-    required List<String> messages,
-  }) async {
+  Future<void> logMessages(PkPass pass, List<String> messages) async {
+    final webServiceUrl = pass.pass.webServiceURL;
     if (webServiceUrl == null) {
       throw PassKitWebServiceUnsupported();
     }
