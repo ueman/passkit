@@ -37,6 +37,7 @@ dependencies:
   url_launcher: ^6.3.0
   wakelock_plus: ^1.2.5
 
+  flutter_gen: any
 dependency_overrides:
   content_resolver:
     git:

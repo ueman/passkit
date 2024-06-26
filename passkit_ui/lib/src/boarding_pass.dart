@@ -1,9 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/src/extensions/extensions.dart';
+import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/theme.dart';
-import 'package:passkit_ui/src/widgets/widgets.dart';
 
 /// A boarding pass looks like the following:
 ///
