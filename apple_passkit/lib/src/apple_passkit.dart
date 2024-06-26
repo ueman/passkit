@@ -25,7 +25,8 @@ class ApplePassKit {
   /// passes. Use this class’s [canAddPasses] method instead.
   Future<bool> isPassLibraryAvailable() async =>
       await wrapWithException(
-          methodChannel.invokeMethod<bool>('isPassLibraryAvailable')) ??
+        methodChannel.invokeMethod<bool>('isPassLibraryAvailable'),
+      ) ??
       false;
 
   /// Presents a user interface for adding multiple passes at once.
@@ -43,11 +44,12 @@ class ApplePassKit {
       return PKPassLibraryAddPassesStatus.unknown;
     }
 
-    final resultCode =
-        await wrapWithException(methodChannel.invokeMethod<String>(
-      'addPasses',
-      nonEmptyPasses,
-    ));
+    final resultCode = await wrapWithException(
+      methodChannel.invokeMethod<String>(
+        'addPasses',
+        nonEmptyPasses,
+      ),
+    );
 
     if (resultCode == null) {
       return PKPassLibraryAddPassesStatus.unknown;
@@ -69,10 +71,11 @@ class ApplePassKit {
   /// Passes don’t have a fixed order. Calling this method multiple times may
   /// return the same passes, but in a different order.
   Future<List<ApplePkPass>> passes() async {
-    final list =
-        await wrapWithException(methodChannel.invokeMethod<List<Object>>(
-      'getPasses',
-    ));
+    final list = await wrapWithException(
+      methodChannel.invokeMethod<List<Object>>(
+        'getPasses',
+      ),
+    );
 
     return list
             ?.cast<Map<Object, Object?>>()
@@ -96,7 +99,8 @@ class ApplePassKit {
       throw PkPassEmptyException();
     }
     return await wrapWithException(
-            methodChannel.invokeMethod<bool>('containsPass', [pass])) ??
+          methodChannel.invokeMethod<bool>('containsPass', [pass]),
+        ) ??
         false;
   }
 
@@ -105,7 +109,8 @@ class ApplePassKit {
   /// Returns a Boolean value that indicates whether the device supports adding passes.
   Future<bool> canAddPasses() async =>
       await wrapWithException(
-          methodChannel.invokeMethod<bool>('canAddPasses')) ??
+        methodChannel.invokeMethod<bool>('canAddPasses'),
+      ) ??
       false;
 
   /// Adding payment passes requires a special entitlement issued by Apple.
@@ -116,10 +121,12 @@ class ApplePassKit {
     if (pass.isEmpty) {
       throw PkPassEmptyException();
     }
-    await wrapWithException(methodChannel.invokeMethod<void>(
-      'addPassViewController',
-      [pass],
-    ));
+    await wrapWithException(
+      methodChannel.invokeMethod<void>(
+        'addPassViewController',
+        [pass],
+      ),
+    );
   }
 
   /// Adding payment passes requires a special entitlement issued by Apple.
@@ -131,9 +138,11 @@ class ApplePassKit {
     if (nonEmptyPasses.isEmpty) {
       return;
     }
-    await wrapWithException(methodChannel.invokeMethod<void>(
-      'addPassesViewController',
-      nonEmptyPasses,
-    ));
+    await wrapWithException(
+      methodChannel.invokeMethod<void>(
+        'addPassesViewController',
+        nonEmptyPasses,
+      ),
+    );
   }
 }

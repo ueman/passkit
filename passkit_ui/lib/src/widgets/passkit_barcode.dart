@@ -1,7 +1,7 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart' as passkit;
-import 'package:passkit_ui/src/pass_theme.dart';
+import 'package:passkit_ui/src/theme/theme.dart';
 
 /// PassKit displays the first supported barcode in this array.
 /// Note that the `PKBarcodeFormatQR`, `PKBarcodeFormatPDF417`,

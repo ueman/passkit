@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
-import 'package:passkit_ui/src/extension/formatting_extensions.dart';
-import 'package:passkit_ui/src/pass_theme.dart';
-import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
+import 'package:passkit_ui/passkit_ui.dart';
+import 'package:passkit_ui/src/theme/theme.dart';
 
 /// https://developer.apple.com/design/human-interface-guidelines/wallet#Generic-passes
 class Generic extends StatelessWidget {
@@ -13,7 +11,8 @@ class Generic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final passTheme = pass.toTheme();
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final passTheme = pass.theme;
     final generic = pass.pass.generic!;
 
     return Card(
@@ -38,7 +37,7 @@ class Generic extends StatelessWidget {
                     maxHeight: 50,
                   ),
                   child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(context),
+                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -79,7 +78,7 @@ class Generic extends StatelessWidget {
                 // 2:3 to 3:2, otherwise the image is cropped.
                 if (pass.thumbnail != null)
                   Image.memory(
-                    pass.thumbnail!.forCorrectPixelRatio(context),
+                    pass.thumbnail!.forCorrectPixelRatio(devicePixelRatio),
                   ),
               ],
             ),
@@ -98,7 +97,7 @@ class Generic extends StatelessWidget {
             const SizedBox(height: 16),
             if (pass.footer != null)
               Image.memory(
-                pass.footer!.forCorrectPixelRatio(context),
+                pass.footer!.forCorrectPixelRatio(devicePixelRatio),
                 fit: BoxFit.contain,
                 width: 286,
                 height: 15,
@@ -127,6 +126,7 @@ class _AuxiliaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final directionality = Directionality.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
@@ -135,12 +135,16 @@ class _AuxiliaryRow extends StatelessWidget {
             Text(
               item.label ?? '',
               style: passTheme.labelTextStyle,
-              textAlign: item.textAlignment?.flutterTextAlign(context),
+              textAlign: item.textAlignment?.toFlutterTextAlign(
+                textDirection: directionality,
+              ),
             ),
             Text(
               item.value.toString(),
               style: passTheme.foregroundTextStyle,
-              textAlign: item.textAlignment?.flutterTextAlign(context),
+              textAlign: item.textAlignment?.toFlutterTextAlign(
+                textDirection: directionality,
+              ),
             ),
           ],
         );

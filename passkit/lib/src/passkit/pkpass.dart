@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:passkit/src/passkit/pass_data.dart';
 import 'package:passkit/src/passkit/pass_type.dart';
+import 'package:passkit/src/passkit/personalization.dart';
 import 'package:passkit/src/passkit/pk_pass_image.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
@@ -42,11 +43,14 @@ class PkPass {
     this.strip,
     this.thumbnail,
     this.languageData,
+    this.personalization,
+    this.personalizationLogo,
   });
 
   static PkPass fromBytes(final List<int> bytes) {
     Map<String, dynamic>? manifestJson;
     Map<String, dynamic>? passJson;
+    Map<String, dynamic>? personalizationJson;
 
     ZipDecoder decoder = ZipDecoder();
     final archive = decoder.decodeBytes(bytes);
@@ -69,6 +73,14 @@ class PkPass {
       // TODO(ueman): throw
     }
 
+    // pass.json
+    final personalizationFile = archive.findFile('personalization.json');
+    if (personalizationFile != null) {
+      personalizationJson =
+          _utf8JsonDecoder.convert(personalizationFile.content as List<int>)
+              as Map<String, dynamic>;
+    }
+
     // images
     // TODO(ueman): Images can be localized, too
     //              Maybe it's better to have an on-demand API, something like
@@ -79,6 +91,7 @@ class PkPass {
     final thumbnail = _loadImage(archive, 'thumbnail');
     final strip = _loadImage(archive, 'strip');
     final background = _loadImage(archive, 'background');
+    final personalizationLogo = _loadImage(archive, 'personalizationLogo');
 
     Map<String, Map<String, String>> availableTranslations = {};
 
@@ -97,6 +110,10 @@ class PkPass {
       sourceData: bytes,
       strip: strip,
       background: background,
+      personalizationLogo: personalizationLogo,
+      personalization: personalizationJson == null
+          ? null
+          : Personalization.fromJson(personalizationJson),
     );
   }
 
@@ -161,6 +178,18 @@ class PkPass {
   /// For example, on a membership card, the thumbnail could be used
   /// to a picture of the cardholder.
   final PkPassImage? thumbnail;
+
+  /// Use a 150 x 40 point png file.
+  /// This logo is displayed at the top of the signup form.
+  final PkPassImage? personalizationLogo;
+
+  /// This file specifies the personal information requested by the signup form.
+  /// It also contains a description of the program and (optionally) the
+  /// program’s terms and conditions.
+  ///
+  /// Learn more at
+  /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/PassPersonalization.html#//apple_ref/doc/uid/TP40012195-CH12-SW2
+  final Personalization? personalization;
 
   /// List of available languages
   Iterable<String> get availableLanguages => languageData?.keys ?? [];

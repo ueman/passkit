@@ -1,7 +1,8 @@
+// TODO(any): Make [PassTheme] a Theme extension.
+
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-
-import 'extension/css_color_extension.dart';
+import 'package:passkit_ui/passkit_ui.dart';
 
 class PassTheme {
   PassTheme({
@@ -19,8 +20,8 @@ class PassTheme {
   TextStyle get labelTextStyle => TextStyle(color: labelColor);
 }
 
-extension PkPassThemeExtension on PkPass {
-  PassTheme toTheme() {
+extension PkPassThemeX on PkPass {
+  PassTheme get theme {
     return PassTheme(
       backgroundColor: pass.backgroundColor?.toDartUiColor() ?? Colors.white,
       foregroundColor: pass.foregroundColor?.toDartUiColor() ?? Colors.black,

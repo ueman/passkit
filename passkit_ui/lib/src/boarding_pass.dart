@@ -1,12 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/src/extension/formatting_extensions.dart';
-import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
-import 'package:passkit_ui/src/pass_theme.dart';
-import 'package:passkit_ui/src/widgets/footer.dart';
-import 'package:passkit_ui/src/widgets/passkit_barcode.dart';
-import 'package:passkit_ui/src/widgets/transit_types/transit_type_widget.dart';
+import 'package:passkit_ui/passkit_ui.dart';
+import 'package:passkit_ui/src/theme/theme.dart';
 
 /// A boarding pass looks like the following:
 ///
@@ -28,7 +24,8 @@ class BoardingPass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final passTheme = pass.toTheme();
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final passTheme = pass.theme;
     final boardingPass = pass.pass.boardingPass!;
 
     return Card(
@@ -53,7 +50,7 @@ class BoardingPass extends StatelessWidget {
                     maxHeight: 50,
                   ),
                   child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(context),
+                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -147,7 +144,7 @@ class BoardingPass extends StatelessWidget {
             if (pass.icon != null)
               // TODO(ueman): check whether this matches Apples design guidelines
               Image.memory(
-                pass.icon!.forCorrectPixelRatio(context),
+                pass.icon!.forCorrectPixelRatio(devicePixelRatio),
                 fit: BoxFit.contain,
                 height: 15,
               ),
@@ -207,34 +204,41 @@ class _AuxiliaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final directionality = Directionality.of(context);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
-      children: auxiliaryRow.map((item) {
-        return Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                item.label ?? '',
-                style: passTheme.labelTextStyle.copyWith(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ...auxiliaryRow.map(
+          (item) => Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  item.label ?? '',
+                  style: passTheme.labelTextStyle.copyWith(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: item.textAlignment?.toFlutterTextAlign(
+                    textDirection: directionality,
+                  ),
                 ),
-                textAlign: item.textAlignment?.flutterTextAlign(context),
-              ),
-              Text(
-                item.value.toString(),
-                style: passTheme.foregroundTextStyle.copyWith(
-                  fontSize: 16,
-                  height: 0.9,
+                Text(
+                  item.value.toString(),
+                  style: passTheme.foregroundTextStyle.copyWith(
+                    fontSize: 16,
+                    height: 0.9,
+                  ),
+                  textAlign: item.textAlignment?.toFlutterTextAlign(
+                    textDirection: directionality,
+                  ),
                 ),
-                textAlign: item.textAlignment?.flutterTextAlign(context),
-              ),
-            ],
+              ],
+            ),
           ),
-        );
-      }).toList(),
+        ),
+      ],
     );
   }
 }

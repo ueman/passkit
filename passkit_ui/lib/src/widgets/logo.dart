@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/src/extension/pk_pass_image_extensions.dart';
+import 'package:passkit_ui/src/extensions/pk_pass_image_extension.dart';
 
 /// The logo image (`logo.png`) is displayed in the top left corner of the pass,
 /// next to the logo text. The allotted space is 160 x 50 points;
@@ -16,18 +16,18 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final logoImage = logo;
-    if (logoImage != null) {
-      return FittedBox(
-        clipBehavior: Clip.hardEdge,
-        child: Image.memory(
-          logoImage.forCorrectPixelRatio(context),
-          fit: BoxFit.cover,
-          width: 160,
-          height: 50,
-        ),
-      );
-    }
-    return const SizedBox.shrink();
+    if (logo == null) return const SizedBox.shrink();
+
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+
+    return FittedBox(
+      clipBehavior: Clip.hardEdge,
+      child: Image.memory(
+        logo!.forCorrectPixelRatio(devicePixelRatio),
+        fit: BoxFit.cover,
+        width: 160,
+        height: 50,
+      ),
+    );
   }
 }
