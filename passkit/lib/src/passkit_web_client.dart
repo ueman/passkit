@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:passkit/passkit.dart';
+import 'package:passkit/src/models/models.dart';
 import 'package:passkit/src/passkit_web_client_exceptions.dart';
 
 /// This class allows you to update a [PkPass] the latest version, if the pass
@@ -42,8 +43,9 @@ class PassKitWebClient {
 
     final identifier = pass.pass.passTypeIdentifier;
     final serial = pass.pass.serialNumber;
-    final endpoint = Uri.parse(webServiceUrl)
-        .resolveUri(Uri(pathSegments: ['v1', 'passes', identifier, serial]));
+    final endpoint = Uri.parse(webServiceUrl).resolveUri(
+      Uri(pathSegments: ['v1', 'passes', identifier, serial]),
+    );
 
     final response = await _client.get(
       endpoint,
@@ -66,14 +68,17 @@ class PassKitWebClient {
   ///
   /// Docs:
   /// [https://developer.apple.com/documentation/walletpasses/log_a_message]
-  Future<void> logMessages(PkPass pass, List<String> messages) async {
-    final webServiceUrl = pass.pass.webServiceURL;
+  Future<void> logMessages({
+    String? webServiceUrl,
+    required List<String> messages,
+  }) async {
     if (webServiceUrl == null) {
       throw PassKitWebServiceUnsupported();
     }
 
-    final endpoint =
-        Uri.parse(webServiceUrl).resolveUri(Uri(pathSegments: ['v1', 'log']));
+    final endpoint = Uri.parse(webServiceUrl).resolveUri(
+      Uri(pathSegments: ['v1', 'log']),
+    );
 
     await _client.post(endpoint, body: jsonEncode(messages));
   }

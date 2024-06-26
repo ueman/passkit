@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:passkit/src/passkit/field_dict.dart';
+import 'package:passkit/src/models/models.dart';
 
 part 'pass_structure.g.dart';
 

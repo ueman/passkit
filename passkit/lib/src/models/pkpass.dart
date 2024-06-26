@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:passkit/src/passkit/pass_data.dart';
-import 'package:passkit/src/passkit/pass_type.dart';
-import 'package:passkit/src/passkit/personalization.dart';
-import 'package:passkit/src/passkit/pk_pass_image.dart';
+import 'package:passkit/src/models/models.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
 /// This speeds up decoding.

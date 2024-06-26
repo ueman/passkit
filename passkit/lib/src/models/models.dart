@@ -1,0 +1,11 @@
+export 'field_dict.dart';
+export 'location.dart';
+export 'nfc.dart';
+export 'pass_structure.dart';
+export 'pass_data.dart';
+export 'pass_type.dart';
+export 'personalization.dart';
+export 'pk_pass_image.dart';
+export 'pkpass.dart';
+export 'barcode.dart';
+export 'beacon.dart';
