@@ -9,3 +9,5 @@ export 'pk_pass_image.dart';
 export 'pkpass.dart';
 export 'barcode.dart';
 export 'beacon.dart';
+export 'semantics.dart';
+export 'semantic_tag_type.dart';

@@ -40,6 +40,7 @@ class PassData {
     this.authenticationToken,
     this.webServiceURL,
     this.nfc,
+    this.semantics,
   });
 
   factory PassData.fromJson(Map<String, dynamic> json) =>
@@ -219,4 +220,13 @@ class PassData {
   /// For this dictionary’s keys, see NFC Dictionary Keys.
   /// Available in iOS 9.0.
   final Nfc? nfc;
+
+  /// You can augment the user-visible information on Wallet passes with
+  /// machine-readable metadata known as semantic tags. The metadata in semantic
+  /// tags helps the system better understand Wallet passes and suggest relevant
+  /// actions for the user to take on their installed passes.
+  ///
+  /// An object that contains machine-readable metadata the system uses to offer
+  /// a pass and suggest related actions.
+  final Semantics? semantics;
 }
