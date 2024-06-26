@@ -16,7 +16,7 @@ FieldDict _$FieldDictFromJson(Map<String, dynamic> json) => FieldDict(
       label: json['label'] as String?,
       textAlignment:
           $enumDecodeNullable(_$PkTextAlignmentEnumMap, json['textAlignment']),
-      value: json['value'] as String,
+      value: json['value'],
     );
 
 Map<String, dynamic> _$FieldDictToJson(FieldDict instance) => <String, dynamic>{

@@ -1,0 +1,7 @@
+{
+  "@@locale": "de",
+  "appName": "Cards",
+  "import": "Importiere eine neue Pass-Datei",
+  "importPass": "Importieren",
+  "pickPasses": "Wähle einen Pass"
+}

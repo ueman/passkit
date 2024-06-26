@@ -1,5 +1,19 @@
 include: package:lints/recommended.yaml
 
+linter:
+  rules:
+    prefer_single_quotes: true
+    unawaited_futures: true
+    sort_constructors_first: true
+    use_key_in_widget_constructors: true
+    use_super_parameters: true
+    use_colored_box: true
+    use_decorated_box: true
+    no_leading_underscores_for_local_identifiers: true
+    require_trailing_commas: true
+    flutter_style_todos: true
+    sort_pub_dependencies: true
+
 analyzer:
   language:
     strict-casts: true
@@ -10,4 +24,4 @@ analyzer:
     missing_return: error
     todo: ignore
   exclude:
-    - '**.g.dart'
+    - "**.g.dart"

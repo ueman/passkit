@@ -38,10 +38,10 @@ class FieldDict {
   /// Optional. Data detectors that are applied to the field’s value.
   /// Valid values are:
   ///
-  /// - PKDataDetectorTypePhoneNumber
-  /// - PKDataDetectorTypeLink
-  /// - PKDataDetectorTypeAddress
-  /// - PKDataDetectorTypeCalendarEvent
+  /// - `PKDataDetectorTypePhoneNumber`
+  /// - `PKDataDetectorTypeLink`
+  /// - `PKDataDetectorTypeAddress`
+  /// - `PKDataDetectorTypeCalendarEvent`
   /// - The default value is all data detectors. Provide an empty array to use
   ///   no data detectors.
   ///
@@ -72,28 +72,44 @@ class FieldDict {
   final PkTextAlignment? textAlignment;
 
   /// Required. Value of the field, for example, 42.
-  // localizable string, ISO 8601 date as a string, or number
-  final String value;
+  /// This can contain a localizable string, ISO 8601 date as a string,
+  /// or a number (double/int)
+  final Object? value;
 }
 
 enum PkTextAlignment {
+  /// Text should be left aligned
   @JsonValue('PKTextAlignmentLeft')
   left,
+
+  /// Text should be center aligned
   @JsonValue('PKTextAlignmentCenter')
   center,
+
+  /// Text should be right aligned
   @JsonValue('PKTextAlignmentRight')
   right,
+
+  /// The default alignment for left-to-right scripts is left, and the default
+  /// alignment for right-to-left scripts is right.
   @JsonValue('PKTextAlignmentNatural')
   natural,
 }
 
 enum DataDetectorTypes {
+  /// Indicates the value is a phone number
   @JsonValue('PKDataDetectorTypePhoneNumber')
   phoneNumber,
+
+  /// Indicates the value is a link number
   @JsonValue('PKDataDetectorTypeLink')
   link,
+
+  /// Indicates the value is an address
   @JsonValue('PKDataDetectorTypeAddress')
   typeAddress,
+
+  /// Indicates the value is a calendar event
   @JsonValue('PKDataDetectorTypeCalendarEvent')
   calendarEvent,
 }

@@ -13,6 +13,7 @@ class Barcode {
     required this.messageEncoding,
   });
 
+  /// Creates an instance of [Barcode] from a JSON object
   factory Barcode.fromJson(Map<String, dynamic> json) =>
       _$BarcodeFromJson(json);
 
@@ -38,6 +39,9 @@ class Barcode {
     if (format == 'PKBarcodeFormatAztec') {
       return barcode.Barcode.aztec();
     }
+    if (format == 'PKBarcodeFormatCode128') {
+      return barcode.Barcode.code128();
+    }
 
     throw UnsupportedError('$format is not supported for barcodes in PKPASS');
   }
@@ -51,4 +55,7 @@ class Barcode {
   /// is supported by your barcode scanning infrastructure.
   // IANA character set name, as a string
   final String messageEncoding;
+
+  /// Converts this instance to a JSON object
+  Map<String, dynamic> toJson() => _$BarcodeToJson(this);
 }

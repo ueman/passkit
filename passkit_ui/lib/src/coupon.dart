@@ -1,7 +1,7 @@
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/src/pass_theme.dart';
+import 'package:passkit_ui/passkit_ui.dart';
+import 'package:passkit_ui/src/theme/theme.dart';
 
 /// A coupon looks like the following:
 ///
@@ -19,8 +19,10 @@ class Coupon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio.toInt();
-    final passTheme = pass.toTheme();
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+
+    final passTheme = pass.theme;
+    final coupon = pass.pass.coupon!;
 
     return Card(
       color: passTheme.backgroundColor,
@@ -45,7 +47,7 @@ class Coupon extends StatelessWidget {
                     maxHeight: 50,
                   ),
                   child: Image.memory(
-                    pass.logo!.fromMultiplier(pixelRatio),
+                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -56,11 +58,11 @@ class Coupon extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      pass.pass.coupon!.headerFields?.first.label ?? '',
+                      coupon.headerFields?.first.label ?? '',
                       style: passTheme.labelTextStyle,
                     ),
                     Text(
-                      pass.pass.coupon!.headerFields?.first.value ?? '',
+                      coupon.headerFields?.first.value?.toString() ?? '',
                       style: passTheme.foregroundTextStyle,
                     ),
                   ],
@@ -68,69 +70,39 @@ class Coupon extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: pass.pass.coupon!.primaryFields!,
+            Stack(
+              children: [
+                if (pass.strip != null)
+                  Image.memory(
+                    pass.strip!.forCorrectPixelRatio(devicePixelRatio),
+                  ),
+                _AuxiliaryRow(
+                  passTheme: passTheme,
+                  auxiliaryRow: coupon.primaryFields!,
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             _AuxiliaryRow(
               passTheme: passTheme,
               auxiliaryRow: [
-                ...?pass.pass.coupon!.secondaryFields,
-                ...?pass.pass.coupon!.auxiliaryFields
+                ...?coupon.secondaryFields,
+                ...?coupon.auxiliaryFields,
               ],
             ),
             const SizedBox(height: 16),
             if (pass.footer != null)
               Image.memory(
-                pass.footer!.fromMultiplier(pixelRatio),
+                pass.footer!.forCorrectPixelRatio(devicePixelRatio),
                 fit: BoxFit.contain,
                 width: 286,
                 height: 15,
               ),
-            if (pass.pass.barcode != null)
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                ),
-                child: BarcodeWidget(
-                  width: 200,
-                  height: 200,
-                  barcode: pass.pass.barcode!.formatType,
-                  data: pass.pass.barcode!.message,
-                  drawText: true,
-                ),
-              ),
-            if (pass.pass.barcode!.altText != null)
-              Text(
-                pass.pass.barcode!.altText!,
-                style: passTheme.foregroundTextStyle,
-              ),
-            if (pass.pass.coupon?.backFields != null)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (_) {
-                      return SimpleDialog(
-                        children: [
-                          for (final entry in pass.pass.coupon!.backFields!)
-                            ListTile(
-                              title: Text(entry.label ?? ''),
-                              subtitle: Text(entry.value),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                  icon: Icon(
-                    Icons.info_outline,
-                    color: passTheme.foregroundColor,
-                  ),
-                ),
+            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
+              PasskitBarcode(
+                barcode:
+                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                passTheme: passTheme,
               ),
           ],
         ),
@@ -150,6 +122,7 @@ class _AuxiliaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final directionality = Directionality.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
@@ -158,10 +131,16 @@ class _AuxiliaryRow extends StatelessWidget {
             Text(
               item.label ?? '',
               style: passTheme.labelTextStyle,
+              textAlign: item.textAlignment?.toFlutterTextAlign(
+                textDirection: directionality,
+              ),
             ),
             Text(
-              item.value,
+              item.value.toString(),
               style: passTheme.foregroundTextStyle,
+              textAlign: item.textAlignment?.toFlutterTextAlign(
+                textDirection: directionality,
+              ),
             ),
           ],
         );

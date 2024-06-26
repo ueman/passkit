@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:passkit/src/passkit/pass_data.dart';
 import 'package:passkit/src/passkit/pass_type.dart';
+import 'package:passkit/src/passkit/personalization.dart';
 import 'package:passkit/src/passkit/pk_pass_image.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
@@ -42,13 +43,14 @@ class PkPass {
     this.strip,
     this.thumbnail,
     this.languageData,
+    this.personalization,
+    this.personalizationLogo,
   });
 
   static PkPass fromBytes(final List<int> bytes) {
     Map<String, dynamic>? manifestJson;
     Map<String, dynamic>? passJson;
-    PkPassImage? logo;
-    PkPassImage? footer;
+    Map<String, dynamic>? personalizationJson;
 
     ZipDecoder decoder = ZipDecoder();
     final archive = decoder.decodeBytes(bytes);
@@ -58,6 +60,8 @@ class PkPass {
     if (manifestFile != null) {
       manifestJson = _utf8JsonDecoder.convert(manifestFile.content as List<int>)
           as Map<String, dynamic>;
+    } else {
+      // TODO(ueman): throw
     }
 
     // pass.json
@@ -65,36 +69,29 @@ class PkPass {
     if (passFile != null) {
       passJson = _utf8JsonDecoder.convert(passFile.content as List<int>)
           as Map<String, dynamic>;
+    } else {
+      // TODO(ueman): throw
     }
 
-    // Logo
-    final logo1 = archive.findFile('logo.png');
-    final logo2 = archive.findFile('logo@2.png');
-    final logo3 = archive.findFile('logo@3.png');
-    logo = PkPassImage.fromImages(
-      image1:
-          logo1 == null ? null : Uint8List.fromList(logo1.content as List<int>),
-      image2:
-          logo2 == null ? null : Uint8List.fromList(logo2.content as List<int>),
-      image3:
-          logo3 == null ? null : Uint8List.fromList(logo3.content as List<int>),
-    );
+    // pass.json
+    final personalizationFile = archive.findFile('personalization.json');
+    if (personalizationFile != null) {
+      personalizationJson =
+          _utf8JsonDecoder.convert(personalizationFile.content as List<int>)
+              as Map<String, dynamic>;
+    }
 
-    // footer
-    final footer1 = archive.findFile('footer.png');
-    final footer2 = archive.findFile('footer@2.png');
-    final footer3 = archive.findFile('footer@3.png');
-    footer = PkPassImage.fromImages(
-      image1: footer1 == null
-          ? null
-          : Uint8List.fromList(footer1.content as List<int>),
-      image2: footer2 == null
-          ? null
-          : Uint8List.fromList(footer2.content as List<int>),
-      image3: footer3 == null
-          ? null
-          : Uint8List.fromList(footer3.content as List<int>),
-    );
+    // images
+    // TODO(ueman): Images can be localized, too
+    //              Maybe it's better to have an on-demand API, something like
+    //              PkPass().getLogo(resolution: 3, languageCode: 'en_EN').
+    final logo = _loadImage(archive, 'logo');
+    final icon = _loadImage(archive, 'icon');
+    final footer = _loadImage(archive, 'footer');
+    final thumbnail = _loadImage(archive, 'thumbnail');
+    final strip = _loadImage(archive, 'strip');
+    final background = _loadImage(archive, 'background');
+    final personalizationLogo = _loadImage(archive, 'personalizationLogo');
 
     Map<String, Map<String, String>> availableTranslations = {};
 
@@ -107,8 +104,33 @@ class PkPass {
       pass: PassData.fromJson(passJson!),
       manifest: manifestJson!,
       logo: logo,
+      icon: icon,
       footer: footer,
+      thumbnail: thumbnail,
       sourceData: bytes,
+      strip: strip,
+      background: background,
+      personalizationLogo: personalizationLogo,
+      personalization: personalizationJson == null
+          ? null
+          : Personalization.fromJson(personalizationJson),
+    );
+  }
+
+  static PkPassImage? _loadImage(Archive archive, String name) {
+    final imageAt1Scale = archive.findFile('$name.png');
+    final imageAt2Scale = archive.findFile('$name@2.png');
+    final imageAt3Scale = archive.findFile('$name@3.png');
+    return PkPassImage.fromImages(
+      image1: imageAt1Scale == null
+          ? null
+          : Uint8List.fromList(imageAt1Scale.content as List<int>),
+      image2: imageAt2Scale == null
+          ? null
+          : Uint8List.fromList(imageAt2Scale.content as List<int>),
+      image3: imageAt3Scale == null
+          ? null
+          : Uint8List.fromList(imageAt3Scale.content as List<int>),
     );
   }
 
@@ -157,15 +179,24 @@ class PkPass {
   /// to a picture of the cardholder.
   final PkPassImage? thumbnail;
 
+  /// Use a 150 x 40 point png file.
+  /// This logo is displayed at the top of the signup form.
+  final PkPassImage? personalizationLogo;
+
+  /// This file specifies the personal information requested by the signup form.
+  /// It also contains a description of the program and (optionally) the
+  /// program’s terms and conditions.
+  ///
+  /// Learn more at
+  /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/PassPersonalization.html#//apple_ref/doc/uid/TP40012195-CH12-SW2
+  final Personalization? personalization;
+
   /// List of available languages
   Iterable<String> get availableLanguages => languageData?.keys ?? [];
 
   final Map<String, Map<String, dynamic>>? languageData;
 
-  // TODO
-  /// The URL that opens the pass in the Wallet app.
-  /// Use the openURL(_:) method to open the pass in the Wallet app.
-  // final Uri? passURL;
-
   final List<int> sourceData;
+
+  bool get isWebServiceAvailable => pass.webServiceURL != null;
 }
