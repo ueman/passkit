@@ -16,7 +16,8 @@ jobs:
   build:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/dart_package.yml@v1
     with:
-      flutter_version: 3.22.2
+      dart_sdk: '>=3.4.3 <4.0.0'
       working_directory: passkit
       # TODO: Increase minimum coverage to 100% gradually.
       min_coverage: 50
+      coverage_excludes: '*.g.dart'
