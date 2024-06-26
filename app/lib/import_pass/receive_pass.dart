@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/import_pass/import_page.dart';
 import 'package:app/router.dart';
 import 'package:flutter/services.dart';
 import 'package:receive_intent/receive_intent.dart';
@@ -46,5 +47,5 @@ Future<void> _onIntent(Intent? receivedIntent) async {
     // TODO(ueman): show error popup?
     return;
   }
-  unawaited(router.push('/import', extra: path));
+  unawaited(router.push('/import', extra: PkPassImportSource(path: path)));
 }

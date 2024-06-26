@@ -11,10 +11,28 @@ import 'package:go_router/go_router.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 
-class ImportPassPage extends StatefulWidget {
-  const ImportPassPage({super.key, required this.path});
+class PkPassImportSource {
+  PkPassImportSource({this.path, this.bytes})
+      : assert(path != null || bytes != null);
 
-  final String path;
+  final String? path;
+  final List<int>? bytes;
+
+  Future<PkPass> getPass() async {
+    if (path != null) {
+      final Content content = await ContentResolver.resolveContent(path!);
+      return PkPass.fromBytes(content.data);
+    } else if (bytes != null) {
+      return PkPass.fromBytes(bytes!);
+    }
+    throw Exception('No data');
+  }
+}
+
+class ImportPassPage extends StatefulWidget {
+  const ImportPassPage({super.key, required this.source});
+
+  final PkPassImportSource source;
 
   @override
   State<ImportPassPage> createState() => _ImportPassPageState();
@@ -30,8 +48,7 @@ class _ImportPassPageState extends State<ImportPassPage> {
   }
 
   Future<void> _load() async {
-    final Content content = await ContentResolver.resolveContent(widget.path);
-    final pkPass = PkPass.fromBytes(content.data);
+    final pkPass = await widget.source.getPass();
     setState(() {
       pass = pkPass;
     });
@@ -41,7 +58,7 @@ class _ImportPassPageState extends State<ImportPassPage> {
   Widget build(BuildContext context) {
     Widget child;
     if (pass == null) {
-      child = Center(child: Text(widget.path));
+      child = const Center(child: CircularProgressIndicator());
     } else {
       child = Column(
         children: [

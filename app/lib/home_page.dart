@@ -1,8 +1,10 @@
 import 'package:app/db/database.dart';
+import 'package:app/import_pass/import_page.dart';
 import 'package:app/import_pass/pick_pass.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/router.dart';
 import 'package:app/widgets/app_icon.dart';
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -37,45 +39,62 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const AppIcon(),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => pickPass(context),
-            icon: const Icon(Icons.file_open),
+    return DropTarget(
+      onDragDone: (detail) async {
+        final firstFile = detail.files.firstOrNull;
+
+        if (firstFile == null) {
+          return;
+        }
+        // TODO(ueman): Add more validation
+
+        await router.push(
+          '/import',
+          extra: PkPassImportSource(
+            bytes: await detail.files.first.readAsBytes(),
           ),
-          IconButton(
-            onPressed: () => router.push('/settings'),
-            icon: const Icon(Icons.settings),
-            tooltip: AppLocalizations.of(context).settings,
-          ),
-        ],
-      ),
-      body: passes.isEmpty
-          ? const Center(child: Text('No passes'))
-          : RefreshIndicator(
-              onRefresh: () => loadPasses(),
-              child: ListView.builder(
-                itemCount: passes.length,
-                itemBuilder: (context, index) {
-                  final pass = passes[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: InkWell(
-                      child: PkPassWidget(pass: pass),
-                      onTap: () {
-                        router.push(
-                          '/backside',
-                          extra: PassBackSidePageArgs(pass, true),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
+        );
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const AppIcon(),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () => pickPass(context),
+              icon: const Icon(Icons.file_open),
             ),
+            IconButton(
+              onPressed: () => router.push('/settings'),
+              icon: const Icon(Icons.settings),
+              tooltip: AppLocalizations.of(context).settings,
+            ),
+          ],
+        ),
+        body: passes.isEmpty
+            ? const Center(child: Text('No passes'))
+            : RefreshIndicator(
+                onRefresh: () => loadPasses(),
+                child: ListView.builder(
+                  itemCount: passes.length,
+                  itemBuilder: (context, index) {
+                    final pass = passes[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: InkWell(
+                        child: PkPassWidget(pass: pass),
+                        onTap: () {
+                          router.push(
+                            '/backside',
+                            extra: PassBackSidePageArgs(pass, true),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+      ),
     );
   }
 }

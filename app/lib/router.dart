@@ -13,7 +13,8 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/import',
-      builder: (context, state) => ImportPassPage(path: state.extra as String),
+      builder: (context, state) =>
+          ImportPassPage(source: state.extra as PkPassImportSource),
     ),
     GoRoute(
       path: '/examples',

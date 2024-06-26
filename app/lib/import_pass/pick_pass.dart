@@ -1,3 +1,4 @@
+import 'package:app/import_pass/import_page.dart';
 import 'package:app/router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
@@ -29,5 +30,5 @@ Future<void> pickPass(BuildContext context) async {
     return;
   }
 
-  await router.push('/import', extra: firstPath);
+  await router.push('/import', extra: PkPassImportSource(path: firstPath));
 }

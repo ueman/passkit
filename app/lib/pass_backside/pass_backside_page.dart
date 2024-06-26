@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:app/pass_backside/app_metadata_tile.dart';
@@ -73,6 +74,9 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
   }
 
   Future<void> _loadRelevantLocations() async {
+    if (!(Platform.isAndroid || Platform.isIOS)) {
+      return;
+    }
     final locations = widget.pass.pass.locations;
     if (locations == null || locations.isEmpty) {
       return;
