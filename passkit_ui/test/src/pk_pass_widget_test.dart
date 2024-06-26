@@ -3,8 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
+import 'package:passkit_ui/src/boarding_pass.dart';
+import 'package:passkit_ui/src/coupon.dart';
+import 'package:passkit_ui/src/event_ticket.dart';
+import 'package:passkit_ui/src/generic.dart';
+import 'package:passkit_ui/src/store_card.dart';
 
-import '../../helpers/helpers.dart';
+import '../helpers/helpers.dart';
 
 class _FakePkPass extends Fake implements PkPass {
   _FakePkPass({required this.type});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/passkit_ui.dart';
 import 'package:csslib/parser.dart' as css;
+import 'package:passkit_ui/src/theme/theme.dart';
 
 void main() {
   group('PassTheme', () {

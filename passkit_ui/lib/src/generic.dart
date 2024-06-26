@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
+import 'package:passkit_ui/src/theme/theme.dart';
 
 /// https://developer.apple.com/design/human-interface-guidelines/wallet#Generic-passes
 class Generic extends StatelessWidget {

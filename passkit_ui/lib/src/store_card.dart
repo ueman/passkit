@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
+import 'package:passkit_ui/src/theme/theme.dart';
 
 /// A store card looks like the following:
 ///

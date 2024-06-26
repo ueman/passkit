@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:passkit/passkit.dart' as pk;
 import 'package:passkit_ui/passkit_ui.dart';
+import 'package:passkit_ui/src/theme/theme.dart';
 
 import '../../helpers/helpers.dart';
 

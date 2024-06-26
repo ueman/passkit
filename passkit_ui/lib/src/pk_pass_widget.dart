@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/passkit_ui.dart';
+import 'package:passkit_ui/src/boarding_pass.dart';
+import 'package:passkit_ui/src/coupon.dart';
+import 'package:passkit_ui/src/event_ticket.dart';
+import 'package:passkit_ui/src/generic.dart';
+import 'package:passkit_ui/src/store_card.dart';
 
 /// https://developer.apple.com/design/human-interface-guidelines/wallet
 class PkPassWidget extends StatelessWidget {
