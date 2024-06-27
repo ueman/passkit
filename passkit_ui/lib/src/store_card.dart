@@ -25,79 +25,83 @@ class StoreCard extends StatelessWidget {
     final passTheme = pass.theme;
     final storeCard = pass.pass.storeCard!;
 
-    return Card(
-      color: passTheme.backgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /// The logo image (logo.png) is displayed in the top left corner
-                /// of the pass, next to the logo text. The allotted space is
-                /// 160 x 50 points; in most cases it should be narrower.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 160,
-                    maxHeight: 50,
-                  ),
-                  child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Text(
-                  pass.pass.logoText ?? '',
-                  style: passTheme.foregroundTextStyle,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      storeCard.headerFields?.first.label ?? '',
-                      style: passTheme.labelTextStyle,
+    return PassSize(
+      theme: passTheme,
+      child: Card(
+        color: passTheme.backgroundColor,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  /// The logo image (logo.png) is displayed in the top left corner
+                  /// of the pass, next to the logo text. The allotted space is
+                  /// 160 x 50 points; in most cases it should be narrower.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: 160,
+                      maxHeight: 50,
                     ),
-                    Text(
-                      storeCard.headerFields?.first.value?.toString() ?? '',
-                      style: passTheme.foregroundTextStyle,
+                    child: Image.memory(
+                      pass.logo!.forCorrectPixelRatio(devicePixelRatio),
+                      fit: BoxFit.contain,
                     ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: storeCard.primaryFields ?? [],
-            ),
-            const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: [
-                ...?storeCard.secondaryFields,
-                ...?storeCard.auxiliaryFields,
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (pass.footer != null)
-              Image.memory(
-                pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                fit: BoxFit.contain,
-                width: 286,
-                height: 15,
+                  ),
+                  Text(
+                    pass.pass.logoText ?? '',
+                    style: passTheme.foregroundTextStyle,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        storeCard.headerFields?.first.label ?? '',
+                        style: passTheme.labelTextStyle,
+                      ),
+                      Text(
+                        storeCard.headerFields?.first.value?.toString() ?? '',
+                        style: passTheme.foregroundTextStyle,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
-              PasskitBarcode(
-                barcode:
-                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+              const SizedBox(height: 16),
+              _AuxiliaryRow(
                 passTheme: passTheme,
+                auxiliaryRow: storeCard.primaryFields ?? [],
               ),
-          ],
+              const SizedBox(height: 16),
+              _AuxiliaryRow(
+                passTheme: passTheme,
+                auxiliaryRow: [
+                  ...?storeCard.secondaryFields,
+                  ...?storeCard.auxiliaryFields,
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (pass.footer != null)
+                Image.memory(
+                  pass.footer!.forCorrectPixelRatio(devicePixelRatio),
+                  fit: BoxFit.contain,
+                  width: 286,
+                  height: 15,
+                ),
+              if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                  null)
+                PasskitBarcode(
+                  barcode:
+                      (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                  passTheme: passTheme,
+                ),
+            ],
+          ),
         ),
       ),
     );

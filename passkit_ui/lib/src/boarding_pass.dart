@@ -28,127 +28,131 @@ class BoardingPass extends StatelessWidget {
     final passTheme = pass.theme;
     final boardingPass = pass.pass.boardingPass!;
 
-    return Card(
-      color: passTheme.backgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                /// The logo image (logo.png) is displayed in the top left corner
-                /// of the pass, next to the logo text. The allotted space is
-                /// 160 x 50 points; in most cases it should be narrower.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 160,
-                    maxHeight: 50,
-                  ),
-                  child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                if (pass.pass.logoText != null)
-                  // Should match the Headline text style from here for medium size devices
-                  // https://developer.apple.com/design/human-interface-guidelines/typography
-                  // Fontweight semibold (w600), font size 16
-                  Text(
-                    pass.pass.logoText!,
-                    style: passTheme.foregroundTextStyle.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+    return PassSize(
+      theme: passTheme,
+      child: Card(
+        color: passTheme.backgroundColor,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  /// The logo image (logo.png) is displayed in the top left corner
+                  /// of the pass, next to the logo text. The allotted space is
+                  /// 160 x 50 points; in most cases it should be narrower.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: 160,
+                      maxHeight: 50,
+                    ),
+                    child: Image.memory(
+                      pass.logo!.forCorrectPixelRatio(devicePixelRatio),
+                      fit: BoxFit.contain,
                     ),
                   ),
-                const Spacer(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
+                  const SizedBox(width: 8),
+                  if (pass.pass.logoText != null)
                     // Should match the Headline text style from here for medium size devices
                     // https://developer.apple.com/design/human-interface-guidelines/typography
                     // Fontweight semibold (w600), font size 16
                     Text(
-                      boardingPass.headerFields!.first.label ?? '',
-                      style: passTheme.labelTextStyle.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      boardingPass.headerFields!.first.value.toString(),
+                      pass.pass.logoText!,
                       style: passTheme.foregroundTextStyle.copyWith(
-                        fontSize: 19,
-                        height: 0.9,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _FromTo(
-                  data: boardingPass.primaryFields!.first,
-                  passTheme: passTheme,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TransitTypeWidget(
-                    transitType: boardingPass.transitType,
-                    width: 40,
-                    height: 40,
-                    color: passTheme.foregroundColor,
+                  const Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Should match the Headline text style from here for medium size devices
+                      // https://developer.apple.com/design/human-interface-guidelines/typography
+                      // Fontweight semibold (w600), font size 16
+                      Text(
+                        boardingPass.headerFields!.first.label ?? '',
+                        style: passTheme.labelTextStyle.copyWith(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        boardingPass.headerFields!.first.value.toString(),
+                        style: passTheme.foregroundTextStyle.copyWith(
+                          fontSize: 19,
+                          height: 0.9,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                _FromTo(
-                  data: boardingPass.primaryFields![1],
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _FromTo(
+                    data: boardingPass.primaryFields!.first,
+                    passTheme: passTheme,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TransitTypeWidget(
+                      transitType: boardingPass.transitType,
+                      width: 40,
+                      height: 40,
+                      color: passTheme.foregroundColor,
+                    ),
+                  ),
+                  _FromTo(
+                    data: boardingPass.primaryFields![1],
+                    passTheme: passTheme,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (boardingPass.auxiliaryFields != null)
+                _AuxiliaryRow(
+                  auxiliaryRow: pass.pass.boardingPass!.auxiliaryFields!,
                   passTheme: passTheme,
-                  crossAxisAlignment: CrossAxisAlignment.end,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (boardingPass.auxiliaryFields != null)
+              const SizedBox(height: 16),
+              // secondary fields
               _AuxiliaryRow(
-                auxiliaryRow: pass.pass.boardingPass!.auxiliaryFields!,
-                passTheme: passTheme,
-              ),
-            const SizedBox(height: 16),
-            // secondary fields
-            _AuxiliaryRow(
-              auxiliaryRow: pass.pass.boardingPass!.secondaryFields!,
-              passTheme: passTheme,
-            ),
-
-            const SizedBox(height: 16),
-            Footer(footer: pass.footer),
-            const SizedBox(height: 2),
-            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
-              PasskitBarcode(
-                barcode:
-                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                auxiliaryRow: pass.pass.boardingPass!.secondaryFields!,
                 passTheme: passTheme,
               ),
 
-            if (pass.icon != null)
-              // TODO(ueman): check whether this matches Apples design guidelines
-              Image.memory(
-                pass.icon!.forCorrectPixelRatio(devicePixelRatio),
-                fit: BoxFit.contain,
-                height: 15,
-              ),
-          ],
+              const SizedBox(height: 16),
+              Footer(footer: pass.footer),
+              const SizedBox(height: 2),
+              if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                  null)
+                PasskitBarcode(
+                  barcode:
+                      (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                  passTheme: passTheme,
+                ),
+
+              if (pass.icon != null)
+                // TODO(ueman): check whether this matches Apples design guidelines
+                Image.memory(
+                  pass.icon!.forCorrectPixelRatio(devicePixelRatio),
+                  fit: BoxFit.contain,
+                  height: 15,
+                ),
+            ],
+          ),
         ),
       ),
     );
