@@ -8,6 +8,7 @@ environment:
   flutter: 3.22.2
 
 dependencies:
+  android_intent_plus: ^5.0.2
   content_resolver: ^0.3.1
   desktop_drop: ^0.4.4
   drift: ^2.11.1

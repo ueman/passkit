@@ -4,8 +4,9 @@ import 'package:app/import_pass/pick_pass.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/router.dart';
 import 'package:app/widgets/app_icon.dart';
+import 'package:app/widgets/pass_list_tile.dart';
 import 'package:desktop_drop/desktop_drop.dart';
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:passkit/passkit.dart';
@@ -20,6 +21,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<PkPass> passes = [];
+
+  PassView passView = PassView.compact;
 
   @override
   void initState() {
@@ -71,30 +74,106 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: passes.isEmpty
-            ? const Center(child: Text('No passes'))
-            : RefreshIndicator(
-                onRefresh: () => loadPasses(),
-                child: ListView.builder(
-                  itemCount: passes.length,
-                  itemBuilder: (context, index) {
-                    final pass = passes[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: InkWell(
-                        child: PkPassWidget(pass: pass),
-                        onTap: () {
-                          router.push(
-                            '/backside',
-                            extra: PassBackSidePageArgs(pass, true),
-                          );
+        body: Column(
+          children: [
+            ViewChooser(
+              selected: passView,
+              onViewChanged: (newViewSelection) {
+                setState(() {
+                  passView = newViewSelection;
+                });
+              },
+            ),
+            passes.isEmpty
+                ? const Center(child: Text('No passes'))
+                : Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () => loadPasses(),
+                      child: ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                        itemCount: passes.length,
+                        itemBuilder: (context, index) {
+                          final pass = passes[index];
+                          if (passView == PassView.compact) {
+                            return PassListTile(
+                              pass: pass,
+                              onTap: () {
+                                router.push(
+                                  '/backside',
+                                  extra: PassBackSidePageArgs(pass, true),
+                                );
+                              },
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: InkWell(
+                                child: PkPassWidget(pass: pass),
+                                onTap: () {
+                                  router.push(
+                                    '/backside',
+                                    extra: PassBackSidePageArgs(pass, true),
+                                  );
+                                },
+                              ),
+                            );
+                          }
                         },
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+                  ),
+          ],
+        ),
       ),
     );
   }
+}
+
+class ViewChooser extends StatelessWidget {
+  const ViewChooser({
+    super.key,
+    required this.onViewChanged,
+    required this.selected,
+  });
+
+  final ValueChanged<PassView> onViewChanged;
+  final PassView selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton<PassView>(
+      segments: const <ButtonSegment<PassView>>[
+        ButtonSegment<PassView>(
+          value: PassView.preview,
+          label: Text('Preview'),
+          icon: Icon(Icons.preview),
+        ),
+        ButtonSegment<PassView>(
+          value: PassView.compact,
+          label: Text('Compact'),
+        ),
+        /*
+        ButtonSegment<PassView>(
+          value: PassView.calendar,
+          label: Text('Calendar'),
+          icon: Icon(Icons.calendar_month),
+        ),
+        */
+      ],
+      selected: {selected},
+      onSelectionChanged: (selection) => onViewChanged(selection.first),
+      multiSelectionEnabled: false,
+    );
+  }
+}
+
+enum PassView {
+  /// Shows a calendar
+  calendar,
+
+  /// Shows a preview of the actual pass
+  preview,
+
+  /// Shows list tiles with a brief description
+  compact,
 }
