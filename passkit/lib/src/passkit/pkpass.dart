@@ -6,6 +6,7 @@ import 'package:passkit/src/passkit/pass_data.dart';
 import 'package:passkit/src/passkit/pass_type.dart';
 import 'package:passkit/src/passkit/personalization.dart';
 import 'package:passkit/src/passkit/pk_pass_image.dart';
+import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
 /// This speeds up decoding.
@@ -47,6 +48,7 @@ class PkPass {
     this.personalizationLogo,
   });
 
+  /// Parses bytes to a [PkPass] file.
   static PkPass fromBytes(final List<int> bytes) {
     Map<String, dynamic>? manifestJson;
     Map<String, dynamic>? passJson;
@@ -93,12 +95,7 @@ class PkPass {
     final background = _loadImage(archive, 'background');
     final personalizationLogo = _loadImage(archive, 'personalizationLogo');
 
-    Map<String, Map<String, String>> availableTranslations = {};
-
-    for (final folder in archive.files.where((element) => !element.isFile)) {
-      final languageName = folder.name.split('.').first;
-      availableTranslations[languageName] = {};
-    }
+    final availableTranslations = _getTranslations(archive);
 
     return PkPass(
       pass: PassData.fromJson(passJson!),
@@ -114,6 +111,7 @@ class PkPass {
       personalization: personalizationJson == null
           ? null
           : Personalization.fromJson(personalizationJson),
+      languageData: availableTranslations,
     );
   }
 
@@ -132,6 +130,25 @@ class PkPass {
           ? null
           : Uint8List.fromList(imageAt3Scale.content as List<int>),
     );
+  }
+
+  static Map<String, Map<String, String>> _getTranslations(Archive archive) {
+    final languageData = <String, Map<String, String>>{};
+
+    // The Archive object doesn't have APIs to work with folders.
+    // Instead the file name contains a `/` indicating the file is within a folder.
+    // Example: `file.name == en.lproj/pass.strings`
+    final translationFiles = archive.files
+        .where((element) => element.isFile)
+        .where((file) => file.name.endsWith('.lproj/pass.strings'));
+
+    for (final languageFile in translationFiles) {
+      final language = languageFile.name.split('.').first;
+
+      languageData[language] =
+          parseStringsFile(languageFile.content as List<int>);
+    }
+    return languageData;
   }
 
   final PassData pass;

@@ -1,3 +1,15 @@
+import 'dart:convert';
+
+/// Parses [content] to a [Map<String, String>] which contains the
+/// key-value-pairs for translations.
+Map<String, String> parseStringsFile(List<int> content) {
+  final string = _stringsFileDecoder.convert(content);
+  return naiveStringsFileParser(string);
+}
+
+// TODO(ueman): `.strings` files should be read as UTF-16, not UTF-8.
+final Converter<List<int>, String> _stringsFileDecoder = const Utf8Decoder();
+
 /// Here's a breakdown of the pattern:
 /// - r'"((?:\"|[^"])*)"': This section matches the key, which is enclosed in
 ///   double quotes. Inside the quotes, it captures any character sequence that
@@ -13,6 +25,8 @@ final _stringsParserRegEx =
 
 /// This method uses a quite naive approach to parse Apples `strings` file
 /// format with a [RegExp]. It doesn't support placeholders.
+///
+/// The returned map has key value pairs.
 ///
 /// See also:
 /// - https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/LoadingResources/Strings/Strings.html
