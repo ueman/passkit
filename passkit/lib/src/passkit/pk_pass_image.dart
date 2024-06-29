@@ -19,7 +19,7 @@ class PkPassImage {
   }
 
   Uint8List fromMultiplier(int multiplier) {
-    assert(multiplier == 1 || multiplier == 2 || multiplier == 3);
+    multiplier = multiplier.clamp(1, 3);
     return switch (multiplier) {
       1 => (image1 ?? image2 ?? image3)!,
       2 => (image2 ?? image3 ?? image1)!,

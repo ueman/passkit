@@ -24,87 +24,91 @@ class Coupon extends StatelessWidget {
     final passTheme = pass.theme;
     final coupon = pass.pass.coupon!;
 
-    return Card(
-      color: passTheme.backgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /// The logo image (logo.png) is displayed in the top left corner
-                /// of the pass, next to the logo text. The allotted space is
-                /// 160 x 50 points; in most cases it should be narrower.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 160,
-                    maxHeight: 50,
-                  ),
-                  child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Text(
-                  pass.pass.logoText!,
-                  style: passTheme.foregroundTextStyle,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      coupon.headerFields?.first.label ?? '',
-                      style: passTheme.labelTextStyle,
+    return PassSize(
+      theme: passTheme,
+      child: Card(
+        color: passTheme.backgroundColor,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  /// The logo image (logo.png) is displayed in the top left corner
+                  /// of the pass, next to the logo text. The allotted space is
+                  /// 160 x 50 points; in most cases it should be narrower.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: 160,
+                      maxHeight: 50,
                     ),
-                    Text(
-                      coupon.headerFields?.first.value?.toString() ?? '',
-                      style: passTheme.foregroundTextStyle,
+                    child: Image.memory(
+                      pass.logo!.forCorrectPixelRatio(devicePixelRatio),
+                      fit: BoxFit.contain,
                     ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Stack(
-              children: [
-                if (pass.strip != null)
-                  Image.memory(
-                    pass.strip!.forCorrectPixelRatio(devicePixelRatio),
                   ),
-                _AuxiliaryRow(
-                  passTheme: passTheme,
-                  auxiliaryRow: coupon.primaryFields!,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: [
-                ...?coupon.secondaryFields,
-                ...?coupon.auxiliaryFields,
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (pass.footer != null)
-              Image.memory(
-                pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                fit: BoxFit.contain,
-                width: 286,
-                height: 15,
+                  Text(
+                    pass.pass.logoText!,
+                    style: passTheme.foregroundTextStyle,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        coupon.headerFields?.first.label ?? '',
+                        style: passTheme.labelTextStyle,
+                      ),
+                      Text(
+                        coupon.headerFields?.first.value?.toString() ?? '',
+                        style: passTheme.foregroundTextStyle,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
-              PasskitBarcode(
-                barcode:
-                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+              const SizedBox(height: 16),
+              Stack(
+                children: [
+                  if (pass.strip != null)
+                    Image.memory(
+                      pass.strip!.forCorrectPixelRatio(devicePixelRatio),
+                    ),
+                  _AuxiliaryRow(
+                    passTheme: passTheme,
+                    auxiliaryRow: coupon.primaryFields!,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _AuxiliaryRow(
                 passTheme: passTheme,
+                auxiliaryRow: [
+                  ...?coupon.secondaryFields,
+                  ...?coupon.auxiliaryFields,
+                ],
               ),
-          ],
+              const SizedBox(height: 16),
+              if (pass.footer != null)
+                Image.memory(
+                  pass.footer!.forCorrectPixelRatio(devicePixelRatio),
+                  fit: BoxFit.contain,
+                  width: 286,
+                  height: 15,
+                ),
+              if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                  null)
+                PasskitBarcode(
+                  barcode:
+                      (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                  passTheme: passTheme,
+                ),
+            ],
+          ),
         ),
       ),
     );
