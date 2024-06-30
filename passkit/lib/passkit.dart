@@ -15,3 +15,6 @@ export 'src/passkit/pkpass.dart';
 export 'src/passkit/semantic_tag_type.dart';
 export 'src/passkit/semantics.dart';
 export 'src/webservice/passkit_web_client.dart';
+export 'src/webservice/passkit_web_client_exceptions.dart';
+export 'src/webservice/personalization_dictionary.dart';
+export 'src/webservice/serial_numbers.dart';

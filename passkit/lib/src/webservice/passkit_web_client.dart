@@ -4,9 +4,6 @@ import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:passkit/passkit.dart';
-import 'package:passkit/src/webservice/passkit_web_client_exceptions.dart';
-import 'package:passkit/src/webservice/personalization_dictionary.dart';
-import 'package:passkit/src/webservice/serial_numbers.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
 /// This speeds up decoding.
