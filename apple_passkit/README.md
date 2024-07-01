@@ -12,7 +12,21 @@
 
 This is a Flutter binding for [Apple's PassKit](https://developer.apple.com/documentation/passkit).
 
-This library allows you to add and and read `PkPass` files.
+This library allows you to add `PkPass` files to the users' wallet.
+It also allows you to read available `PkPass` files in your users' wallet.
+
+Do you need to deal with `PkPass` files in your code, consider using 
+[`passkit`](https://pub.dev/packages/passkit) and [`passkit_ui`](https://pub.dev/packages/passkit_ui) instead. Those do not depend on iOS/macOS and are mostly cross-platform.
+
+## What is PassKit?
+
+> Passes are a digital representation of information that might otherwise be printed on small pieces of paper or plastic. They let users take an action in the physical world. Passes can contain images and a barcode, and you can update passes using push notifications on iOS.
+
+A PkPass file looks something like this when rendered:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ueman/passkit/master/apple_passkit/assets/boarding_pass.png" height="400"/>
+</p>
 
 ## How to use it
 
@@ -36,3 +50,13 @@ To view all methods, take a look at the [API docs](https://pub.dev/documentation
 Setup your Xcode project as described in the [documentation](https://help.apple.com/xcode/mac/current/#/devfc3f493bb).
 
 After that, use `await ApplePassKit().passes()` to load your installed passes.
+
+## Contributors
+
+Thanks a lot to all the awesome contributors:
+
+<a href="https://github.com/ueman/passkit/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ueman/passkit" />
+</a>
+
+Contribute to this library, and you'll show up too.
