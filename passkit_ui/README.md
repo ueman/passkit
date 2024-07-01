@@ -66,6 +66,10 @@ Thanks a lot to all the awesome contributors:
 
 Contribute to this library, and you'll show up too.
 
+We encourage you to contribute to this library.
+A good starting point is to look at these [good first issues](https://github.com/ueman/passkit/issues?q=is%3Aopen+is%3Aissue+label%3A%22package%3A+passkit_ui%22+label%3A%22good+first+issue%22). Take a look at [these issues](https://github.com/ueman/passkit/issues?q=is%3Aopen+is%3Aissue+label%3A%22package%3A+passkit_ui%22)
+if you're up for a challenge.
+
 # Development related docs
 
 Design docs: 
