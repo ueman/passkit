@@ -1,0 +1,60 @@
+on:
+  workflow_dispatch:
+    inputs:
+      buildNumber:
+        description: 'Build Number'
+        required: true
+        type: string
+      versionName:
+        description: 'Version Name'
+        required: true
+        type: string
+
+name: Test, Build and Release apk
+
+jobs:
+  build:
+    defaults:
+        run:
+          working-directory: ./app
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        flutter-version-file: app/pubspec.yaml # path to pubspec.yaml
+    # write key.properties
+    #- run: echo "$KEY_PROPERTIES" > android/key.properties
+    #  env:
+    #    KEY_PROPERTIES: ${{ secrets.key_properties }}
+    # write key.keystore
+    #- run: mkdir android/key
+    #- run: echo "$KEY_KEYSTORE" | base64 --decode > android/key/key.keystore
+    #  env:
+    #    KEY_KEYSTORE: ${{ secrets.key_keystore }}
+    - run: flutter pub get
+    - run: flutter analyze .
+    #- run: flutter build apk --build-number $GITHUB_RUN_NUMBER
+    - run: flutter build apk --build-number ${{ inputs.buildNumber }} --build-name ${{ inputs.versionName }}
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
+    - name: Upload Release APK
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ./app/build/app/outputs/apk/release/app-release.apk
+        asset_name: cards.apk
+        asset_content_type: application/vnd.android.package-archive
