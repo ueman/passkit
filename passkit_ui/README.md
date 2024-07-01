@@ -11,12 +11,27 @@
 > 🚧 API is subject to change! 🚧
 > Not all pass types are yet supported. Not ready for production use.
 
-This package contains widgets to visualize `PkPass` files with the help of [`passkit`](https://pub.dev/packages/passkit). `passkit` is a pure Dart package, which also works on servers.
+## What is PassKit?
 
-This package does intentionally not support showing the "backside" of a `PkPass` file, since there are a lot of features that depend on application logic.
-Those include among other things: sharing a pass, deleting a pass, having the ability to open URLs, emails and phone numbers.
+> Passes are a digital representation of information that might otherwise be printed on small pieces of paper or plastic. They let users take an action in the physical world. Passes can contain images and a barcode, and you can update passes using push notifications on iOS.
+>
+> This technology consists of three main components:
+> - A package format for creating passes.
+> - A web service API for updating passes, implemented on your server.
+> - An API used by your apps to interact with the user’s pass library.
 
-Want to work with Apple's PassKit APIs? Consider using [`apple_passkit`](https://pub.dev/packages/apple_passkit).
+A PkPass file looks something like this when rendered:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ueman/passkit/master/passkit_ui/assets/boarding_pass.png" height="400"/>
+</p>
+
+This package contains widgets to visualize `PkPass` files as seen above with the help of [`passkit`](https://pub.dev/packages/passkit). `passkit` is a pure Dart package, which works on servers, too.
+
+This package does intentionally not support showing the "backside" of a `PkPass` file, since that requires a lot of features that depend on application logic.
+Those include, among other things: sharing a pass, deleting a pass, having the ability to open URLs, emails and phone numbers.
+
+You want to work with Apple's native PassKit APIs? Consider using [`apple_passkit`](https://pub.dev/packages/apple_passkit) in addition to this.
 
 ## How to use it?
 
