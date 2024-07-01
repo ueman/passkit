@@ -18,7 +18,7 @@ class PassListTile extends StatelessWidget {
       leading: icon == null ? null : Image.memory(icon),
       title: Text(pass.pass.description),
       subtitle: Text(pass.pass.organizationName),
-      trailing: PkPassWidget(pass: pass),
+      //trailing: PkPassWidget(pass: pass),
       onTap: onTap,
     );
   }
