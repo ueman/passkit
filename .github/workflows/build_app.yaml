@@ -51,8 +51,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: Release ${{ inputs.versionName }}-${{ inputs.buildNumber }}
-        tag_name: ${{ inputs.buildNumber }}
+        name: App Release ${{ inputs.versionName }}-${{ inputs.buildNumber }}
+        tag_name: app-${{ inputs.buildNumber }}
         draft: false
         prerelease: true
         files: ./app/build/app/outputs/apk/release/app-release.apk
