@@ -14,6 +14,8 @@
 
 PassKit allows you to work with Apple's PkPass files. This is a pure Dart library. No Flutter needed.
 
+In order to show PassKit files in Flutter, use the [`passkit_ui`](https://pub.dev/packages/passkit_ui) package, which includes ready made widgets.
+
 Want to work with Apple's PassKit APIs? Consider using [`apple_passkit`](https://pub.dev/packages/apple_passkit).
 
 ## How to read a PassKit file?
@@ -58,3 +60,13 @@ Feel free to submit PRs for them
 ## Bugs and parsing issues
 
 If you hit an issue with parsing, please create an issue and attach the PkPass (if possible)
+
+## Contributors
+
+Thanks a lot to all the awesome contributors:
+
+<a href="https://github.com/ueman/passkit/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ueman/passkit" />
+</a>
+
+Contribute to this library, and you'll show up too.
