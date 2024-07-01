@@ -23,7 +23,7 @@
 A PkPass file looks something like this when rendered:
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ueman/passkit/master/passkit_ui/assets/boarding_pass.png" height="400"/>
+  <img src="https://raw.githubusercontent.com/ueman/passkit/master/passkit_ui/assets/boarding_pass.webp" />
 </p>
 
 This package contains widgets to visualize `PkPass` files as seen above with the help of [`passkit`](https://pub.dev/packages/passkit). `passkit` is a pure Dart package, which works on servers, too.
@@ -55,6 +55,13 @@ final pkPass = await loadPass('assets/coupon.pkpass')
 // Then in your widget, use the `PkPassWidget` and pass the PkPass to it
 Center(child: PkPassWidget(pass: pkPass))
 ```
+
+## Apple Wallet PassKit docs
+
+- [Wallet Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/wallet)
+- [Wallet Passes](https://developer.apple.com/documentation/walletpasses/)
+- [Loyalty passes](https://developer.apple.com/wallet/loyalty-passes/)
+- [Wallet Developer Guide](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195-CH1-SW1)
 
 ## Contributors
 

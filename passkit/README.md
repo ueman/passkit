@@ -29,10 +29,8 @@ Want to work with Apple's native PassKit APIs? Consider using [`apple_passkit`](
 
 A PkPass file looks something like this when rendered:
 
-<!-- ![](https://raw.githubusercontent.com/ueman/passkit/master/passkit/assets/boarding_pass.png) -->
-
 <p align="center">
-  <img src="assets/boarding_pass.png" height="400"/>
+  <img src="https://raw.githubusercontent.com/ueman/passkit/master/passkit/assets/boarding_pass.webp"/>
 </p>
 
 ## How to read a PassKit file?
@@ -73,6 +71,13 @@ Feel free to submit PRs for them
     - .strings file format description https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/LoadingResources/Strings/Strings.html
 - Passkit creation: https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54 (as seen at the bottom of the page)
 - checksum verification
+
+## Apple Wallet PassKit docs
+
+- [Wallet Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/wallet)
+- [Wallet Passes](https://developer.apple.com/documentation/walletpasses/)
+- [Loyalty passes](https://developer.apple.com/wallet/loyalty-passes/)
+- [Wallet Developer Guide](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195-CH1-SW1)
 
 ## Bugs and parsing issues
 

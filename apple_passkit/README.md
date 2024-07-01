@@ -25,7 +25,7 @@ Do you need to deal with `PkPass` files in your code, consider using
 A PkPass file looks something like this when rendered:
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ueman/passkit/master/apple_passkit/assets/boarding_pass.png" height="400"/>
+  <img src="https://raw.githubusercontent.com/ueman/passkit/master/apple_passkit/assets/boarding_pass.webp"/>
 </p>
 
 ## How to use it
@@ -50,6 +50,13 @@ To view all methods, take a look at the [API docs](https://pub.dev/documentation
 Setup your Xcode project as described in the [documentation](https://help.apple.com/xcode/mac/current/#/devfc3f493bb).
 
 After that, use `await ApplePassKit().passes()` to load your installed passes.
+
+## Apple Wallet PassKit docs
+
+- [Wallet Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/wallet)
+- [Wallet Passes](https://developer.apple.com/documentation/walletpasses/)
+- [Loyalty passes](https://developer.apple.com/wallet/loyalty-passes/)
+- [Wallet Developer Guide](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195-CH1-SW1)
 
 ## Contributors
 
