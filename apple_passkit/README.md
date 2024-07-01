@@ -18,6 +18,16 @@ It also allows you to read available `PkPass` files in your users' wallet.
 Do you need to deal with `PkPass` files in your code, consider using 
 [`passkit`](https://pub.dev/packages/passkit) and [`passkit_ui`](https://pub.dev/packages/passkit_ui) instead. Those do not depend on iOS/macOS and are mostly cross-platform.
 
+## What is PassKit?
+
+> Passes are a digital representation of information that might otherwise be printed on small pieces of paper or plastic. They let users take an action in the physical world. Passes can contain images and a barcode, and you can update passes using push notifications on iOS.
+
+A PkPass file looks something like this when rendered:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ueman/passkit/master/apple_passkit/assets/boarding_pass.png" height="400"/>
+</p>
+
 ## How to use it
 
 ```dart
