@@ -8,7 +8,7 @@ topics:
   - pkpass
 screenshots:
   - description: "Screenshot of a PkPass of the boarding pass type"
-    path: assets/boarding_pass.png
+    path: assets/boarding_pass.webp
 
 environment:
   sdk: ">=3.4.3 <4.0.0"
