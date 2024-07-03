@@ -23,7 +23,11 @@ class FieldDict {
     this.ignoresTimeZone,
     this.isRelative,
     this.semantics,
-  });
+    this.row,
+  }) : assert(
+          row == null || row == 0 || row == 1,
+          'Allowed values for row are null, 0 and 1',
+        );
 
   /// Optional. Attributed value of the field.
   /// The value may contain HTML markup for links. Only the <a> tag and its href
@@ -119,6 +123,14 @@ class FieldDict {
   /// An object that contains machine-readable metadata the system uses to offer
   /// a pass and suggest related actions.
   final Semantics? semantics;
+
+  /// A number you use to add a row to the auxiliary field in an event ticket
+  /// pass type. Set the value to 1 to add an auxiliary row.
+  /// Each row displays up to four fields.
+  ///
+  /// Possible Values: 0, 1
+  /// This field is only valid for event pass types.
+  final int? row;
 }
 
 enum PkTextAlignment {

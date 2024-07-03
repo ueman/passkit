@@ -27,6 +27,7 @@ FieldDict _$FieldDictFromJson(Map<String, dynamic> json) => FieldDict(
       semantics: json['semantics'] == null
           ? null
           : Semantics.fromJson(json['semantics'] as Map<String, dynamic>),
+      row: (json['row'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$FieldDictToJson(FieldDict instance) => <String, dynamic>{
@@ -46,6 +47,7 @@ Map<String, dynamic> _$FieldDictToJson(FieldDict instance) => <String, dynamic>{
       'ignoresTimeZone': instance.ignoresTimeZone,
       'isRelative': instance.isRelative,
       'semantics': instance.semantics,
+      'row': instance.row,
     };
 
 const _$DataDetectorTypesEnumMap = {
