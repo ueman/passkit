@@ -10,5 +10,6 @@ void main() async {
 
   if (pkPass.isWebServiceAvailable) {
     final updatedPass = PassKitWebClient().getLatestVersion(pkPass);
+    print(updatedPass);
   }
 }
