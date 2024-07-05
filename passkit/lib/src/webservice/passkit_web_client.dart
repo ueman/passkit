@@ -32,8 +32,7 @@ class PassKitWebClient {
   ///
   /// If [modifiedSince] is present, only updates after [modifiedSince] will be
   /// considered.
-  // TODO(ueman): This could return a PkPass object instead
-  Future<Uint8List?> getLatestVersion(
+  Future<PkPass?> getLatestVersion(
     PkPass pass, {
     DateTime? modifiedSince,
   }) async {
@@ -58,12 +57,17 @@ class PassKitWebClient {
       },
     );
 
-    return switch (response.statusCode) {
+    final bytes = switch (response.statusCode) {
       200 => response.bodyBytes,
       304 => null,
       401 => throw PassKitWebServiceAuthenticationError(),
       _ => throw PassKitWebServiceUnrecognizedStatusCode(response.statusCode),
     };
+
+    if (bytes != null) {
+      return PkPass.fromBytes(bytes);
+    }
+    return null;
   }
 
   /// Record a message on the server.

@@ -25,6 +25,19 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      description: Which package has a bug?
+      options:
+        - passkit
+        - passkit_ui
+        - apple_passkit
+        - (app)
+    validations:
+      required: true
+
   - type: textarea
     id: repro
     attributes:
@@ -51,3 +64,11 @@ body:
       description: Logs? Screenshots? Yes, please.
     validations:
       required: true
+
+  - type: textarea
+    id: passkit_file
+    attributes:
+      label: Upload ".pkpass" or ".pkpasses" file
+      description: If possible & relevant, please attach the non-working file. Change the file extension to zip and drop it into this field.
+    validations:
+      required: false

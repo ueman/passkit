@@ -1,0 +1,58 @@
+on:
+  workflow_dispatch:
+    inputs:
+      buildNumber:
+        description: 'Build Number'
+        required: true
+        type: string
+      versionName:
+        description: 'Version Name'
+        required: true
+        type: string
+
+name: Test, Build and Release apk
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    defaults:
+        run:
+          working-directory: ./app
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: 'temurin'
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        flutter-version-file: app/pubspec.yaml # path to pubspec.yaml
+    # write key.properties
+    #- run: echo "$KEY_PROPERTIES" > android/key.properties
+    #  env:
+    #    KEY_PROPERTIES: ${{ secrets.key_properties }}
+    # write key.keystore
+    #- run: mkdir android/key
+    #- run: echo "$KEY_KEYSTORE" | base64 --decode > android/key/key.keystore
+    #  env:
+    #    KEY_KEYSTORE: ${{ secrets.key_keystore }}
+    - run: flutter pub get
+    - run: flutter analyze .
+    #- run: flutter build apk --build-number $GITHUB_RUN_NUMBER
+    - run: flutter build apk --build-number ${{ inputs.buildNumber }} --build-name ${{ inputs.versionName }}
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: App Release ${{ inputs.versionName }}-${{ inputs.buildNumber }}
+        tag_name: app-${{ inputs.buildNumber }}
+        draft: false
+        prerelease: true
+        files: ./app/build/app/outputs/apk/release/app-release.apk

@@ -11,10 +11,71 @@
 > 🚧 API is subject to change! 🚧
 > Not all pass types are yet supported. Not ready for production use.
 
-Package with widgets to visualize `PkPass` files with the help of [`passkit`](https://pub.dev/packages/passkit).
+## What is PassKit?
 
-This package does intentionally not support showing the "backside" of a `PkPass` file, since there are a lot of features that depend on the application logic.
-Those include among other things: sharing a pass, deleting a pass, having the ability to open URLs, emails and phone numbers.
+> Passes are a digital representation of information that might otherwise be printed on small pieces of paper or plastic. They let users take an action in the physical world. Passes can contain images and a barcode, and you can update passes using push notifications on iOS.
+>
+> This technology consists of three main components:
+> - A package format for creating passes.
+> - A web service API for updating passes, implemented on your server.
+> - An API used by your apps to interact with the user’s pass library.
+
+A PkPass file looks something like this when rendered:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ueman/passkit/master/passkit_ui/assets/boarding_pass.webp" />
+</p>
+
+This package contains widgets to visualize `PkPass` files as seen above with the help of [`passkit`](https://pub.dev/packages/passkit). `passkit` is a pure Dart package, which works on servers, too.
+
+This package does intentionally not support showing the "backside" of a `PkPass` file, since that requires a lot of features that depend on application logic.
+Those include, among other things: sharing a pass, deleting a pass, having the ability to open URLs, emails and phone numbers.
+
+You want to work with Apple's native PassKit APIs? Consider using [`apple_passkit`](https://pub.dev/packages/apple_passkit) in addition to this.
+
+## How to use it?
+
+Add the `passkit` and `passkit_ui` packages to your `pubspec.yaml` file
+
+```yaml
+dependencies:
+  passkit: any # Use the latest available version
+  passkit_ui: any # Use the latest available version
+```
+
+Use it in your code:
+
+```dart
+import 'package:passkit/passkit.dart';
+import 'package:passkit_ui/passkit_ui.dart';
+
+// First load the PkPass file somewhere
+final pkPass = await loadPass('assets/coupon.pkpass')
+
+// Then in your widget, use the `PkPassWidget` and pass the PkPass to it
+Center(child: PkPassWidget(pass: pkPass))
+```
+
+## Apple Wallet PassKit docs
+
+- [Wallet Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/wallet)
+- [Wallet Passes](https://developer.apple.com/documentation/walletpasses/)
+- [Loyalty passes](https://developer.apple.com/wallet/loyalty-passes/)
+- [Wallet Developer Guide](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195-CH1-SW1)
+
+## Contributors
+
+Thanks a lot to all the awesome contributors:
+
+<a href="https://github.com/ueman/passkit/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ueman/passkit" />
+</a>
+
+Contribute to this library, and you'll show up too.
+
+We encourage you to contribute to this library.
+A good starting point is to look at these [good first issues](https://github.com/ueman/passkit/issues?q=is%3Aopen+is%3Aissue+label%3A%22package%3A+passkit_ui%22+label%3A%22good+first+issue%22). Take a look at [these issues](https://github.com/ueman/passkit/issues?q=is%3Aopen+is%3Aissue+label%3A%22package%3A+passkit_ui%22)
+if you're up for a challenge.
 
 # Development related docs
 
@@ -40,4 +101,3 @@ The pass layout allots a certain area on the front of the pass for each image. I
 - The thumbnail image (`thumbnail.png`) displayed next to the fields on the front of the pass. The allotted space is 90 x 90 points. The aspect ratio should be in the range of 2:3 to 3:2, otherwise the image is cropped.
 
 > [!NOTE ]The dimensions given above are all in points. On a non-Retina display, each point equals exactly 1 pixel. On a Retina display, there are 2 or 3 pixels per point, depending on the device. To support all screen sizes and resolutions, provide the original, @2x, and @3x versions of your art.
-
