@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:passkit/src/passkit/exceptions.dart';
 import 'package:passkit/src/passkit/pass_data.dart';
 import 'package:passkit/src/passkit/pass_type.dart';
 import 'package:passkit/src/passkit/personalization.dart';
@@ -10,7 +11,9 @@ import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
 /// This speeds up decoding.
-/// See https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
+/// See
+/// - https://api.dart.dev/stable/3.4.4/dart-convert/Utf8Decoder-class.html
+/// - https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
 final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
 
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Reference/PassKit_Bundle/Chapters/Introduction.html
@@ -32,7 +35,6 @@ final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
 /// manifest.json
 /// pass.json
 /// signature
-// TODO(ueman): Provide an async method for this.
 class PkPass {
   PkPass({
     required this.pass,
@@ -50,69 +52,38 @@ class PkPass {
   });
 
   /// Parses bytes to a [PkPass] file.
+  // TODO(ueman): Provide an async method for this.
   static PkPass fromBytes(final List<int> bytes) {
-    Map<String, dynamic>? manifestJson;
-    Map<String, dynamic>? passJson;
-    Map<String, dynamic>? personalizationJson;
+    if (bytes.isEmpty) {
+      throw EmptyBytesException();
+    }
 
     ZipDecoder decoder = ZipDecoder();
     final archive = decoder.decodeBytes(bytes);
 
-    // Manifest
-    final manifestFile = archive.findFile('manifest.json');
-    if (manifestFile != null) {
-      manifestJson = _utf8JsonDecoder.convert(manifestFile.content as List<int>)
-          as Map<String, dynamic>;
-    } else {
-      // TODO(ueman): throw
-    }
+    final manifest = archive.readManifest();
 
-    // pass.json
-    final passFile = archive.findFile('pass.json');
-    if (passFile != null) {
-      passJson = _utf8JsonDecoder.convert(passFile.content as List<int>)
-          as Map<String, dynamic>;
-    } else {
-      // TODO(ueman): throw
-    }
-
-    // pass.json
-    final personalizationFile = archive.findFile('personalization.json');
-    if (personalizationFile != null) {
-      personalizationJson =
-          _utf8JsonDecoder.convert(personalizationFile.content as List<int>)
-              as Map<String, dynamic>;
-    }
-
-    // images
-    // TODO(ueman): Images can be localized, too
-    //              Maybe it's better to have an on-demand API, something like
-    //              PkPass().getLogo(resolution: 3, languageCode: 'en_EN').
-    final logo = _loadImage(archive, 'logo');
-    final icon = _loadImage(archive, 'icon');
-    final footer = _loadImage(archive, 'footer');
-    final thumbnail = _loadImage(archive, 'thumbnail');
-    final strip = _loadImage(archive, 'strip');
-    final background = _loadImage(archive, 'background');
-    final personalizationLogo = _loadImage(archive, 'personalizationLogo');
-
-    final availableTranslations = _getTranslations(archive);
+    // TODO(ueman): Do checksum verification here
 
     return PkPass(
-      pass: PassData.fromJson(passJson!),
-      manifest: manifestJson!,
-      logo: logo,
-      icon: icon,
-      footer: footer,
-      thumbnail: thumbnail,
+      // data
+      pass: archive.readPass(),
+      manifest: manifest,
+      personalization: archive.readPersonalization(),
+      languageData: archive.getTranslations(),
+      // images
+      // TODO(ueman): Images can be localized, too
+      //              Maybe it's better to have an on-demand API, something like
+      //              PkPass().getLogo(resolution: 3, languageCode: 'en_EN').
+      logo: archive.loadImage('logo'),
+      icon: archive.loadImage('icon'),
+      footer: archive.loadImage('footer'),
+      thumbnail: archive.loadImage('thumbnail'),
+      strip: archive.loadImage('strip'),
+      background: archive.loadImage('background'),
+      personalizationLogo: archive.loadImage('personalizationLogo'),
+      // source
       sourceData: bytes,
-      strip: strip,
-      background: background,
-      personalizationLogo: personalizationLogo,
-      personalization: personalizationJson == null
-          ? null
-          : Personalization.fromJson(personalizationJson),
-      languageData: availableTranslations,
     );
   }
 
@@ -125,6 +96,9 @@ class PkPass {
   // gracefully fall back to just parsing the PkPass file.
   // TODO(ueman): Provide an async method for this.
   static List<PkPass> passesFromBytes(final List<int> bytes) {
+    if (bytes.isEmpty) {
+      throw EmptyBytesException();
+    }
     ZipDecoder decoder = ZipDecoder();
     final archive = decoder.decodeBytes(bytes);
     final pkPasses =
@@ -134,42 +108,14 @@ class PkPass {
         .toList();
   }
 
-  static PkPassImage? _loadImage(Archive archive, String name) {
-    final imageAt1Scale = archive.findFile('$name.png')?.content as List<int>?;
-    final imageAt2Scale =
-        archive.findFile('$name@2.png')?.content as List<int>?;
-    final imageAt3Scale =
-        archive.findFile('$name@3.png')?.content as List<int>?;
-    return PkPassImage.fromImages(
-      image1: imageAt1Scale == null ? null : Uint8List.fromList(imageAt1Scale),
-      image2: imageAt2Scale == null ? null : Uint8List.fromList(imageAt2Scale),
-      image3: imageAt3Scale == null ? null : Uint8List.fromList(imageAt3Scale),
-    );
-  }
-
-  static Map<String, Map<String, String>> _getTranslations(Archive archive) {
-    final languageData = <String, Map<String, String>>{};
-
-    // The Archive object doesn't have APIs to work with folders.
-    // Instead the file name contains a `/` indicating the file is within a folder.
-    // Example: `file.name == en.lproj/pass.strings`
-    final translationFiles = archive.files
-        .where((element) => element.isFile)
-        .where((file) => file.name.endsWith('.lproj/pass.strings'));
-
-    for (final languageFile in translationFiles) {
-      final language = languageFile.name.split('.').first;
-
-      languageData[language] =
-          parseStringsFile(languageFile.content as List<int>);
-    }
-    return languageData;
-  }
-
+  /// Data of the PkPass
   final PassData pass;
 
+  /// Mapping of files to their respective checksums. Typically not relevant for
+  /// users of this package.
   final Map<String, dynamic> manifest;
 
+  /// The [PassType] of this PkPass.
   PassType get type {
     if (pass.boardingPass != null) {
       return PassType.boardingPass;
@@ -223,12 +169,90 @@ class PkPass {
   /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/PassPersonalization.html#//apple_ref/doc/uid/TP40012195-CH12-SW2
   final Personalization? personalization;
 
-  /// List of available languages
+  /// List of available languages. Each value is a language identifier
   Iterable<String> get availableLanguages => languageData?.keys ?? [];
 
+  /// Translations for this PkPass.
+  /// Consists of a mapping of language identifier to translation key-value
+  /// pairs.
   final Map<String, Map<String, dynamic>>? languageData;
 
+  /// The bytes of this PkPass
   final List<int> sourceData;
 
+  /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => pass.webServiceURL != null;
+}
+
+// This is intentionally not exposed to keep this an implementation detail.
+// Tests should be written against the PkPass class directly.
+extension on Archive {
+  List<int>? findBytesForFile(String fileName) =>
+      findFile(fileName)?.content as List<int>?;
+
+  Uint8List? findUint8ListForFile(String fileName) {
+    final data = findBytesForFile(fileName);
+    return data == null ? null : Uint8List.fromList(data);
+  }
+
+  Map<String, dynamic>? findFileAndReadAsJson(String fileName) {
+    final bytes = findBytesForFile(fileName);
+    if (bytes == null) {
+      return null;
+    }
+    return _utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
+  }
+
+  PkPassImage? loadImage(String name) {
+    return PkPassImage.fromImages(
+      image1: findUint8ListForFile('$name.png'),
+      image2: findUint8ListForFile('$name@2.png'),
+      image3: findUint8ListForFile('$name@3.png'),
+    );
+  }
+
+  Map<String, Map<String, String>> getTranslations() {
+    final languageData = <String, Map<String, String>>{};
+
+    // The Archive object doesn't have APIs to work with folders.
+    // Instead the file name contains a `/` indicating the file is within a folder.
+    // Example: `file.name == en.lproj/pass.strings`
+    final translationFiles = files
+        .where((element) => element.isFile)
+        .where((file) => file.name.endsWith('.lproj/pass.strings'));
+
+    for (final languageFile in translationFiles) {
+      final language = languageFile.name.split('.').first;
+
+      languageData[language] =
+          parseStringsFile(languageFile.content as List<int>);
+    }
+    return languageData;
+  }
+
+  PassData readPass() {
+    final passJson = findFileAndReadAsJson('pass.json');
+    if (passJson != null) {
+      return PassData.fromJson(passJson);
+    } else {
+      throw MissingPassJsonException();
+    }
+  }
+
+  Map<String, dynamic> readManifest() {
+    final manifestJson = findFileAndReadAsJson('manifest.json');
+    if (manifestJson != null) {
+      return manifestJson;
+    } else {
+      throw MissingManifestJsonException();
+    }
+  }
+
+  Personalization? readPersonalization() {
+    final personalizationFile = findFileAndReadAsJson('personalization.json');
+    if (personalizationFile != null) {
+      return Personalization.fromJson(personalizationFile);
+    }
+    return null;
+  }
 }
