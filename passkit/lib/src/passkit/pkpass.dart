@@ -31,6 +31,7 @@ final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
 /// manifest.json
 /// pass.json
 /// signature
+// TODO(ueman): Provide an async method for this.
 class PkPass {
   PkPass({
     required this.pass,
@@ -117,20 +118,34 @@ class PkPass {
     );
   }
 
+  /// Parses a `.pkpasses` to a list of [PkPass]es.
+  /// The mimetype of that file is `application/vnd.apple.pkpasses`.
+  /// A `.pkpasses` file cna contain up to ten [PkPass]es.
+  /// Read more at:
+  /// - https://developer.apple.com/documentation/walletpasses/distributing_and_updating_a_pass#3793284
+  // TODO(ueman): Detect whether it's maybe just a single pass, and then
+  // gracefully fall back to just parsing the PkPass file.
+  // TODO(ueman): Provide an async method for this.
+  static List<PkPass> passesFromBytes(final List<int> bytes) {
+    ZipDecoder decoder = ZipDecoder();
+    final archive = decoder.decodeBytes(bytes);
+    final pkPasses =
+        archive.files.where((file) => file.name.endsWith('.pkpass')).toList();
+    return pkPasses
+        .map((file) => fromBytes(file.content as List<int>))
+        .toList();
+  }
+
   static PkPassImage? _loadImage(Archive archive, String name) {
-    final imageAt1Scale = archive.findFile('$name.png');
-    final imageAt2Scale = archive.findFile('$name@2.png');
-    final imageAt3Scale = archive.findFile('$name@3.png');
+    final imageAt1Scale = archive.findFile('$name.png')?.content as List<int>?;
+    final imageAt2Scale =
+        archive.findFile('$name@2.png')?.content as List<int>?;
+    final imageAt3Scale =
+        archive.findFile('$name@3.png')?.content as List<int>?;
     return PkPassImage.fromImages(
-      image1: imageAt1Scale == null
-          ? null
-          : Uint8List.fromList(imageAt1Scale.content as List<int>),
-      image2: imageAt2Scale == null
-          ? null
-          : Uint8List.fromList(imageAt2Scale.content as List<int>),
-      image3: imageAt3Scale == null
-          ? null
-          : Uint8List.fromList(imageAt3Scale.content as List<int>),
+      image1: imageAt1Scale == null ? null : Uint8List.fromList(imageAt1Scale),
+      image2: imageAt2Scale == null ? null : Uint8List.fromList(imageAt2Scale),
+      image3: imageAt3Scale == null ? null : Uint8List.fromList(imageAt3Scale),
     );
   }
 
