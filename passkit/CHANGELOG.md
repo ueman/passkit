@@ -1,3 +1,15 @@
+## 0.0.3
+
+- Support for localization parsing. This is an experimental feature.
+- Support for semantic properties.
+- Support for reading `.pkpasses` files. These are bundles of `.pkpass` files.
+- Updating a pass via the web service returns an instance of a `PkPass` object instead of a `UInt8List`. This is a breaking change.
+- Improved readme
+- Added an example.
+- Add missing `row` attribute on auxiliary rows.
+- Add personalization fields.
+- It's no longer possible to request an image resolution lower than 1 or higher than 3.
+
 ## 0.0.2
 
 - Make package with latest dependencies
