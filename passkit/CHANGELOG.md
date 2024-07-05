@@ -1,5 +1,7 @@
 ## 0.0.4
 
+- Add some missing `toJson` methods.
+
 ## 0.0.3
 
 - Support for localization parsing. This is an experimental feature.

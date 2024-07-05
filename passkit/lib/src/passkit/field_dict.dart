@@ -5,9 +5,6 @@ part 'field_dict.g.dart';
 
 @JsonSerializable()
 class FieldDict {
-  factory FieldDict.fromJson(Map<String, dynamic> json) =>
-      _$FieldDictFromJson(json);
-
   FieldDict({
     this.attributedValue,
     this.changeMessage,
@@ -28,6 +25,10 @@ class FieldDict {
           row == null || row == 0 || row == 1,
           'Allowed values for row are null, 0 and 1',
         );
+  factory FieldDict.fromJson(Map<String, dynamic> json) =>
+      _$FieldDictFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FieldDictToJson(this);
 
   /// Optional. Attributed value of the field.
   /// The value may contain HTML markup for links. Only the <a> tag and its href

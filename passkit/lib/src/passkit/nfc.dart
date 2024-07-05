@@ -13,6 +13,8 @@ class Nfc {
 
   factory Nfc.fromJson(Map<String, dynamic> json) => _$NfcFromJson(json);
 
+  Map<String, dynamic> toJson() => _$NfcToJson(this);
+
   /// Required. The payload to be transmitted to the Apple Pay terminal.
   /// Must be 64 bytes or less. Messages longer than 64 bytes are truncated by
   /// the system.

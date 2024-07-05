@@ -14,6 +14,8 @@ class Personalization {
   factory Personalization.fromJson(Map<String, dynamic> json) =>
       _$PersonalizationFromJson(json);
 
+  Map<String, dynamic> toJson() => _$PersonalizationToJson(this);
+
   /// Required. A brief description of the program. This is displayed on the
   /// signup sheet, under the personalization logo.
   final String description;

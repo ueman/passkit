@@ -20,6 +20,8 @@ class PassStructure {
   factory PassStructure.fromJson(Map<String, dynamic> json) =>
       _$PassStructureFromJson(json);
 
+  Map<String, dynamic> toJson() => _$PassStructureToJson(this);
+
   /// Optional. Additional fields to be displayed on the front of the pass.
   // array of field dictionaries
   final List<FieldDict>? auxiliaryFields;

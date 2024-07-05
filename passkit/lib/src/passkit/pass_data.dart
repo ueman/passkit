@@ -51,6 +51,8 @@ class PassData {
   factory PassData.fromJson(Map<String, dynamic> json) =>
       _$PassDataFromJson(json);
 
+  Map<String, dynamic> toJson() => _$PassDataToJson(this);
+
   /// Required. Brief description of the pass, used by the iOS accessibility
   /// technologies.
   ///
