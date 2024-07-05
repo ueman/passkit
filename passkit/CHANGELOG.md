@@ -1,6 +1,7 @@
 ## 0.0.4
 
 - Add some missing `toJson` methods.
+- Improve readme
 
 ## 0.0.3
 

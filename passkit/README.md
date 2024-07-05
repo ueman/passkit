@@ -59,18 +59,14 @@ void main() {
 }
 ```
 
-## Currently unsupported functionality
+## Currently unsupported or experimental functionality
 
-Feel free to submit PRs for them
+Please feel encouraged to create PRs for the following features.
 
-- Semantic Tags: https://developer.apple.com/documentation/passkit/wallet/supporting_semantic_tags_in_wallet_passes
-- PassKit Web Service: https://developer.apple.com/library/archive/documentation/PassKit/Reference/PassKit_WebService/WebService.html#//apple_ref/doc/uid/TP40011988
-  - Partially supported
-  - Push Notification related functionality can only work on iOS due to its [APN](https://en.wikipedia.org/wiki/Apple_Push_Notification_service) requirement (that's why it's not done yet)
-- Localization: https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54 (as seen at the bottom of the page)
-    - .strings file format description https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/LoadingResources/Strings/Strings.html
-- Passkit creation: https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54 (as seen at the bottom of the page)
-- checksum verification
+- PassKit Web Service: This functionality is existing, but might not work. Please file an issue or create a PR with a fix for bugs you encounter.
+- Localization: Existing, but still inconvenient to use. There might be issues due to localizations being UTF-16 formatted, but the library currently uses UTF-8 to read localizations.
+- [Passkit creation](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54)
+- Checksum & signature verification is missing
 
 ## Apple Wallet PassKit docs
 
@@ -81,7 +77,7 @@ Feel free to submit PRs for them
 
 ## Bugs and parsing issues
 
-If you hit an issue with parsing, please create an issue and attach the PkPass (if possible)
+If you hit an issue with parsing, please create an issue and attach the PkPass (if possible).
 
 ## Contributors
 
