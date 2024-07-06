@@ -15,3 +15,18 @@ class EmptyBytesException implements Exception {
   @override
   String toString() => 'The list of bytes have no content';
 }
+
+/// Indicates that the pkpass archive is missing a checksum
+class MissingChecksumException implements Exception {
+  @override
+  String toString() => 'A file in the pkpass archive is missing a checksum';
+}
+
+class ChecksumMismatchException implements Exception {
+  ChecksumMismatchException(this.fileName);
+
+  final String fileName;
+  @override
+  String toString() =>
+      "The checksum of $fileName doesn't match the expected checksum";
+}

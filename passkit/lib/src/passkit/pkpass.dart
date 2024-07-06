@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:crypto/crypto.dart';
 import 'package:passkit/src/passkit/exceptions.dart';
 import 'package:passkit/src/passkit/pass_data.dart';
 import 'package:passkit/src/passkit/pass_type.dart';
@@ -53,7 +54,10 @@ class PkPass {
 
   /// Parses bytes to a [PkPass] file.
   // TODO(ueman): Provide an async method for this.
-  static PkPass fromBytes(final List<int> bytes) {
+  static PkPass fromBytes(
+    final List<int> bytes, {
+    bool skipVerification = false,
+  }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
     }
@@ -62,8 +66,9 @@ class PkPass {
     final archive = decoder.decodeBytes(bytes);
 
     final manifest = archive.readManifest();
-
-    // TODO(ueman): Do checksum verification here
+    if (!skipVerification) {
+      archive.checkSha1Checksums(manifest);
+    }
 
     return PkPass(
       // data
@@ -95,7 +100,10 @@ class PkPass {
   // TODO(ueman): Detect whether it's maybe just a single pass, and then
   // gracefully fall back to just parsing the PkPass file.
   // TODO(ueman): Provide an async method for this.
-  static List<PkPass> passesFromBytes(final List<int> bytes) {
+  static List<PkPass> passesFromBytes(
+    final List<int> bytes, {
+    bool skipVerification = false,
+  }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
     }
@@ -104,7 +112,12 @@ class PkPass {
     final pkPasses =
         archive.files.where((file) => file.name.endsWith('.pkpass')).toList();
     return pkPasses
-        .map((file) => fromBytes(file.content as List<int>))
+        .map(
+          (file) => fromBytes(
+            file.content as List<int>,
+            skipVerification: skipVerification,
+          ),
+        )
         .toList();
   }
 
@@ -254,5 +267,33 @@ extension on Archive {
       return Personalization.fromJson(personalizationFile);
     }
     return null;
+  }
+
+  /// To create the manifest file, recursively list the files in the package
+  /// (except the manifest file and signature), calculate the SHA-1 hash of the
+  /// contents of those files, and store the data in a dictionary. The keys are
+  /// relative paths to the file from the pass package. The values are the SHA-1
+  /// hash (hex encoded) of the data at that path. Write this dictionary to the
+  /// file manifest.json at the top level of the pass package.
+  ///
+  /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW1
+  void checkSha1Checksums(Map<String, dynamic> manifest) {
+    final filesWithoutSignatureAndManifest = files.where((file) {
+      return file.name != 'signature' && file.name != 'manifest.json';
+    }).toList();
+
+    final fileInArchiveCount = filesWithoutSignatureAndManifest.length;
+    final manifestCount = manifest.length;
+    if (fileInArchiveCount != manifestCount) {
+      throw MissingChecksumException();
+    }
+
+    for (final file in filesWithoutSignatureAndManifest) {
+      final checksumInManifest = manifest[file.name] as String?;
+      final digest = sha1.convert(file.content as List<int>);
+      if (checksumInManifest != digest.toString()) {
+        throw ChecksumMismatchException(file.name);
+      }
+    }
   }
 }
