@@ -26,20 +26,16 @@ class PkPassWidget extends StatelessWidget {
       ],
     );
 
-    return SizedBox(
-      width: 320,
-      height: 400,
-      child: Theme(
-        data: themeWithExtensions,
-        child: switch (pass.type) {
-          PassType.boardingPass => BoardingPass(pass: pass),
-          PassType.coupon => Coupon(pass: pass),
-          PassType.eventTicket => EventTicket(pass: pass),
-          PassType.storeCard => StoreCard(pass: pass),
-          PassType.generic => Generic(pass: pass),
-          PassType.unknown => Generic(pass: pass),
-        },
-      ),
+    return Theme(
+      data: themeWithExtensions,
+      child: switch (pass.type) {
+        PassType.boardingPass => BoardingPass(pass: pass),
+        PassType.coupon => Coupon(pass: pass),
+        PassType.eventTicket => EventTicket(pass: pass),
+        PassType.storeCard => StoreCard(pass: pass),
+        PassType.generic => Generic(pass: pass),
+        PassType.unknown => Generic(pass: pass),
+      },
     );
   }
 }
