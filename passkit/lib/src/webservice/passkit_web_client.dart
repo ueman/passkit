@@ -45,8 +45,8 @@ class PassKitWebClient {
 
     final identifier = pass.pass.passTypeIdentifier;
     final serial = pass.pass.serialNumber;
-    final endpoint = Uri.parse(webServiceUrl)
-        .resolveUri(Uri(pathSegments: ['v1', 'passes', identifier, serial]));
+    final endpoint =
+        webServiceUrl.appendPathSegments(['v1', 'passes', identifier, serial]);
 
     final response = await _client.get(
       endpoint,
@@ -80,8 +80,7 @@ class PassKitWebClient {
       throw PassKitWebServiceUnsupported();
     }
 
-    final endpoint =
-        Uri.parse(webServiceUrl).resolveUri(Uri(pathSegments: ['v1', 'log']));
+    final endpoint = webServiceUrl.appendPathSegments(['v1', 'log']);
 
     await _client.post(endpoint, body: jsonEncode(messages));
   }
@@ -109,17 +108,15 @@ class PassKitWebClient {
     }
     final authenticationToken = pass.pass.authenticationToken!;
 
-    final endpoint = Uri.parse(webServiceUrl).resolveUri(
-      Uri(
-        pathSegments: [
-          'v1',
-          'devices',
-          deviceLibraryIdentifier,
-          'registrations',
-          pass.pass.passTypeIdentifier,
-          pass.pass.serialNumber,
-        ],
-      ),
+    final endpoint = webServiceUrl.appendPathSegments(
+      [
+        'v1',
+        'devices',
+        deviceLibraryIdentifier,
+        'registrations',
+        pass.pass.passTypeIdentifier,
+        pass.pass.serialNumber,
+      ],
     );
 
     final response = await _client.post(
@@ -167,17 +164,15 @@ class PassKitWebClient {
     }
     final authenticationToken = pass.pass.authenticationToken!;
 
-    final endpoint = Uri.parse(webServiceUrl).resolveUri(
-      Uri(
-        pathSegments: [
-          'v1',
-          'devices',
-          deviceLibraryIdentifier,
-          'registrations',
-          pass.pass.passTypeIdentifier,
-          pass.pass.serialNumber,
-        ],
-      ),
+    final endpoint = webServiceUrl.appendPathSegments(
+      [
+        'v1',
+        'devices',
+        deviceLibraryIdentifier,
+        'registrations',
+        pass.pass.passTypeIdentifier,
+        pass.pass.serialNumber,
+      ],
     );
 
     final response = await _client.delete(
@@ -221,20 +216,17 @@ class PassKitWebClient {
       throw PassKitWebServiceUnsupported();
     }
 
-    final endpoint = Uri.parse(webServiceUrl).resolveUri(
-      Uri(
-        pathSegments: [
-          'v1',
-          'devices',
-          deviceLibraryIdentifier,
-          'registrations',
-          pass.pass.passTypeIdentifier,
-        ],
-        queryParameters: {
-          if (previousLastUpdated != null)
-            'passesUpdatedSince': previousLastUpdated,
-        },
-      ),
+    final endpoint = webServiceUrl.appendPathSegments([
+      'v1',
+      'devices',
+      deviceLibraryIdentifier,
+      'registrations',
+      pass.pass.passTypeIdentifier,
+    ]).replace(
+      queryParameters: {
+        if (previousLastUpdated != null)
+          'passesUpdatedSince': previousLastUpdated,
+      },
     );
 
     final response = await _client.get(endpoint);
@@ -273,16 +265,14 @@ class PassKitWebClient {
       throw PassKitWebServiceUnsupported();
     }
 
-    final endpoint = Uri.parse(webServiceUrl).resolveUri(
-      Uri(
-        pathSegments: [
-          'v1',
-          'passes',
-          pass.pass.passTypeIdentifier,
-          pass.pass.serialNumber,
-          'personalize',
-        ],
-      ),
+    final endpoint = webServiceUrl.appendPathSegments(
+      [
+        'v1',
+        'passes',
+        pass.pass.passTypeIdentifier,
+        pass.pass.serialNumber,
+        'personalize',
+      ],
     );
 
     final response = await _client.post(
@@ -297,4 +287,9 @@ class PassKitWebClient {
         throw PassKitWebServiceUnrecognizedStatusCode(response.statusCode);
     }
   }
+}
+
+extension on Uri {
+  Uri appendPathSegments(List<String> additionalSegments) =>
+      replace(pathSegments: [...pathSegments, ...additionalSegments]);
 }

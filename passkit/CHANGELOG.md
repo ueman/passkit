@@ -3,6 +3,8 @@
 - Add some missing `toJson` methods.
 - Improve readme
 - Add checksum verification (signature verification is still missing)
+- Change `webServiceUrl` from `String?` to `Uri?`. This is a breaking change
+- Fix building URLs for the PassKit web service
 
 ## 0.0.3
 

@@ -221,7 +221,7 @@ class PassData {
   /// included in the value of this key.
   /// On devices configured for development, there is UI in Settings to allow
   /// HTTP web services.
-  final String? webServiceURL;
+  final Uri? webServiceURL;
 
   /// Optional. Information used for Value Added Service Protocol transactions.
   /// For this dictionary’s keys, see NFC Dictionary Keys.

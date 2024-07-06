@@ -63,7 +63,9 @@ PassData _$PassDataFromJson(Map<String, dynamic> json) => PassData(
       suppressStripShine: json['suppressStripShine'] as bool?,
       sharingProhibited: json['sharingProhibited'] as bool?,
       authenticationToken: json['authenticationToken'] as String?,
-      webServiceURL: json['webServiceURL'] as String?,
+      webServiceURL: json['webServiceURL'] == null
+          ? null
+          : Uri.parse(json['webServiceURL'] as String),
       nfc: json['nfc'] == null
           ? null
           : Nfc.fromJson(json['nfc'] as Map<String, dynamic>),
@@ -103,7 +105,7 @@ Map<String, dynamic> _$PassDataToJson(PassData instance) => <String, dynamic>{
       'suppressStripShine': instance.suppressStripShine,
       'sharingProhibited': instance.sharingProhibited,
       'authenticationToken': instance.authenticationToken,
-      'webServiceURL': instance.webServiceURL,
+      'webServiceURL': instance.webServiceURL?.toString(),
       'nfc': instance.nfc,
       'semantics': instance.semantics,
     };
