@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:passkit/src/passkit/semantic_tag_type.dart';
+import 'package:passkit/src/pkpass/semantic_tag_type.dart';
 
 part 'semantics.g.dart';
 

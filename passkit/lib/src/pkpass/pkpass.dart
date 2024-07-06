@@ -3,11 +3,11 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
-import 'package:passkit/src/passkit/exceptions.dart';
-import 'package:passkit/src/passkit/pass_data.dart';
-import 'package:passkit/src/passkit/pass_type.dart';
-import 'package:passkit/src/passkit/personalization.dart';
-import 'package:passkit/src/passkit/pk_pass_image.dart';
+import 'package:passkit/src/pkpass/exceptions.dart';
+import 'package:passkit/src/pkpass/pass_data.dart';
+import 'package:passkit/src/pkpass/pass_type.dart';
+import 'package:passkit/src/pkpass/personalization.dart';
+import 'package:passkit/src/pkpass/pk_pass_image.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].

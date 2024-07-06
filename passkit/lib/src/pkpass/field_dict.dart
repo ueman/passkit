@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:passkit/src/passkit/semantics.dart';
+import 'package:passkit/src/pkpass/semantics.dart';
 
 part 'field_dict.g.dart';
 
