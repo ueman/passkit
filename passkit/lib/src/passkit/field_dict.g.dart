@@ -14,8 +14,9 @@ FieldDict _$FieldDictFromJson(Map<String, dynamic> json) => FieldDict(
           .toList(),
       key: json['key'] as String,
       label: json['label'] as String?,
-      textAlignment:
-          $enumDecodeNullable(_$PkTextAlignmentEnumMap, json['textAlignment']),
+      textAlignment: $enumDecodeNullable(
+              _$PkTextAlignmentEnumMap, json['textAlignment']) ??
+          PkTextAlignment.natural,
       value: json['value'],
       currencyCode: json['currencyCode'] as String?,
       dateStyle: $enumDecodeNullable(_$DateStyleEnumMap, json['dateStyle']),
@@ -38,7 +39,7 @@ Map<String, dynamic> _$FieldDictToJson(FieldDict instance) => <String, dynamic>{
           .toList(),
       'key': instance.key,
       'label': instance.label,
-      'textAlignment': _$PkTextAlignmentEnumMap[instance.textAlignment],
+      'textAlignment': _$PkTextAlignmentEnumMap[instance.textAlignment]!,
       'value': instance.value,
       'currencyCode': instance.currencyCode,
       'dateStyle': _$DateStyleEnumMap[instance.dateStyle],
