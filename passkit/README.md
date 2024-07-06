@@ -66,7 +66,7 @@ Please feel encouraged to create PRs for the following features.
 - PassKit Web Service: This functionality is existing, but might not work. Please file an issue or create a PR with a fix for bugs you encounter.
 - Localization: Existing, but still inconvenient to use. There might be issues due to localizations being UTF-16 formatted, but the library currently uses UTF-8 to read localizations.
 - [Passkit creation](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54)
-- Checksum & signature verification is missing
+- Signature verification is missing
 
 ## Apple Wallet PassKit docs
 

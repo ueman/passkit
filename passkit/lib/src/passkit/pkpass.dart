@@ -53,6 +53,8 @@ class PkPass {
   });
 
   /// Parses bytes to a [PkPass] file.
+  /// Setting [skipVerification] to true disables any checksum or signature
+  /// verification and validation.
   // TODO(ueman): Provide an async method for this.
   static PkPass fromBytes(
     final List<int> bytes, {
@@ -95,6 +97,10 @@ class PkPass {
   /// Parses a `.pkpasses` to a list of [PkPass]es.
   /// The mimetype of that file is `application/vnd.apple.pkpasses`.
   /// A `.pkpasses` file cna contain up to ten [PkPass]es.
+  ///
+  /// Setting [skipVerification] to true disables any checksum or signature
+  /// verification and validation.
+  ///
   /// Read more at:
   /// - https://developer.apple.com/documentation/walletpasses/distributing_and_updating_a_pass#3793284
   // TODO(ueman): Detect whether it's maybe just a single pass, and then
