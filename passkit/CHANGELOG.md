@@ -2,6 +2,7 @@
 
 - Add some missing `toJson` methods.
 - Improve readme
+- Add checksum verification (signature verification is still missing)
 
 ## 0.0.3
 
