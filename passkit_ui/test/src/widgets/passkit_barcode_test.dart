@@ -1,9 +1,7 @@
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:passkit/passkit.dart' as pk;
 import 'package:passkit_ui/passkit_ui.dart';
-import 'package:passkit_ui/src/theme/theme.dart';
 
 import '../../helpers/helpers.dart';
 
@@ -19,11 +17,6 @@ void main() {
             format: 'PKBarcodeFormatQR',
             messageEncoding: 'utf-8',
             altText: altText,
-          ),
-          passTheme: PassTheme(
-            labelColor: Colors.green,
-            foregroundColor: Colors.red,
-            backgroundColor: Colors.blue,
           ),
         ),
       );

@@ -120,7 +120,7 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
         actions: [
           if (sharingAllowed)
             IconButton(
-              icon: const Icon(Icons.share),
+              icon: Icon(Icons.adaptive.share),
               onPressed: _sharePass,
             ),
         ],

@@ -102,7 +102,6 @@ class Coupon extends StatelessWidget {
               PasskitBarcode(
                 barcode:
                     (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
-                passTheme: passTheme,
               ),
           ],
         ),

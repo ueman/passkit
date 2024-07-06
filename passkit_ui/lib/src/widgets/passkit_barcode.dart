@@ -1,7 +1,6 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart' as passkit;
-import 'package:passkit_ui/src/theme/theme.dart';
 
 /// PassKit displays the first supported barcode in this array.
 /// Note that the `PKBarcodeFormatQR`, `PKBarcodeFormatPDF417`,
@@ -11,11 +10,9 @@ class PasskitBarcode extends StatelessWidget {
   const PasskitBarcode({
     super.key,
     required this.barcode,
-    required this.passTheme,
   });
 
   final passkit.Barcode barcode;
-  final PassTheme passTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +57,7 @@ class PasskitBarcode extends StatelessWidget {
             if (barcode.altText != null)
               Text(
                 barcode.altText!,
-                style: passTheme.foregroundTextStyle.copyWith(
+                style: const TextStyle(
                   color: Colors.black,
                 ),
               ),
