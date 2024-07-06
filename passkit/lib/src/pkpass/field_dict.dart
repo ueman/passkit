@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:passkit/src/pkpass/semantics.dart';
 
@@ -11,7 +12,7 @@ class FieldDict {
     this.dataDetectorTypes,
     required this.key,
     this.label,
-    this.textAlignment,
+    this.textAlignment = PkTextAlignment.natural,
     required this.value,
     this.currencyCode,
     this.dateStyle,
@@ -81,7 +82,7 @@ class FieldDict {
   /// appropriately based on its script direction.
   ///
   /// This key is not allowed for primary fields or back fields.
-  final PkTextAlignment? textAlignment;
+  final PkTextAlignment textAlignment;
 
   /// Required. Value of the field, for example, 42.
   /// This can contain a localizable string, ISO 8601 date as a string,
@@ -132,6 +133,56 @@ class FieldDict {
   /// Possible Values: 0, 1
   /// This field is only valid for event pass types.
   final int? row;
+
+  String? formatted({String? locale}) {
+    if (value == null) {
+      return null;
+    }
+    if (value is num) {
+      if (numberStyle != null) {
+        return numberStyle!.asFormat(currencyCode, locale).format(value as num);
+      }
+      if (currencyCode != null) {
+        return NumberFormat.simpleCurrency(locale: locale, name: currencyCode)
+            .format(value as num);
+      }
+      return value.toString();
+    }
+
+    var dateTime = DateTime.tryParse(value as String);
+    if (dateTime != null) {
+      DateFormat format = DateFormat(null, locale);
+
+      if (dateStyle != null) {
+        format = switch (dateStyle!) {
+          DateStyle.none => DateFormat(null, locale),
+          DateStyle.full => DateFormat.yMMMMEEEEd(locale),
+          DateStyle.long => DateFormat.yMMMMd(locale),
+          // We can't easily do spellOut, so fall back to decimal
+          DateStyle.medium => DateFormat.yMMMd(locale),
+          DateStyle.short => DateFormat.yMd(locale),
+        };
+      }
+      if (timeStyle != null) {
+        switch (timeStyle!) {
+          case DateStyle.none:
+            break;
+          case DateStyle.short:
+            format.add_jm();
+          case DateStyle.medium:
+          case DateStyle.long:
+          case DateStyle.full:
+            format.add_jms();
+        }
+      }
+      if (!(ignoresTimeZone ?? false)) {
+        dateTime = dateTime.toLocal();
+      }
+      return format.format(dateTime);
+    }
+    // TODO(any): Could be localizable
+    return value?.toString();
+  }
 }
 
 enum PkTextAlignment {
@@ -201,4 +252,21 @@ enum NumberStyle {
 
   @JsonValue('PKNumberStyleSpellOut')
   spellOut,
+}
+
+extension on NumberStyle {
+  NumberFormat asFormat(String? currency, String? locale) {
+    return switch (this) {
+      NumberStyle.decimal => () {
+          if (currency != null) {
+            return NumberFormat.simpleCurrency(locale: locale, name: currency);
+          }
+          return NumberFormat.decimalPattern(locale);
+        }(),
+      NumberStyle.percent => NumberFormat.percentPattern(locale),
+      NumberStyle.scientific => NumberFormat.scientificPattern(locale),
+      // We can't easily do spellOut, so fall back to decimal
+      NumberStyle.spellOut => NumberFormat.decimalPattern(locale),
+    };
+  }
 }

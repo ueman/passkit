@@ -133,7 +133,7 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
             ListTile(
               title: Text(entry.label ?? ''),
               subtitle: Linkify(
-                text: entry.value.toString(),
+                text: entry.formatted() ?? '',
                 onOpen: (link) => launchUrl(Uri.parse(link.url)),
               ),
             ),
