@@ -178,12 +178,12 @@ class _AuxiliaryRow extends StatelessWidget {
             Text(
               item.label ?? '',
               style: passTheme.labelTextStyle,
-              textAlign: item.textAlignment?.toFlutterTextAlign(),
+              textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
               item.value.toString(),
               style: passTheme.foregroundTextStyle,
-              textAlign: item.textAlignment?.toFlutterTextAlign(),
+              textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
           ],
         );

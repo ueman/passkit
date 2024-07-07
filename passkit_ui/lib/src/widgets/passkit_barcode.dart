@@ -21,9 +21,7 @@ class PasskitBarcode extends StatelessWidget {
   Widget build(BuildContext context) {
     double? height;
     double? width;
-    if ({
-      'PKBarcodeFormatQR', /* 'PKBarcodeFormatAztec' */
-    }.contains(barcode.format)) {
+    if (barcode.format == passkit.PkPassBarcodeType.qr) {
       // These two formats are quadratic, meaning they have the same height and width.
       height = 150;
       width = 150;
@@ -68,5 +66,16 @@ class PasskitBarcode extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension on passkit.Barcode {
+  Barcode get formatType {
+    return switch (format) {
+      passkit.PkPassBarcodeType.qr => Barcode.qrCode(),
+      passkit.PkPassBarcodeType.pdf417 => Barcode.pdf417(),
+      passkit.PkPassBarcodeType.aztec => Barcode.aztec(),
+      passkit.PkPassBarcodeType.code128 => Barcode.code128(),
+    };
   }
 }
