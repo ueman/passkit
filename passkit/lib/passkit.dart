@@ -1,5 +1,22 @@
 library;
 
+// Order
+export 'src/order/order_address.dart';
+export 'src/order/order_application.dart';
+export 'src/order/order_barcode.dart';
+export 'src/order/order_customer.dart';
+export 'src/order/order_data.dart';
+export 'src/order/order_line_item.dart';
+export 'src/order/order_location.dart';
+export 'src/order/order_merchant.dart';
+export 'src/order/order_payment.dart';
+export 'src/order/order_pickup_fulfillment.dart';
+export 'src/order/order_provider.dart';
+export 'src/order/order_return.dart';
+export 'src/order/order_return_info.dart';
+export 'src/order/order_shipping_fulfillment.dart';
+export 'src/order/pk_order.dart';
+// PkPass
 export 'src/pkpass/barcode.dart';
 export 'src/pkpass/beacon.dart';
 export 'src/pkpass/field_dict.dart';
