@@ -219,7 +219,7 @@ class _AuxiliaryRow extends StatelessWidget {
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                   ),
-                  textAlign: item.textAlignment?.toFlutterTextAlign(),
+                  textAlign: item.textAlignment.toFlutterTextAlign(),
                 ),
                 Text(
                   item.value.toString(),
@@ -227,7 +227,7 @@ class _AuxiliaryRow extends StatelessWidget {
                     fontSize: 16,
                     height: 0.9,
                   ),
-                  textAlign: item.textAlignment?.toFlutterTextAlign(),
+                  textAlign: item.textAlignment.toFlutterTextAlign(),
                 ),
               ],
             ),

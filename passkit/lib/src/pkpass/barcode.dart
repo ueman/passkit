@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:barcode/barcode.dart' as barcode;
 
 part 'barcode.g.dart';
 
@@ -25,26 +24,7 @@ class Barcode {
   /// following values: PKBarcodeFormatQR, PKBarcodeFormatPDF417, or
   /// PKBarcodeFormatAztec. For dictionaries in the barcodes array, you may also
   /// use PKBarcodeFormatCode128.
-  final String format;
-
-  barcode.Barcode get formatType {
-    if (format == 'PKBarcodeFormatQR') {
-      return barcode.Barcode.qrCode(
-        errorCorrectLevel: barcode.BarcodeQRCorrectionLevel.high,
-      );
-    }
-    if (format == 'PKBarcodeFormatPDF417') {
-      return barcode.Barcode.pdf417();
-    }
-    if (format == 'PKBarcodeFormatAztec') {
-      return barcode.Barcode.aztec();
-    }
-    if (format == 'PKBarcodeFormatCode128') {
-      return barcode.Barcode.code128();
-    }
-
-    throw UnsupportedError('$format is not supported for barcodes in PKPASS');
-  }
+  final PkPassBarcodeType format;
 
   /// Required. Message or payload to be displayed as a barcode.
   final String message;
@@ -58,4 +38,18 @@ class Barcode {
 
   /// Converts this instance to a JSON object
   Map<String, dynamic> toJson() => _$BarcodeToJson(this);
+}
+
+enum PkPassBarcodeType {
+  @JsonValue('PKBarcodeFormatQR')
+  qr,
+
+  @JsonValue('PKBarcodeFormatPDF417')
+  pdf417,
+
+  @JsonValue('PKBarcodeFormatAztec')
+  aztec,
+
+  @JsonValue('PKBarcodeFormatCode128')
+  code128,
 }

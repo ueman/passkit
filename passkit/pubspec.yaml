@@ -15,7 +15,6 @@ environment:
 
 dependencies:
   archive: ^3.6.0
-  barcode: ^2.2.0
   crypto: ^3.0.0
   csslib: ^1.0.0
   http: ^1.2.0

@@ -1,4 +1,3 @@
-import 'package:barcode/barcode.dart' as barcode;
 import 'package:json_annotation/json_annotation.dart';
 
 part 'order_barcode.g.dart';
@@ -28,26 +27,7 @@ class OrderBarcode {
   /// (Required) The format of the barcode.
   /// Possible Values: qr, pdf417, aztec, code128
   @JsonKey(name: 'format')
-  final String format;
-
-  barcode.Barcode get formatType {
-    if (format == 'qr') {
-      return barcode.Barcode.qrCode(
-        errorCorrectLevel: barcode.BarcodeQRCorrectionLevel.high,
-      );
-    }
-    if (format == 'pdf417') {
-      return barcode.Barcode.pdf417();
-    }
-    if (format == 'aztec') {
-      return barcode.Barcode.aztec();
-    }
-    if (format == 'code128') {
-      return barcode.Barcode.code128();
-    }
-
-    throw UnsupportedError('$format is not supported for barcodes in PKPASS');
-  }
+  final OrderBarcodeType format;
 
   /// The contents of the barcode.
   @JsonKey(name: 'message')
@@ -57,4 +37,18 @@ class OrderBarcode {
   /// iso-8859-1, but you may specify an alternative encoding if required.
   @JsonKey(name: 'messageEncoding')
   final String messageEncoding;
+}
+
+enum OrderBarcodeType {
+  @JsonValue('qr')
+  qr,
+
+  @JsonValue('pdf417')
+  pdf417,
+
+  @JsonValue('aztec')
+  aztec,
+
+  @JsonValue('code128')
+  code128,
 }
