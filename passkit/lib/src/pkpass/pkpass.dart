@@ -214,6 +214,51 @@ extension on Archive {
     return data == null ? null : Uint8List.fromList(data);
   }
 
+  /// Returns a map of locale to a map of resolution to image bytes.
+  /// Returns null, if no image is localized
+  Map<String, Map<int, Uint8List>>? loadLocalizedImage(String imageName) {
+    final map = <String, Map<int, Uint8List>>{};
+    for (final file in files) {
+      final fileName = file.name;
+      if (!fileName.endsWith('.png')) {
+        // file is not an image
+        continue;
+      }
+      if (!fileName.contains(imageName)) {
+        // file is not the image that's been searched for
+        continue;
+      }
+      if (!fileName.contains('/')) {
+        // this is a non-localized image, which has been loaded before
+        continue;
+      }
+      // It can be assumed now that the image is localized
+
+      // get the language part of the name, which is something like 'en.lpoj/icon@2x.png'
+      final language = fileName.split('.').first;
+      if (!map.containsKey(language)) {
+        map[language] = {};
+      }
+
+      if (fileName.endsWith('@2x.png')) {
+        map[language]![2] = Uint8List.fromList(file.content as List<int>);
+      } else if (fileName.endsWith('@3x.png')) {
+        map[language]![3] = Uint8List.fromList(file.content as List<int>);
+      } else {
+        map[language]![1] = Uint8List.fromList(file.content as List<int>);
+      }
+    }
+
+    map.removeWhere((lang, images) {
+      return images.values.isEmpty;
+    });
+
+    if (map.isEmpty) {
+      return null;
+    }
+    return map;
+  }
+
   Map<String, dynamic>? findFileAndReadAsJson(String fileName) {
     final bytes = findBytesForFile(fileName);
     if (bytes == null) {
@@ -227,6 +272,7 @@ extension on Archive {
       image1: findUint8ListForFile('$name.png'),
       image2: findUint8ListForFile('$name@2.png'),
       image3: findUint8ListForFile('$name@3.png'),
+      localizedImages: loadLocalizedImage(name),
     );
   }
 
