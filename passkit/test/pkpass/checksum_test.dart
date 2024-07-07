@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:passkit/passkit.dart';
-import 'package:passkit/src/passkit/exceptions.dart';
+import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:test/test.dart';
 
 void main() {

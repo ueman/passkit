@@ -1,12 +1,12 @@
 import 'package:csslib/parser.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:passkit/src/passkit/barcode.dart';
-import 'package:passkit/src/passkit/beacon.dart';
-import 'package:passkit/src/passkit/location.dart';
-import 'package:passkit/src/passkit/nfc.dart';
-import 'package:passkit/src/passkit/parse_utils.dart';
-import 'package:passkit/src/passkit/pass_structure.dart';
-import 'package:passkit/src/passkit/semantics.dart';
+import 'package:passkit/src/pkpass/barcode.dart';
+import 'package:passkit/src/pkpass/beacon.dart';
+import 'package:passkit/src/pkpass/location.dart';
+import 'package:passkit/src/pkpass/nfc.dart';
+import 'package:passkit/src/pkpass/parse_utils.dart';
+import 'package:passkit/src/pkpass/pass_structure.dart';
+import 'package:passkit/src/pkpass/semantics.dart';
 
 part 'pass_data.g.dart';
 

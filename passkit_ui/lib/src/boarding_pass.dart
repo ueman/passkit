@@ -193,7 +193,6 @@ class _AuxiliaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final directionality = Directionality.of(context);
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,16 +205,12 @@ class _AuxiliaryRow extends StatelessWidget {
                 Text(
                   item.label ?? '',
                   style: theme.auxiliaryLabelStyle,
-                  textAlign: item.textAlignment?.toFlutterTextAlign(
-                    textDirection: directionality,
-                  ),
+                  textAlign: item.textAlignment.toFlutterTextAlign(),
                 ),
                 Text(
                   item.value.toString(),
                   style: theme.auxiliaryTextStyle,
-                  textAlign: item.textAlignment?.toFlutterTextAlign(
-                    textDirection: directionality,
-                  ),
+                  textAlign: item.textAlignment.toFlutterTextAlign(),
                 ),
               ],
             ),

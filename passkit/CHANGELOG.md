@@ -5,6 +5,9 @@
 - Add checksum verification (signature verification is still missing)
 - Change `webServiceUrl` from `String?` to `Uri?`. This is a breaking change
 - Fix building URLs for the PassKit web service
+- Remove `formatType` from `Barcode`. `Barcode.format` is an enum instead. 
+  - This is a breaking change
+  - Also drop the dependency on `package:barcode`
 
 ## 0.0.3
 

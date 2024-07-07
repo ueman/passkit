@@ -34,9 +34,7 @@ void main() {
         'when TextDirection is ltr',
         () {
           for (final textAlign in textAlignsLtr.entries) {
-            final result = textAlign.key.toFlutterTextAlign(
-              textDirection: TextDirection.ltr,
-            );
+            final result = textAlign.key.toFlutterTextAlign();
             expect(result, equals(textAlign.value));
           }
         },
@@ -47,9 +45,7 @@ void main() {
         'when TextDirection is rtl',
         () {
           for (final textAlign in textAlignsRtl.entries) {
-            final result = textAlign.key.toFlutterTextAlign(
-              textDirection: TextDirection.rtl,
-            );
+            final result = textAlign.key.toFlutterTextAlign();
             expect(result, equals(textAlign.value));
           }
         },

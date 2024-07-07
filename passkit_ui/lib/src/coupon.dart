@@ -121,7 +121,6 @@ class _AuxiliaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final directionality = Directionality.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
@@ -130,16 +129,12 @@ class _AuxiliaryRow extends StatelessWidget {
             Text(
               item.label ?? '',
               style: passTheme.labelTextStyle,
-              textAlign: item.textAlignment?.toFlutterTextAlign(
-                textDirection: directionality,
-              ),
+              textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
               item.value.toString(),
               style: passTheme.foregroundTextStyle,
-              textAlign: item.textAlignment?.toFlutterTextAlign(
-                textDirection: directionality,
-              ),
+              textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
           ],
         );
