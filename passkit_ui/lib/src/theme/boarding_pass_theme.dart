@@ -43,29 +43,29 @@ class BoardingPassTheme extends ThemeExtension<BoardingPassTheme>
         fontSize: 16,
       ),
       headerLabelStyle: labelTextStyle.copyWith(
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: FontWeight.w600,
       ),
       headerTextStyle: foregroundTextStyle.copyWith(
-        fontSize: 19,
+        fontSize: 17,
         height: 0.9,
       ),
       primaryLabelStyle: TextStyle(
         color: labelColor,
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: FontWeight.w600,
       ),
       primaryTextStyle: TextStyle(
         color: foregroundColor,
-        fontSize: 40,
+        fontSize: 32,
         height: 0.9,
       ),
       auxiliaryLabelStyle: labelTextStyle.copyWith(
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: FontWeight.w600,
       ),
       auxiliaryTextStyle: foregroundTextStyle.copyWith(
-        fontSize: 16,
+        fontSize: 12,
         height: 0.9,
       ),
     );

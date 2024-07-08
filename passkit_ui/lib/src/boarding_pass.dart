@@ -28,56 +28,55 @@ class BoardingPass extends StatelessWidget {
     final theme = Theme.of(context).extension<BoardingPassTheme>()!;
     final boardingPass = pass.pass.boardingPass!;
 
-    return FittedBox(
-      fit: BoxFit.contain,
-      child: SizedBox(
-        height: 400,
-        width: 320,
-        child: ColoredBox(
-          color: theme.backgroundColor,
-          child: Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: Column(
+    return ColoredBox(
+      color: theme.backgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Stack(
+          children: [
+            Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     /// The logo image (logo.png) is displayed in the top left corner
                     /// of the pass, next to the logo text. The allotted space is
                     /// 160 x 50 points; in most cases it should be narrower.
                     ConstrainedBox(
                       constraints: const BoxConstraints(
-                        maxWidth: 160,
-                        maxHeight: 50,
+                        maxWidth: 144,
+                        maxHeight: 45,
                       ),
                       child: Image.memory(
                         pass.logo!.forCorrectPixelRatio(devicePixelRatio),
                         fit: BoxFit.contain,
                       ),
                     ),
-                    const SizedBox(width: 8),
                     if (pass.pass.logoText != null)
                       Text(
                         pass.pass.logoText!,
                         style: theme.logoTextStyle,
                       ),
-                    const Spacer(),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          boardingPass.headerFields!.first.label ?? '',
-                          style: theme.headerLabelStyle,
-                        ),
-                        Text(
-                          boardingPass.headerFields!.first.value.toString(),
-                          style: theme.headerTextStyle,
-                        ),
-                      ],
-                    ),
+                    for (final field in boardingPass.headerFields!)
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment:
+                            field.textAlignment.toCrossAxisAlign(),
+                        children: [
+                          Text(
+                            field.label ?? '',
+                            style: theme.headerLabelStyle,
+                            textAlign: field.textAlignment.toFlutterTextAlign(),
+                          ),
+                          Text(
+                            field.formatted() ?? '',
+                            style: theme.headerTextStyle,
+                            textAlign: field.textAlignment.toFlutterTextAlign(),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -93,9 +92,9 @@ class BoardingPass extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: TransitTypeWidget(
                         transitType: boardingPass.transitType,
-                        width: 40,
-                        height: 40,
-                        color: theme.foregroundColor,
+                        width: 30,
+                        height: 30,
+                        color: theme.labelColor,
                       ),
                     ),
                     _FromTo(
@@ -126,18 +125,21 @@ class BoardingPass extends StatelessWidget {
                   PasskitBarcode(
                     barcode:
                         (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
-                  ),
-
-                if (pass.icon != null)
-                  // TODO(ueman): check whether this matches Apples design guidelines
-                  Image.memory(
-                    pass.icon!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                    height: 15,
+                    fontSize: 12,
                   ),
               ],
             ),
-          ),
+            if (pass.icon != null)
+              // TODO(ueman): check whether this matches Apples design guidelines
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Image.memory(
+                  pass.icon!.forCorrectPixelRatio(devicePixelRatio),
+                  fit: BoxFit.contain,
+                  height: 15,
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -163,19 +165,11 @@ class _FromTo extends StatelessWidget {
       children: [
         Text(
           data.label ?? '',
-          style: TextStyle(
-            color: theme.labelColor,
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-          ),
+          style: theme.primaryLabelStyle,
         ),
         Text(
           data.value.toString(),
-          style: TextStyle(
-            color: theme.foregroundColor,
-            fontSize: 40,
-            height: 0.9,
-          ),
+          style: theme.primaryTextStyle,
         ),
       ],
     );

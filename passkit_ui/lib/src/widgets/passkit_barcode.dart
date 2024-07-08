@@ -10,23 +10,27 @@ class PasskitBarcode extends StatelessWidget {
   const PasskitBarcode({
     super.key,
     required this.barcode,
+    required this.fontSize,
   });
 
   final passkit.Barcode barcode;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
     double? height;
     double? width;
-    if (barcode.format == passkit.PkPassBarcodeType.qr) {
+    if (barcode.format == passkit.PkPassBarcodeType.qr ||
+        barcode.format == passkit.PkPassBarcodeType.aztec) {
       // These two formats are quadratic, meaning they have the same height and width.
-      height = 150;
-      width = 150;
+      height = 110;
+      width = 110;
     } else {
       // The other codes are much wider than tall.
       // Not too sure which dimension they should have, though.
       // Apples designs make it seem they should be as wide as possible.
-      height = 80;
+      height = 60;
+      width = 250;
     }
 
     return DecoratedBox(
@@ -39,6 +43,7 @@ class PasskitBarcode extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             BarcodeWidget(
               height: height,
@@ -52,13 +57,15 @@ class PasskitBarcode extends StatelessWidget {
               color: Colors.black,
               textPadding: 0,
             ),
-            if (barcode.altText != null)
+            if (barcode.altText != null) ...[
               Text(
                 barcode.altText!,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black,
+                  fontSize: fontSize,
                 ),
               ),
+            ],
           ],
         ),
       ),
@@ -70,7 +77,11 @@ extension on passkit.Barcode {
   Barcode get formatType {
     return switch (format) {
       passkit.PkPassBarcodeType.qr => Barcode.qrCode(),
-      passkit.PkPassBarcodeType.pdf417 => Barcode.pdf417(),
+      passkit.PkPassBarcodeType.pdf417 => Barcode.pdf417(
+          preferredRatio: 4.0,
+          moduleHeight: 3.5,
+          securityLevel: Pdf417SecurityLevel.level3,
+        ),
       passkit.PkPassBarcodeType.aztec => Barcode.aztec(),
       passkit.PkPassBarcodeType.code128 => Barcode.code128(),
     };

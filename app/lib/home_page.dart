@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<PkPass> passes = [];
 
-  PassView passView = PassView.compact;
+  PassView passView = PassView.preview;
 
   @override
   void initState() {

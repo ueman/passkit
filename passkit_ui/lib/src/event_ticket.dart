@@ -39,9 +39,8 @@ class EventTicket extends StatelessWidget {
       "An event ticket can display logo, strip, background, or thumbnail images. However, if you supply a strip image, don't include a background or thumbnail image.",
     );
 
-    return Card(
+    return ColoredBox(
       color: passTheme.backgroundColor,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Stack(
         children: [
           if (pass.background != null)
@@ -119,6 +118,9 @@ class EventTicket extends StatelessWidget {
                     // 2:3 to 3:2, otherwise the image is cropped.
                     if (pass.thumbnail != null)
                       Image.memory(
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.contain,
                         pass.thumbnail!.forCorrectPixelRatio(devicePixelRatio),
                       ),
                   ],
@@ -148,6 +150,7 @@ class EventTicket extends StatelessWidget {
                   PasskitBarcode(
                     barcode:
                         (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                    fontSize: 11,
                   ),
               ],
             ),

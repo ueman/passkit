@@ -18,6 +18,7 @@ void main() {
             messageEncoding: 'utf-8',
             altText: altText,
           ),
+          fontSize: 11,
         ),
       );
 

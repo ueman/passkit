@@ -272,8 +272,8 @@ extension on Archive {
   PkPassImage? loadImage(String name) {
     return PkPassImage.fromImages(
       image1: findUint8ListForFile('$name.png'),
-      image2: findUint8ListForFile('$name@2.png'),
-      image3: findUint8ListForFile('$name@3.png'),
+      image2: findUint8ListForFile('$name@2x.png'),
+      image3: findUint8ListForFile('$name@3x.png'),
       localizedImages: loadLocalizedImage(name),
     );
   }

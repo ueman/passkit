@@ -25,11 +25,8 @@ class StoreCard extends StatelessWidget {
     final passTheme = pass.theme;
     final storeCard = pass.pass.storeCard!;
 
-    return Card(
+    return ColoredBox(
       color: passTheme.backgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -95,6 +92,7 @@ class StoreCard extends StatelessWidget {
               PasskitBarcode(
                 barcode:
                     (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                fontSize: 11,
               ),
           ],
         ),
