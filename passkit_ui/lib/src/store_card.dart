@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
-import 'package:passkit_ui/src/theme/theme.dart';
+import 'package:passkit_ui/src/theme/store_card_theme.dart';
+import 'package:passkit_ui/src/widgets/header_row.dart';
 
 /// A store card looks like the following:
 ///
@@ -22,34 +23,48 @@ class StoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
 
-    final passTheme = pass.theme;
+    final theme = Theme.of(context).extension<StoreCardTheme>()!;
     final storeCard = pass.pass.storeCard!;
 
     return ColoredBox(
-      color: passTheme.backgroundColor,
+      color: theme.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            HeaderRow(
+              passTheme: theme,
+              headerFields: storeCard.headerFields,
+              logo: pass.logo,
+              logoText: pass.pass.logoText,
+            ),
+            const SizedBox(height: 16),
+            Stack(
               children: [
-                Logo(logo: pass.logo),
-                Text(
-                  pass.pass.logoText ?? '',
-                  style: passTheme.foregroundTextStyle,
-                ),
+                if (pass.strip != null)
+                  Image.memory(
+                    pass.strip!.forCorrectPixelRatio(devicePixelRatio),
+                  ),
                 Column(
+                  crossAxisAlignment: storeCard
+                          .primaryFields?.firstOrNull?.textAlignment
+                          .toCrossAxisAlign() ??
+                      CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      storeCard.headerFields?.first.label ?? '',
-                      style: passTheme.labelTextStyle,
+                      storeCard.primaryFields?.firstOrNull?.formatted() ?? '',
+                      style: theme.primaryTextStyle,
+                      textAlign: storeCard
+                          .primaryFields?.firstOrNull?.textAlignment
+                          .toFlutterTextAlign(),
                     ),
                     Text(
-                      storeCard.headerFields?.first.value?.toString() ?? '',
-                      style: passTheme.foregroundTextStyle,
+                      storeCard.primaryFields?.firstOrNull?.label ?? '',
+                      style: theme.primaryLabelStyle,
+                      textAlign: storeCard
+                          .primaryFields?.firstOrNull?.textAlignment
+                          .toFlutterTextAlign(),
                     ),
                   ],
                 ),
@@ -57,18 +72,14 @@ class StoreCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: storeCard.primaryFields ?? [],
-            ),
-            const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
+              passTheme: theme,
               auxiliaryRow: [
                 ...?storeCard.secondaryFields,
                 ...?storeCard.auxiliaryFields,
               ],
             ),
             const SizedBox(height: 16),
+            const Spacer(),
             if (pass.footer != null)
               Image.memory(
                 pass.footer!.forCorrectPixelRatio(devicePixelRatio),
@@ -96,7 +107,7 @@ class _AuxiliaryRow extends StatelessWidget {
   });
 
   final List<FieldDict> auxiliaryRow;
-  final PassTheme passTheme;
+  final StoreCardTheme passTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -107,12 +118,12 @@ class _AuxiliaryRow extends StatelessWidget {
           children: [
             Text(
               item.label ?? '',
-              style: passTheme.labelTextStyle,
+              style: passTheme.auxiliaryLabelStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
               item.formatted() ?? '',
-              style: passTheme.foregroundTextStyle,
+              style: passTheme.auxiliaryTextStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
           ],

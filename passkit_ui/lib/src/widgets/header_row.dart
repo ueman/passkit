@@ -24,11 +24,14 @@ class HeaderRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Logo(logo: logo),
-        if (logoText != null)
+        if (logoText != null) ...[
+          const SizedBox(width: 8),
           Text(
             logoText!,
             style: passTheme.logoTextStyle,
           ),
+        ],
+        const Spacer(),
         if (headerFields != null && headerFields!.isNotEmpty)
           Column(
             children: [

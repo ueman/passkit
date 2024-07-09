@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
-import 'package:passkit_ui/src/theme/theme.dart';
+import 'package:passkit_ui/src/theme/coupon_theme.dart';
+import 'package:passkit_ui/src/widgets/header_row.dart';
 
 /// A coupon looks like the following:
 ///
@@ -21,38 +22,21 @@ class Coupon extends StatelessWidget {
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
 
-    final passTheme = pass.theme;
+    final theme = Theme.of(context).extension<CouponTheme>()!;
     final coupon = pass.pass.coupon!;
 
     return ColoredBox(
-      color: passTheme.backgroundColor,
+      color: theme.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Logo(logo: pass.logo),
-                Text(
-                  pass.pass.logoText!,
-                  style: passTheme.foregroundTextStyle,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      coupon.headerFields?.first.label ?? '',
-                      style: passTheme.labelTextStyle,
-                    ),
-                    Text(
-                      coupon.headerFields?.first.value?.toString() ?? '',
-                      style: passTheme.foregroundTextStyle,
-                    ),
-                  ],
-                ),
-              ],
+            HeaderRow(
+              passTheme: theme,
+              headerFields: coupon.headerFields,
+              logo: pass.logo,
+              logoText: pass.pass.logoText,
             ),
             const SizedBox(height: 16),
             Stack(
@@ -61,21 +45,40 @@ class Coupon extends StatelessWidget {
                   Image.memory(
                     pass.strip!.forCorrectPixelRatio(devicePixelRatio),
                   ),
-                _AuxiliaryRow(
-                  passTheme: passTheme,
-                  auxiliaryRow: coupon.primaryFields!,
+                Column(
+                  crossAxisAlignment: coupon
+                          .primaryFields?.firstOrNull?.textAlignment
+                          .toCrossAxisAlign() ??
+                      CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      coupon.primaryFields?.firstOrNull?.formatted() ?? '',
+                      style: theme.primaryTextStyle,
+                      textAlign: coupon
+                          .primaryFields?.firstOrNull?.textAlignment
+                          .toFlutterTextAlign(),
+                    ),
+                    Text(
+                      coupon.primaryFields?.firstOrNull?.label ?? '',
+                      style: theme.primaryLabelStyle,
+                      textAlign: coupon
+                          .primaryFields?.firstOrNull?.textAlignment
+                          .toFlutterTextAlign(),
+                    ),
+                  ],
                 ),
               ],
             ),
             const SizedBox(height: 16),
             _AuxiliaryRow(
-              passTheme: passTheme,
+              passTheme: theme,
               auxiliaryRow: [
                 ...?coupon.secondaryFields,
                 ...?coupon.auxiliaryFields,
               ],
             ),
             const SizedBox(height: 16),
+            const Spacer(),
             if (pass.footer != null)
               Image.memory(
                 pass.footer!.forCorrectPixelRatio(devicePixelRatio),
@@ -103,7 +106,7 @@ class _AuxiliaryRow extends StatelessWidget {
   });
 
   final List<FieldDict> auxiliaryRow;
-  final PassTheme passTheme;
+  final CouponTheme passTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -114,12 +117,12 @@ class _AuxiliaryRow extends StatelessWidget {
           children: [
             Text(
               item.label ?? '',
-              style: passTheme.labelTextStyle,
+              style: passTheme.auxiliaryLabelStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
               item.formatted() ?? '',
-              style: passTheme.foregroundTextStyle,
+              style: passTheme.auxiliaryTextStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
           ],
