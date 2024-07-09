@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/boarding_pass_theme.dart';
+import 'package:passkit_ui/src/widgets/header_row.dart';
 
 /// A boarding pass looks like the following:
 ///
@@ -37,47 +38,11 @@ class BoardingPass extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    /// The logo image (logo.png) is displayed in the top left corner
-                    /// of the pass, next to the logo text. The allotted space is
-                    /// 160 x 50 points; in most cases it should be narrower.
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: 144,
-                        maxHeight: 45,
-                      ),
-                      child: Image.memory(
-                        pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    if (pass.pass.logoText != null)
-                      Text(
-                        pass.pass.logoText!,
-                        style: theme.logoTextStyle,
-                      ),
-                    for (final field in boardingPass.headerFields!)
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment:
-                            field.textAlignment.toCrossAxisAlign(),
-                        children: [
-                          Text(
-                            field.label ?? '',
-                            style: theme.headerLabelStyle,
-                            textAlign: field.textAlignment.toFlutterTextAlign(),
-                          ),
-                          Text(
-                            field.formatted() ?? '',
-                            style: theme.headerTextStyle,
-                            textAlign: field.textAlignment.toFlutterTextAlign(),
-                          ),
-                        ],
-                      ),
-                  ],
+                HeaderRow(
+                  passTheme: theme,
+                  logoText: pass.pass.logoText,
+                  headerFields: boardingPass.headerFields,
+                  logo: pass.logo,
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -118,15 +83,17 @@ class BoardingPass extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 16),
-                Footer(footer: pass.footer),
-                const SizedBox(height: 2),
                 if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
-                    null)
+                    null) ...[
+                  const Spacer(),
+                  Footer(footer: pass.footer),
+                  const SizedBox(height: 2),
                   PasskitBarcode(
                     barcode:
                         (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
                     fontSize: 12,
                   ),
+                ],
               ],
             ),
             if (pass.icon != null)
@@ -168,7 +135,7 @@ class _FromTo extends StatelessWidget {
           style: theme.primaryLabelStyle,
         ),
         Text(
-          data.value.toString(),
+          data.formatted() ?? '',
           style: theme.primaryTextStyle,
         ),
       ],
@@ -202,7 +169,7 @@ class _AuxiliaryRow extends StatelessWidget {
                   textAlign: item.textAlignment.toFlutterTextAlign(),
                 ),
                 Text(
-                  item.value.toString(),
+                  item.formatted() ?? '',
                   style: theme.auxiliaryTextStyle,
                   textAlign: item.textAlignment.toFlutterTextAlign(),
                 ),

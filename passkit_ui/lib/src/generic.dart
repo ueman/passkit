@@ -25,19 +25,7 @@ class Generic extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                /// The logo image (logo.png) is displayed in the top left corner
-                /// of the pass, next to the logo text. The allotted space is
-                /// 160 x 50 points; in most cases it should be narrower.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 160,
-                    maxHeight: 50,
-                  ),
-                  child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                  ),
-                ),
+                Logo(logo: pass.logo),
                 if (pass.pass.logoText != null)
                   Text(
                     pass.pass.logoText!,
@@ -137,7 +125,7 @@ class _AuxiliaryRow extends StatelessWidget {
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
-              item.value.toString(),
+              item.formatted() ?? '',
               style: passTheme.foregroundTextStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),

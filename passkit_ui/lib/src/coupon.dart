@@ -35,19 +35,7 @@ class Coupon extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /// The logo image (logo.png) is displayed in the top left corner
-                /// of the pass, next to the logo text. The allotted space is
-                /// 160 x 50 points; in most cases it should be narrower.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 160,
-                    maxHeight: 50,
-                  ),
-                  child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                  ),
-                ),
+                Logo(logo: pass.logo),
                 Text(
                   pass.pass.logoText!,
                   style: passTheme.foregroundTextStyle,
@@ -130,7 +118,7 @@ class _AuxiliaryRow extends StatelessWidget {
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
-              item.value.toString(),
+              item.formatted() ?? '',
               style: passTheme.foregroundTextStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),

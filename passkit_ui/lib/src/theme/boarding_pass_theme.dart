@@ -82,11 +82,14 @@ class BoardingPassTheme extends ThemeExtension<BoardingPassTheme>
 
   /// Should match the Headline text style from here for medium size devices
   /// https://developer.apple.com/design/human-interface-guidelines/typography
+  @override
   final TextStyle logoTextStyle;
 
   /// Should match the Headline text style from here for medium size devices
   /// https://developer.apple.com/design/human-interface-guidelines/typography
+  @override
   final TextStyle headerLabelStyle;
+  @override
   final TextStyle headerTextStyle;
 
   final TextStyle primaryLabelStyle;

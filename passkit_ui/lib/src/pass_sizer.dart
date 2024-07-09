@@ -8,12 +8,12 @@ class PassSizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 400,
+      height: 460,
       width: 320,
       child: FittedBox(
         fit: BoxFit.contain,
         child: SizedBox(
-          height: 400,
+          height: 460,
           width: 320,
           child: child,
         ),
