@@ -3,28 +3,36 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/base_pass_theme.dart';
 
-/// ThemeExtension for a coupon pass.
+/// ThemeExtension for a event ticket.
 ///
-/// ![](https://docs-assets.developer.apple.com/published/69bfb27a52f67ad10eb88d66276d0fa8/coupon@2x.png)
-/// ![](https://docs-assets.developer.apple.com/published/e9ff886bf6d8e3f3202e165f5e0e5889/coupon-pass-layout@2x.png)
+/// ![](https://docs-assets.developer.apple.com/published/2f8c9366433d611399132b3075659cba/generic@2x.png)
+/// ![](https://docs-assets.developer.apple.com/published/0ea8eaf5a48417f07aed39a2e317710e/generic-pass-layout-1@2x.png)
+/// ![](https://docs-assets.developer.apple.com/published/17f44895905b4c1e99b22bdab5c2842f/generic-pass-layout-2@2x.png)
 ///
 /// See:
-/// - https://developer.apple.com/design/human-interface-guidelines/wallet#Coupons
-class CouponTheme extends ThemeExtension<CouponTheme> implements BasePassTheme {
-  CouponTheme({
+/// - https://developer.apple.com/design/human-interface-guidelines/wallet#Generic-passes
+class GenericPassTheme extends ThemeExtension<GenericPassTheme>
+    implements BasePassTheme {
+  GenericPassTheme({
     required this.auxiliaryLabelStyle,
     required this.auxiliaryTextStyle,
-    required this.primaryLabelStyle,
-    required this.primaryTextStyle,
     required this.headerLabelStyle,
     required this.headerTextStyle,
+    required this.primaryWithStripLabelStyle,
+    required this.primaryWithStripTextStyle,
+    required this.primaryWithThumbnailLabelStyle,
+    required this.primaryWithThumbnailTextStyle,
+    required this.secondaryWithStripLabelStyle,
+    required this.secondaryWithStripTextStyle,
+    required this.secondaryWithThumbnailLabelStyle,
+    required this.secondaryWithThumbnailTextStyle,
     required this.backgroundColor,
     required this.foregroundColor,
     required this.labelColor,
     required this.logoTextStyle,
   });
 
-  factory CouponTheme.fromPass(PkPass pass) {
+  factory GenericPassTheme.fromPass(PkPass pass) {
     final backgroundColor =
         pass.pass.backgroundColor?.toDartUiColor() ?? Colors.white;
     final foregroundColor =
@@ -33,7 +41,7 @@ class CouponTheme extends ThemeExtension<CouponTheme> implements BasePassTheme {
     final foregroundTextStyle = TextStyle(color: foregroundColor);
     final labelTextStyle = TextStyle(color: labelColor);
 
-    return CouponTheme(
+    return GenericPassTheme(
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       labelColor: labelColor,
@@ -47,16 +55,6 @@ class CouponTheme extends ThemeExtension<CouponTheme> implements BasePassTheme {
       ),
       headerTextStyle: foregroundTextStyle.copyWith(
         fontSize: 17,
-        height: 0.9,
-      ),
-      primaryLabelStyle: TextStyle(
-        color: foregroundColor,
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-      ),
-      primaryTextStyle: TextStyle(
-        color: foregroundColor,
-        fontSize: 50,
         height: 0.9,
       ),
       auxiliaryLabelStyle: labelTextStyle.copyWith(
@@ -91,18 +89,27 @@ class CouponTheme extends ThemeExtension<CouponTheme> implements BasePassTheme {
   @override
   final TextStyle headerTextStyle;
 
-  final TextStyle primaryLabelStyle;
-  final TextStyle primaryTextStyle;
+  final TextStyle primaryWithStripLabelStyle;
+  final TextStyle primaryWithStripTextStyle;
+
+  final TextStyle primaryWithThumbnailLabelStyle;
+  final TextStyle primaryWithThumbnailTextStyle;
+
+  final TextStyle secondaryWithStripLabelStyle;
+  final TextStyle secondaryWithStripTextStyle;
+
+  final TextStyle secondaryWithThumbnailLabelStyle;
+  final TextStyle secondaryWithThumbnailTextStyle;
 
   final TextStyle auxiliaryLabelStyle;
   final TextStyle auxiliaryTextStyle;
 
   @override
-  ThemeExtension<CouponTheme> copyWith() => this;
+  ThemeExtension<GenericPassTheme> copyWith() => this;
 
   @override
-  ThemeExtension<CouponTheme> lerp(
-    covariant ThemeExtension<CouponTheme>? other,
+  ThemeExtension<GenericPassTheme> lerp(
+    covariant ThemeExtension<GenericPassTheme>? other,
     double t,
   ) =>
       this;

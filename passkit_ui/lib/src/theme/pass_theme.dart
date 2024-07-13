@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 
+@deprecated
 class PassTheme {
   PassTheme({
     required this.backgroundColor,
