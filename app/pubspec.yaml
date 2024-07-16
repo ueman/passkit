@@ -10,6 +10,7 @@ environment:
 dependencies:
   android_intent_plus: ^5.0.2
   content_resolver: ^0.3.1
+  cupertino_icons: ^1.0.8
   desktop_drop: ^0.4.4
   drift: ^2.11.1
   file_picker: ^8.0.5

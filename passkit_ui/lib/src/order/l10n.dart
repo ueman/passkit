@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 abstract class OrderLocalizations {
   /// Creates a [OrderLocalizations].
@@ -35,6 +36,7 @@ abstract class OrderLocalizations {
   String get pickupInstructions;
   String get pickupWindow;
   String get cancelledStatus;
+  String formatCurrency(double amount, String currency);
 
   /// Merchant is responsible for the order, order details and receipt details.
   String get merchantIsResponsibleNote;
@@ -52,7 +54,8 @@ abstract class OrderLocalizations {
 class EnOrderLocalizations extends OrderLocalizations {
   @override
   String orderedAt(DateTime date) {
-    return 'Ordered $date';
+    final dateFormat = DateFormat.yMd('en_EN');
+    return 'Ordered ${dateFormat.format(date)}';
   }
 
   @override
@@ -155,4 +158,10 @@ class EnOrderLocalizations extends OrderLocalizations {
 
   @override
   String cancelledStatus = 'Cancelled';
+
+  @override
+  String formatCurrency(double amount, String currency) {
+    final numberFormat = NumberFormat.currency(name: currency, locale: 'en_EN');
+    return numberFormat.format(amount);
+  }
 }

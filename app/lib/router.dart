@@ -1,5 +1,6 @@
 import 'package:app/example/example_passes.dart';
 import 'package:app/home_page.dart';
+import 'package:app/import_order/import_order_page.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/settings/settings_page.dart';
@@ -15,6 +16,11 @@ final router = GoRouter(
       path: '/import',
       builder: (context, state) =>
           ImportPassPage(source: state.extra as PkPassImportSource),
+    ),
+    GoRoute(
+      path: '/importOrder',
+      builder: (context, state) =>
+          ImportOrderPage(source: state.extra as PkOrderImportSource),
     ),
     GoRoute(
       path: '/examples',

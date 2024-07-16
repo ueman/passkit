@@ -1,4 +1,5 @@
 import 'package:app/db/database.dart';
+import 'package:app/import_order/import_order_page.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/import_pass/pick_pass.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
@@ -51,12 +52,22 @@ class _HomePageState extends State<HomePage> {
         }
         // TODO(ueman): Add more validation
 
-        await router.push(
-          '/import',
-          extra: PkPassImportSource(
-            bytes: await detail.files.first.readAsBytes(),
-          ),
-        );
+        if (firstFile.name.endsWith('pkpass')) {
+          await router.push(
+            '/import',
+            extra: PkPassImportSource(
+              bytes: await detail.files.first.readAsBytes(),
+            ),
+          );
+        }
+        if (firstFile.name.endsWith('order')) {
+          await router.push(
+            '/importOrder',
+            extra: PkOrderImportSource(
+              bytes: await detail.files.first.readAsBytes(),
+            ),
+          );
+        }
       },
       child: Scaffold(
         appBar: AppBar(
