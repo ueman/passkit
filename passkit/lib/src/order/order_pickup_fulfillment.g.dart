@@ -18,9 +18,9 @@ OrderPickupFulfillment _$OrderPickupFulfillmentFromJson(
       displayName: json['displayName'] as String,
       fulfillmentIdentifier: json['fulfillmentIdentifier'] as String,
       fulfillmentType: json['fulfillmentType'] as String,
-      lineItems: json['lineItems'] == null
-          ? null
-          : OrderLineItem.fromJson(json['lineItems'] as Map<String, dynamic>),
+      lineItems: (json['lineItems'] as List<dynamic>?)
+          ?.map((e) => OrderLineItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       location: json['location'] == null
           ? null
           : OrderLocation.fromJson(json['location'] as Map<String, dynamic>),
@@ -31,10 +31,7 @@ OrderPickupFulfillment _$OrderPickupFulfillmentFromJson(
       pickupAt: json['pickupAt'] == null
           ? null
           : DateTime.parse(json['pickupAt'] as String),
-      pickupWindowDuration: json['pickupWindowDuration'] == null
-          ? null
-          : Duration(
-              microseconds: (json['pickupWindowDuration'] as num).toInt()),
+      pickupWindowDuration: json['pickupWindowDuration'] as String?,
       status: $enumDecode(_$PickupFulfillmentStatusEnumMap, json['status']),
       statusDescription: json['statusDescription'] as String?,
     );
@@ -52,7 +49,7 @@ Map<String, dynamic> _$OrderPickupFulfillmentToJson(
       'notes': instance.notes,
       'pickedUpAt': instance.pickedUpAt?.toIso8601String(),
       'pickupAt': instance.pickupAt?.toIso8601String(),
-      'pickupWindowDuration': instance.pickupWindowDuration?.inMicroseconds,
+      'pickupWindowDuration': instance.pickupWindowDuration,
       'status': _$PickupFulfillmentStatusEnumMap[instance.status]!,
       'statusDescription': instance.statusDescription,
     };

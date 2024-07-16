@@ -64,7 +64,7 @@ class OrderCurrencyAmount {
 
   /// (Required) The monetary amount associated with the currency.
   @JsonKey(name: 'amount')
-  final String amount;
+  final double amount;
 
   /// (Required) The ISO 4217 currency code that applies to the monetary amount.
   /// Minimum Length: 3

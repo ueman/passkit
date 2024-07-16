@@ -33,7 +33,7 @@ OrderData _$OrderDataFromJson(Map<String, dynamic> json) => OrderData(
       customer: json['customer'] == null
           ? null
           : OrderCustomer.fromJson(json['customer'] as Map<String, dynamic>),
-      fulfillments: _fulfillmentsFromJson(json['fulfillments'] as List),
+      fulfillments: _fulfillmentsFromJson(json['fulfillments'] as List?),
       lineItems: (json['lineItems'] as List<dynamic>?)
           ?.map((e) => OrderLineItem.fromJson(e as Map<String, dynamic>))
           .toList(),
