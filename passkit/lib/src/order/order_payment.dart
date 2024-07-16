@@ -14,6 +14,13 @@ class OrderPayment {
     required this.applePayTransactionIdentifiers,
   });
 
+  /// Creates an instance of this class from a JSON object
+  factory OrderPayment.fromJson(Map<String, dynamic> json) =>
+      _$OrderPaymentFromJson(json);
+
+  /// Converts this instance to a JSON object
+  Map<String, dynamic> toJson() => _$OrderPaymentToJson(this);
+
   /// (Required) The total amount to be paid.
   @JsonKey(name: 'total')
   final OrderCurrencyAmount total;
