@@ -32,7 +32,7 @@ Map<String, dynamic> _$OrderLineItemToJson(OrderLineItem instance) =>
 
 OrderCurrencyAmount _$OrderCurrencyAmountFromJson(Map<String, dynamic> json) =>
     OrderCurrencyAmount(
-      amount: json['amount'] as String,
+      amount: (json['amount'] as num).toDouble(),
       currency: json['currency'] as String,
     );
 

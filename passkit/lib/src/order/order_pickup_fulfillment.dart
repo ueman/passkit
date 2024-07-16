@@ -51,7 +51,7 @@ class OrderPickupFulfillment {
   final String fulfillmentType;
 
   /// The items for the customer to pick up, displayed in the order provided.
-  final OrderLineItem? lineItems;
+  final List<OrderLineItem>? lineItems;
 
   /// The latitude and longitude of the pickup location. Use this when you
   /// require greater precision than address alone (for example, for accurate
@@ -68,7 +68,7 @@ class OrderPickupFulfillment {
   final DateTime? pickupAt;
 
   /// The duration for which the pickup window is open, in ISO 8601-1 duration format.
-  final Duration? pickupWindowDuration;
+  final String? pickupWindowDuration;
 
   /// (Required) The status of the fulfillment.
   /// Possible Values: open, processing, readyForPickup, pickedUp, issue, cancelled

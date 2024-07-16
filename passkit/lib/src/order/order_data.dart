@@ -156,7 +156,10 @@ class OrderData {
   final Uri? webServiceURL;
 }
 
-List<Object>? _fulfillmentsFromJson(List<dynamic> fulfillments) {
+List<Object>? _fulfillmentsFromJson(List<dynamic>? fulfillments) {
+  if (fulfillments == null) {
+    return null;
+  }
   return fulfillments.map((dynamic json) {
     return json as Map<String, dynamic>;
   }).map((json) {
