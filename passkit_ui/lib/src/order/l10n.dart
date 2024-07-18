@@ -37,6 +37,9 @@ abstract class OrderLocalizations {
   String get pickupWindow;
   String get cancelledStatus;
   String formatCurrency(double amount, String currency);
+  String get markOrderCompleted;
+  String get track;
+  String get cancel;
 
   /// Merchant is responsible for the order, order details and receipt details.
   String get merchantIsResponsibleNote;
@@ -59,22 +62,22 @@ class EnOrderLocalizations extends OrderLocalizations {
   }
 
   @override
-  String amount = 'Amount';
+  final String amount = 'Amount';
 
   @override
-  String coupon = 'Coupon';
+  final String coupon = 'Coupon';
 
   @override
-  String courier = 'Courier';
+  final String courier = 'Courier';
 
   @override
-  String deleteOrder = 'Delete Order';
+  final String deleteOrder = 'Delete Order';
 
   @override
-  String deliveredStatus = 'Delivered';
+  final String deliveredStatus = 'Delivered';
 
   @override
-  String details = 'Details';
+  final String details = 'Details';
 
   @override
   String from(String merchant) {
@@ -82,32 +85,32 @@ class EnOrderLocalizations extends OrderLocalizations {
   }
 
   @override
-  String manageOrder = 'Manage Order';
+  final String manageOrder = 'Manage Order';
 
   @override
-  String markAsComplete = 'Mark as Complete';
+  final String markAsComplete = 'Mark as Complete';
 
   @override
-  String merchantIsResponsibleNote =
+  final String merchantIsResponsibleNote =
       'Merchant is responsible for the order, order details and receipt details.';
 
   @override
-  String orderId = 'Order ID';
+  final String orderId = 'Order ID';
 
   @override
-  String orderPlacedStatus = 'Order placed';
+  final String orderPlacedStatus = 'Order placed';
 
   @override
-  String orderTotal = 'Order total';
+  final String orderTotal = 'Order total';
 
   @override
-  String outForDeliveryStatus = 'Out for delivery';
+  final String outForDeliveryStatus = 'Out for delivery';
 
   @override
-  String pendingStatus = 'Pending';
+  final String pendingStatus = 'Pending';
 
   @override
-  String shareOrder = 'Share order';
+  final String shareOrder = 'Share order';
 
   @override
   String status(String status) {
@@ -115,34 +118,34 @@ class EnOrderLocalizations extends OrderLocalizations {
   }
 
   @override
-  String subtotal = 'Subtotal';
+  final String subtotal = 'Subtotal';
 
   @override
-  String tax = 'Tax';
+  final String tax = 'Tax';
 
   @override
-  String total = 'Total';
+  final String total = 'Total';
 
   @override
-  String trackShipment = 'Track Shipment';
+  final String trackShipment = 'Track Shipment';
 
   @override
-  String trackingId = 'Tracking ID';
+  final String trackingId = 'Tracking ID';
 
   @override
-  String transactions = 'Transactions';
+  final String transactions = 'Transactions';
 
   @override
-  String visitMerchantWebsite = 'Visit merchant website';
+  final String visitMerchantWebsite = 'Visit merchant website';
 
   @override
-  String barcode = 'Barcode';
+  final String barcode = 'Barcode';
 
   @override
-  String pickup = 'Pickup';
+  final String pickup = 'Pickup';
 
   @override
-  String pickupInstructions = 'Pickup Instructions';
+  final String pickupInstructions = 'Pickup Instructions';
 
   @override
   String pickupTime(DateTime from, DateTime to) {
@@ -151,17 +154,26 @@ class EnOrderLocalizations extends OrderLocalizations {
   }
 
   @override
-  String readyForPickup = 'Ready for Pickup';
+  final String readyForPickup = 'Ready for Pickup';
 
   @override
-  String pickupWindow = 'Pickup Window';
+  final String pickupWindow = 'Pickup Window';
 
   @override
-  String cancelledStatus = 'Cancelled';
+  final String cancelledStatus = 'Cancelled';
 
   @override
   String formatCurrency(double amount, String currency) {
     final numberFormat = NumberFormat.currency(name: currency, locale: 'en_EN');
     return numberFormat.format(amount);
   }
+
+  @override
+  final String markOrderCompleted = 'Mark as completed';
+
+  @override
+  final String track = 'Track';
+
+  @override
+  final String cancel = 'Cancel';
 }

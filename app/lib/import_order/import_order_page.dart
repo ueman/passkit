@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PkOrderImportSource {
   PkOrderImportSource({this.path, this.bytes})
@@ -65,7 +66,17 @@ class _ImportOrderPageState extends State<ImportOrderPage> {
         body: const Center(child: CircularProgressIndicator()),
       );
     } else {
-      return OrderWidget(order: order!);
+      return OrderWidget(
+        order: order!,
+        isOrderImport: true,
+        onDeleteOrderClicked: (order) {},
+        onManageOrderClicked: launchUrl,
+        onVisitMerchantWebsiteClicked: launchUrl,
+        onShareClicked: (order) {},
+        onMarkOrderCompletedClicked: (order) {},
+        onTrackingLinkClicked: launchUrl,
+        onImportOrderClicked: (order) {},
+      );
     }
   }
 }

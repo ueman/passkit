@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:archive/archive.dart';
+import 'package:archive/archive_io.dart';
 import 'package:passkit/src/archive_extensions.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
+import 'package:passkit/src/pkpass/pk_pass_image.dart';
 
 import 'order_data.dart';
 
@@ -39,7 +43,7 @@ class PkOrder {
       languageData: archive.getTranslations(),
       // source
       sourceData: bytes,
-    );
+    ).._archive = archive;
   }
 
   final OrderData order;
@@ -55,6 +59,26 @@ class PkOrder {
   /// Consists of a mapping of language identifier to translation key-value
   /// pairs.
   final Map<String, Map<String, dynamic>>? languageData;
+
+  late Archive _archive;
+
+  // TODO(any): Do proper image loading for orders
+  //            Do a sanity check for paths that already contains @2x/@3x modifier
+  PkPassImage loadImage(String path, {String? locale}) {
+    assert(path.isNotEmpty);
+
+    final fileExtension = path.split('.').last;
+    final twoXResPath =
+        path.replaceAll('.$fileExtension', '@2x.$fileExtension');
+    final threeXResPath =
+        path.replaceAll('.$fileExtension', '@3x.$fileExtension');
+
+    return PkPassImage(
+      image1: _archive.findFile(path)?.content as Uint8List?,
+      image2: _archive.findFile(twoXResPath)?.content as Uint8List?,
+      image3: _archive.findFile(threeXResPath)?.content as Uint8List?,
+    );
+  }
 
   /// The bytes of this PkPass
   final List<int> sourceData;

@@ -1,27 +1,92 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:passkit/passkit.dart';
+import 'package:passkit_ui/src/extensions/pk_pass_image_extension.dart';
 import 'package:passkit_ui/src/order/l10n.dart';
 import 'package:passkit_ui/src/order/order_details_model_sheet.dart';
 
 class OrderWidget extends StatelessWidget {
-  const OrderWidget({super.key, required this.order});
+  const OrderWidget({
+    super.key,
+    required this.order,
+    required this.isOrderImport,
+    required this.onManageOrderClicked,
+    required this.onVisitMerchantWebsiteClicked,
+    required this.onShareClicked,
+    required this.onDeleteOrderClicked,
+    required this.onMarkOrderCompletedClicked,
+    required this.onTrackingLinkClicked,
+    required this.onImportOrderClicked,
+  });
 
   final PkOrder order;
+
+  /// When this is an import, the navigation bar shows a cancle and track button.
+  /// When this is not an import, the navigation bar shows, depending on the status,
+  /// a mark as completed button, a share button, and a delete order button.
+  final bool isOrderImport;
+  final ValueChanged<Uri> onManageOrderClicked;
+  final ValueChanged<Uri> onVisitMerchantWebsiteClicked;
+  final ValueChanged<Uri> onTrackingLinkClicked;
+  final ValueChanged<PkOrder> onShareClicked;
+  final ValueChanged<PkOrder> onDeleteOrderClicked;
+  final ValueChanged<PkOrder> onMarkOrderCompletedClicked;
+  final ValueChanged<PkOrder> onImportOrderClicked;
 
   // Build the UI according to https://docs-assets.developer.apple.com/published/e5ec23af37b6a9d9cbc90e5d5f47bf8a/wallet-ot-status-on-the-way-fields@2x.png
   // https://developer.apple.com/design/human-interface-guidelines/wallet#Order-tracking
   @override
   Widget build(BuildContext context) {
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
     final l10n = EnOrderLocalizations();
+
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(order.order.merchant.displayName),
+        leading: isOrderImport
+            ? CupertinoButton(
+                onPressed: () => Navigator.maybePop(context),
+                padding: EdgeInsets.zero,
+                child: Text(l10n.cancel),
+              )
+            : null,
+        trailing: isOrderImport
+            ? CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => onImportOrderClicked(order),
+                child: Text(l10n.track),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () => onShareClicked(order),
+                    icon: Icon(Icons.adaptive.share),
+                  ),
+                  IconButton(
+                    onPressed: () => onShareClicked(order),
+                    icon: Icon(Icons.adaptive.more_outlined),
+                  ),
+                ],
+              ),
       ),
       backgroundColor:
           CupertinoColors.systemGroupedBackground.resolveFrom(context),
       child: ListView(
         children: [
-          //Image.memory(order.o)
+          if (order.order.merchant.logo != null)
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Image.memory(
+                order
+                    .loadImage(order.order.merchant.logo!)
+                    .forCorrectPixelRatio(devicePixelRatio),
+                fit: BoxFit.contain,
+                width: 150,
+                height: 150,
+              ),
+            ),
           Text(
             order.order.merchant.displayName,
             textAlign: TextAlign.center,
@@ -30,7 +95,10 @@ class OrderWidget extends StatelessWidget {
           Text(
             l10n.orderedAt(order.order.createdAt),
             textAlign: TextAlign.center,
-            style: CupertinoTheme.of(context).textTheme.textStyle,
+            style: CupertinoTheme.of(context)
+                .textTheme
+                .textStyle
+                .copyWith(color: CupertinoColors.systemGrey),
           ),
           if (order.order.orderProvider?.displayName != null)
             CupertinoListTile(
@@ -39,12 +107,16 @@ class OrderWidget extends StatelessWidget {
             ),
           if (order.order.fulfillments != null)
             for (final fulfillment in order.order.fulfillments!)
-              _FulfillmentSection(fulfillment: fulfillment, order: order),
+              _FulfillmentSection(
+                fulfillment: fulfillment,
+                order: order,
+                onTrackingLinkClicked: onTrackingLinkClicked,
+              ),
           DetailsSection(order: order),
           InfoSection(
             order: order,
-            onManageOrderClicked: (_) {},
-            onVisitMerchantWebsiteClicked: (_) {},
+            onManageOrderClicked: onManageOrderClicked,
+            onVisitMerchantWebsiteClicked: onVisitMerchantWebsiteClicked,
           ),
         ],
       ),
@@ -64,9 +136,21 @@ class DetailsSection extends StatelessWidget {
     return CupertinoListSection.insetGrouped(
       header: Text(l10n.details),
       children: [
-        CupertinoListTile.notched(
-          title: Text(l10n.orderId),
-          subtitle: Text(order.order.orderIdentifier),
+        CupertinoContextMenu(
+          actions: [
+            CupertinoContextMenuAction(
+              onPressed: () => Clipboard.setData(
+                ClipboardData(text: order.order.orderIdentifier),
+              ),
+              isDefaultAction: true,
+              trailingIcon: CupertinoIcons.number,
+              child: const Text('Copy Order Number'),
+            ),
+          ],
+          child: CupertinoListTile.notched(
+            title: Text(l10n.orderId),
+            subtitle: Text(order.order.orderIdentifier),
+          ),
         ),
         if (order.order.payment != null)
           CupertinoListTile.notched(
@@ -131,11 +215,14 @@ class InfoSection extends StatelessWidget {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 8),
           child: Text(
             l10n.merchantIsResponsibleNote,
             textAlign: TextAlign.center,
-            style: CupertinoTheme.of(context).textTheme.textStyle,
+            style: CupertinoTheme.of(context)
+                .textTheme
+                .textStyle
+                .copyWith(color: CupertinoColors.systemGrey),
           ),
         ),
       ],
@@ -144,16 +231,24 @@ class InfoSection extends StatelessWidget {
 }
 
 class _FulfillmentSection extends StatelessWidget {
-  const _FulfillmentSection({required this.fulfillment, required this.order});
+  const _FulfillmentSection({
+    required this.fulfillment,
+    required this.order,
+    required this.onTrackingLinkClicked,
+  });
 
   final Object fulfillment;
   final PkOrder order;
+  final ValueChanged<Uri> onTrackingLinkClicked;
 
   @override
   Widget build(BuildContext context) {
     return switch (fulfillment) {
-      OrderShippingFulfillment shipping =>
-        _OrderShippingFulfillmentWidget(fulfillment: shipping, order: order),
+      OrderShippingFulfillment shipping => _OrderShippingFulfillmentWidget(
+          fulfillment: shipping,
+          order: order,
+          onTrackingLinkClicked: onTrackingLinkClicked,
+        ),
       OrderPickupFulfillment orderPickup =>
         _OrderPickupFulfillmentWidget(fulfillment: orderPickup),
       _ => const SizedBox.shrink()
@@ -165,14 +260,17 @@ class _OrderShippingFulfillmentWidget extends StatelessWidget {
   const _OrderShippingFulfillmentWidget({
     required this.fulfillment,
     required this.order,
+    required this.onTrackingLinkClicked,
   });
 
   final OrderShippingFulfillment fulfillment;
   final PkOrder order;
+  final ValueChanged<Uri> onTrackingLinkClicked;
 
   @override
   Widget build(BuildContext context) {
     final l10n = EnOrderLocalizations();
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
 
     return CupertinoListSection.insetGrouped(
       children: [
@@ -205,15 +303,24 @@ class _OrderShippingFulfillmentWidget extends StatelessWidget {
               l10n.trackShipment,
               style: const TextStyle(color: CupertinoColors.link),
             ),
-            onTap: () {},
+            onTap: () => onTrackingLinkClicked(fulfillment.trackingURL!),
           ),
         if (fulfillment.lineItems != null)
           for (final lineItem in fulfillment.lineItems!)
             CupertinoListTile.notched(
+              leading: lineItem.image != null
+                  ? Image.memory(
+                      order
+                          .loadImage(lineItem.image!)
+                          .forCorrectPixelRatio(devicePixelRatio),
+                      fit: BoxFit.contain,
+                      width: 150,
+                      height: 150,
+                    )
+                  : null,
               title: Text(lineItem.title),
               subtitle:
                   lineItem.subtitle != null ? Text(lineItem.subtitle!) : null,
-              onTap: () {},
             ),
       ],
     );
