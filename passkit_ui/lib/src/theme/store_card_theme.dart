@@ -52,7 +52,7 @@ class StoreCardTheme extends ThemeExtension<StoreCardTheme>
       ),
       primaryLabelStyle: TextStyle(
         color: foregroundColor,
-        fontSize: 11,
+        fontSize: 14,
         fontWeight: FontWeight.w600,
       ),
       primaryTextStyle: TextStyle(
