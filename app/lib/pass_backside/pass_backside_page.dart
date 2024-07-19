@@ -12,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:passkit/passkit.dart';
+import 'package:passkit_ui/passkit_ui.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -127,6 +128,10 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
               icon: Icon(Icons.adaptive.share),
               onPressed: _sharePass,
             ),
+          IconButton(
+            icon: const Icon(Icons.image),
+            onPressed: _sharePassAsImage,
+          ),
         ],
       ),
       body: ListView(
@@ -196,6 +201,13 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
   void _sharePass() {
     final data = Uint8List.fromList(widget.pass.sourceData);
     Share.shareXFiles([XFile.fromData(data)]);
+  }
+
+  void _sharePassAsImage() async {
+    final imageData = await exportPassAsImage(widget.pass);
+    if (imageData != null) {
+      await Share.shareXFiles([XFile.fromData(imageData)]);
+    }
   }
 
   void _onAppClick(Uri url) {
