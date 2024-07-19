@@ -13,7 +13,6 @@ import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
 /// This speeds up decoding.
 /// See
-/// - https://api.dart.dev/stable/3.4.4/dart-convert/Utf8Decoder-class.html
 /// - https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
 final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
 
@@ -188,12 +187,15 @@ class PkPass {
   /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/PassPersonalization.html#//apple_ref/doc/uid/TP40012195-CH12-SW2
   final Personalization? personalization;
 
-  /// List of available languages. Each value is a language identifier
+  /// List of available languages. Each value is a language identifier as
+  /// described in https://developer.apple.com/documentation/xcode/choosing-localization-regions-and-scripts
   Iterable<String> get availableLanguages => languageData?.keys ?? [];
 
   /// Translations for this PkPass.
   /// Consists of a mapping of language identifier to translation key-value
   /// pairs.
+  /// The language identifier looks as described in
+  /// https://developer.apple.com/documentation/xcode/choosing-localization-regions-and-scripts
   final Map<String, Map<String, dynamic>>? languageData;
 
   /// The bytes of this PkPass
@@ -270,8 +272,8 @@ extension on Archive {
   PkPassImage? loadImage(String name) {
     return PkPassImage.fromImages(
       image1: findUint8ListForFile('$name.png'),
-      image2: findUint8ListForFile('$name@2.png'),
-      image3: findUint8ListForFile('$name@3.png'),
+      image2: findUint8ListForFile('$name@2x.png'),
+      image3: findUint8ListForFile('$name@3x.png'),
       localizedImages: loadLocalizedImage(name),
     );
   }

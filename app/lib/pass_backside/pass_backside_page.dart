@@ -6,6 +6,7 @@ import 'package:app/pass_backside/app_metadata_tile.dart';
 import 'package:app/pass_backside/placemark_tile.dart';
 import 'package:app/web_service/app_meta_data_client.dart';
 import 'package:app/web_service/app_metadata.dart';
+import 'package:app/widgets/squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -110,17 +111,20 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
     return Scaffold(
       appBar: AppBar(
         title: widget.pass.icon != null
-            ? Image.memory(
-                widget.pass.icon!.fromMultiplier(3),
-                fit: BoxFit.contain,
-                height: kToolbarHeight *
-                    (2 / 3), // unscientific calculation, but looks good
+            ? Squircle(
+                radius: 10,
+                child: Image.memory(
+                  widget.pass.icon!.fromMultiplier(3),
+                  fit: BoxFit.contain,
+                  height: kToolbarHeight *
+                      (2 / 3), // unscientific calculation, but looks good
+                ),
               )
             : null,
         actions: [
           if (sharingAllowed)
             IconButton(
-              icon: const Icon(Icons.share),
+              icon: Icon(Icons.adaptive.share),
               onPressed: _sharePass,
             ),
         ],
