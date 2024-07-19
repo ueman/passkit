@@ -189,16 +189,17 @@ class _BoarderPassClipper extends CustomClipper<Path> {
   _BoarderPassClipper({required this.notchRadius});
 
   final double notchRadius;
-  final offsetFromTop = 105.0;
+  final offsetFromTop = 108.0;
+  static const roundedBoarder = ShapeBorderClipper(
+    shape: ContinuousRectangleBorder(
+      // TODO(any): put this into the theme
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+    ),
+  );
 
   @override
   Path getClip(Size size) {
-    final roundedBorderPath = const ShapeBorderClipper(
-      shape: ContinuousRectangleBorder(
-        // TODO(any): put this into the theme
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-    ).getClip(size);
+    final roundedBorderPath = roundedBoarder.getClip(size);
 
     final path = Path()
       ..moveTo(0, 0)
@@ -208,6 +209,7 @@ class _BoarderPassClipper extends CustomClipper<Path> {
         clockwise: true,
         radius: const Radius.circular(1),
       )
+      //--
       ..lineTo(0.0, size.height) // bottom left corner
       ..lineTo(size.width, size.height) // bottom right corner
       //--

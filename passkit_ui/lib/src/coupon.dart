@@ -144,15 +144,15 @@ class _AuxiliaryRow extends StatelessWidget {
 enum Sides { bottom, vertical }
 
 class CouponClipper extends CustomClipper<Path> {
-  final double heightOfPoint;
-  final int numberOfPoints;
-  final Sides side;
-
   CouponClipper(
     this.side, {
     this.heightOfPoint = 12,
     this.numberOfPoints = 16,
   }); // final Sides side;
+
+  final double heightOfPoint;
+  final int numberOfPoints;
+  final Sides side;
 
   @override
   Path getClip(Size size) {
@@ -166,7 +166,11 @@ class CouponClipper extends CustomClipper<Path> {
     if (side == Sides.bottom || side == Sides.vertical) {
       while (x < size.width) {
         path.quadraticBezierTo(
-            x + increment / 2, yControlPoint, x + increment, y);
+          x + increment / 2,
+          yControlPoint,
+          x + increment,
+          y,
+        );
         x += increment;
       }
     }
@@ -176,7 +180,11 @@ class CouponClipper extends CustomClipper<Path> {
     if (side == Sides.vertical) {
       while (x > 0) {
         path.quadraticBezierTo(
-            x - increment / 2, heightOfPoint, x - increment, 0);
+          x - increment / 2,
+          heightOfPoint,
+          x - increment,
+          0,
+        );
         x -= increment;
       }
     }
