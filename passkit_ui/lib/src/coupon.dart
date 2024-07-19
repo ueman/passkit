@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
-import 'package:passkit_ui/src/theme/theme.dart';
+import 'package:passkit_ui/src/theme/coupon_theme.dart';
+import 'package:passkit_ui/src/widgets/header_row.dart';
 
 /// A coupon looks like the following:
 ///
@@ -21,90 +22,86 @@ class Coupon extends StatelessWidget {
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
 
-    final passTheme = pass.theme;
+    final theme = Theme.of(context).extension<CouponTheme>()!;
     final coupon = pass.pass.coupon!;
 
-    return Card(
-      color: passTheme.backgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+    return ClipPath(
+      clipBehavior: Clip.antiAlias,
+      clipper: CouponClipper(
+        Sides.vertical,
+        heightOfPoint: 8,
+        numberOfPoints: 40,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /// The logo image (logo.png) is displayed in the top left corner
-                /// of the pass, next to the logo text. The allotted space is
-                /// 160 x 50 points; in most cases it should be narrower.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 160,
-                    maxHeight: 50,
-                  ),
-                  child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Text(
-                  pass.pass.logoText!,
-                  style: passTheme.foregroundTextStyle,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      coupon.headerFields?.first.label ?? '',
-                      style: passTheme.labelTextStyle,
-                    ),
-                    Text(
-                      coupon.headerFields?.first.value?.toString() ?? '',
-                      style: passTheme.foregroundTextStyle,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Stack(
-              children: [
-                if (pass.strip != null)
-                  Image.memory(
-                    pass.strip!.forCorrectPixelRatio(devicePixelRatio),
-                  ),
-                _AuxiliaryRow(
-                  passTheme: passTheme,
-                  auxiliaryRow: coupon.primaryFields!,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: [
-                ...?coupon.secondaryFields,
-                ...?coupon.auxiliaryFields,
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (pass.footer != null)
-              Image.memory(
-                pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                fit: BoxFit.contain,
-                width: 286,
-                height: 15,
+      child: ColoredBox(
+        color: theme.backgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HeaderRow(
+                passTheme: theme,
+                headerFields: coupon.headerFields,
+                logo: pass.logo,
+                logoText: pass.pass.logoText,
               ),
-            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
-              PasskitBarcode(
-                barcode:
-                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
-                passTheme: passTheme,
+              const SizedBox(height: 16),
+              Stack(
+                children: [
+                  if (pass.strip != null)
+                    Image.memory(
+                      pass.strip!.forCorrectPixelRatio(devicePixelRatio),
+                    ),
+                  Column(
+                    crossAxisAlignment: coupon
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toCrossAxisAlign() ??
+                        CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        coupon.primaryFields?.firstOrNull?.formatted() ?? '',
+                        style: theme.primaryTextStyle,
+                        textAlign: coupon
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toFlutterTextAlign(),
+                      ),
+                      Text(
+                        coupon.primaryFields?.firstOrNull?.label ?? '',
+                        style: theme.primaryLabelStyle,
+                        textAlign: coupon
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toFlutterTextAlign(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-          ],
+              const SizedBox(height: 16),
+              _AuxiliaryRow(
+                passTheme: theme,
+                auxiliaryRow: [
+                  ...?coupon.secondaryFields,
+                  ...?coupon.auxiliaryFields,
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Spacer(),
+              if (pass.footer != null)
+                Image.memory(
+                  pass.footer!.forCorrectPixelRatio(devicePixelRatio),
+                  fit: BoxFit.contain,
+                  width: 286,
+                  height: 15,
+                ),
+              if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                  null)
+                PasskitBarcode(
+                  barcode:
+                      (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                  fontSize: 11,
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -118,7 +115,7 @@ class _AuxiliaryRow extends StatelessWidget {
   });
 
   final List<FieldDict> auxiliaryRow;
-  final PassTheme passTheme;
+  final CouponTheme passTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +126,12 @@ class _AuxiliaryRow extends StatelessWidget {
           children: [
             Text(
               item.label ?? '',
-              style: passTheme.labelTextStyle,
+              style: passTheme.auxiliaryLabelStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
-              item.value.toString(),
-              style: passTheme.foregroundTextStyle,
+              item.formatted() ?? '',
+              style: passTheme.auxiliaryTextStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
           ],
@@ -142,4 +139,59 @@ class _AuxiliaryRow extends StatelessWidget {
       }).toList(),
     );
   }
+}
+
+enum Sides { bottom, vertical }
+
+class CouponClipper extends CustomClipper<Path> {
+  CouponClipper(
+    this.side, {
+    this.heightOfPoint = 12,
+    this.numberOfPoints = 16,
+  }); // final Sides side;
+
+  final double heightOfPoint;
+  final int numberOfPoints;
+  final Sides side;
+
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0.0, size.height);
+    double x = 0;
+    double y = size.height;
+    double yControlPoint = size.height - heightOfPoint;
+    double increment = size.width / numberOfPoints;
+
+    if (side == Sides.bottom || side == Sides.vertical) {
+      while (x < size.width) {
+        path.quadraticBezierTo(
+          x + increment / 2,
+          yControlPoint,
+          x + increment,
+          y,
+        );
+        x += increment;
+      }
+    }
+
+    path.lineTo(size.width, 0.0);
+
+    if (side == Sides.vertical) {
+      while (x > 0) {
+        path.quadraticBezierTo(
+          x - increment / 2,
+          heightOfPoint,
+          x - increment,
+          0,
+        );
+        x -= increment;
+      }
+    }
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => oldClipper != this;
 }

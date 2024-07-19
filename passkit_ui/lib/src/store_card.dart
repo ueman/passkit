@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
-import 'package:passkit_ui/src/theme/theme.dart';
+import 'package:passkit_ui/src/theme/store_card_theme.dart';
+import 'package:passkit_ui/src/widgets/header_row.dart';
 
 /// A store card looks like the following:
 ///
@@ -22,82 +23,86 @@ class StoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
 
-    final passTheme = pass.theme;
+    final theme = Theme.of(context).extension<StoreCardTheme>()!;
     final storeCard = pass.pass.storeCard!;
 
-    return Card(
-      color: passTheme.backgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+    return ClipPath(
+      clipper: const ShapeBorderClipper(
+        shape: ContinuousRectangleBorder(
+          // TODO(any): put this into the theme
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /// The logo image (logo.png) is displayed in the top left corner
-                /// of the pass, next to the logo text. The allotted space is
-                /// 160 x 50 points; in most cases it should be narrower.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 160,
-                    maxHeight: 50,
-                  ),
-                  child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Text(
-                  pass.pass.logoText ?? '',
-                  style: passTheme.foregroundTextStyle,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      storeCard.headerFields?.first.label ?? '',
-                      style: passTheme.labelTextStyle,
-                    ),
-                    Text(
-                      storeCard.headerFields?.first.value?.toString() ?? '',
-                      style: passTheme.foregroundTextStyle,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: storeCard.primaryFields ?? [],
-            ),
-            const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: passTheme,
-              auxiliaryRow: [
-                ...?storeCard.secondaryFields,
-                ...?storeCard.auxiliaryFields,
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (pass.footer != null)
-              Image.memory(
-                pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                fit: BoxFit.contain,
-                width: 286,
-                height: 15,
+      child: ColoredBox(
+        color: theme.backgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HeaderRow(
+                passTheme: theme,
+                headerFields: storeCard.headerFields,
+                logo: pass.logo,
+                logoText: pass.pass.logoText,
               ),
-            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
-              PasskitBarcode(
-                barcode:
-                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
-                passTheme: passTheme,
+              const SizedBox(height: 16),
+              Stack(
+                children: [
+                  if (pass.strip != null)
+                    Image.memory(
+                      pass.strip!.forCorrectPixelRatio(devicePixelRatio),
+                    ),
+                  Column(
+                    crossAxisAlignment: storeCard
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toCrossAxisAlign() ??
+                        CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        storeCard.primaryFields?.firstOrNull?.formatted() ?? '',
+                        style: theme.primaryTextStyle,
+                        textAlign: storeCard
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toFlutterTextAlign(),
+                      ),
+                      Text(
+                        storeCard.primaryFields?.firstOrNull?.label ?? '',
+                        style: theme.primaryLabelStyle,
+                        textAlign: storeCard
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toFlutterTextAlign(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-          ],
+              const SizedBox(height: 16),
+              _AuxiliaryRow(
+                passTheme: theme,
+                auxiliaryRow: [
+                  ...?storeCard.secondaryFields,
+                  ...?storeCard.auxiliaryFields,
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Spacer(),
+              if (pass.footer != null)
+                Image.memory(
+                  pass.footer!.forCorrectPixelRatio(devicePixelRatio),
+                  fit: BoxFit.contain,
+                  width: 286,
+                  height: 15,
+                ),
+              if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                  null)
+                PasskitBarcode(
+                  barcode:
+                      (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                  fontSize: 11,
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -111,7 +116,7 @@ class _AuxiliaryRow extends StatelessWidget {
   });
 
   final List<FieldDict> auxiliaryRow;
-  final PassTheme passTheme;
+  final StoreCardTheme passTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -122,12 +127,12 @@ class _AuxiliaryRow extends StatelessWidget {
           children: [
             Text(
               item.label ?? '',
-              style: passTheme.labelTextStyle,
+              style: passTheme.auxiliaryLabelStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
-              item.value.toString(),
-              style: passTheme.foregroundTextStyle,
+              item.formatted() ?? '',
+              style: passTheme.auxiliaryTextStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
           ],

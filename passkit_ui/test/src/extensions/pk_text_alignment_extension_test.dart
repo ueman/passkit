@@ -11,21 +11,21 @@ void main() {
         PkTextAlignment.left: TextAlign.left,
         PkTextAlignment.center: TextAlign.center,
         PkTextAlignment.right: TextAlign.right,
-        PkTextAlignment.natural: TextAlign.left,
+        PkTextAlignment.natural: TextAlign.start,
       };
 
       final textAlignsRtl = {
         PkTextAlignment.left: TextAlign.left,
         PkTextAlignment.center: TextAlign.center,
         PkTextAlignment.right: TextAlign.right,
-        PkTextAlignment.natural: TextAlign.right,
+        PkTextAlignment.natural: TextAlign.start,
       };
 
       test(
         'returns TextAlign.left when is default case',
         () => expect(
           PkTextAlignment.natural.toFlutterTextAlign(),
-          equals(TextAlign.left),
+          equals(TextAlign.start),
         ),
       );
 

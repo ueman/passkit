@@ -1,4 +1,5 @@
 import 'package:app/web_service/app_metadata.dart';
+import 'package:app/widgets/squircle.dart';
 import 'package:flutter/material.dart';
 
 class AppMetadataTile extends StatelessWidget {
@@ -21,7 +22,10 @@ class AppMetadataTile extends StatelessWidget {
       title: Text(metadata.name),
       subtitle: Text(metadata.genres.join(', ')),
       // TODO(ueman): Icon should be an Apple typical squircle
-      leading: Image.network(iconUri.toString()),
+      leading: Squircle(
+        radius: 10,
+        child: Image.network(iconUri.toString()),
+      ),
       onTap: onAppTap == null ? null : () => onAppTap!(metadata.url),
     );
   }

@@ -2,7 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
-import 'package:passkit_ui/src/theme/theme.dart';
+import 'package:passkit_ui/src/theme/boarding_pass_theme.dart';
+import 'package:passkit_ui/src/widgets/header_row.dart';
 
 /// A boarding pass looks like the following:
 ///
@@ -25,130 +26,90 @@ class BoardingPass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
-    final passTheme = pass.theme;
+    final theme = Theme.of(context).extension<BoardingPassTheme>()!;
     final boardingPass = pass.pass.boardingPass!;
 
-    return Card(
-      color: passTheme.backgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                /// The logo image (logo.png) is displayed in the top left corner
-                /// of the pass, next to the logo text. The allotted space is
-                /// 160 x 50 points; in most cases it should be narrower.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 160,
-                    maxHeight: 50,
+    return ClipPath(
+      clipper: _BoarderPassClipper(notchRadius: 13),
+      child: ColoredBox(
+        color: theme.backgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  HeaderRow(
+                    passTheme: theme,
+                    logoText: pass.pass.logoText,
+                    headerFields: boardingPass.headerFields,
+                    logo: pass.logo,
                   ),
-                  child: Image.memory(
-                    pass.logo!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                if (pass.pass.logoText != null)
-                  // Should match the Headline text style from here for medium size devices
-                  // https://developer.apple.com/design/human-interface-guidelines/typography
-                  // Fontweight semibold (w600), font size 16
-                  Text(
-                    pass.pass.logoText!,
-                    style: passTheme.foregroundTextStyle.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                const Spacer(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // Should match the Headline text style from here for medium size devices
-                    // https://developer.apple.com/design/human-interface-guidelines/typography
-                    // Fontweight semibold (w600), font size 16
-                    Text(
-                      boardingPass.headerFields!.first.label ?? '',
-                      style: passTheme.labelTextStyle.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _FromTo(
+                        data: boardingPass.primaryFields!.first,
+                        theme: theme,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                       ),
-                    ),
-                    Text(
-                      boardingPass.headerFields!.first.value.toString(),
-                      style: passTheme.foregroundTextStyle.copyWith(
-                        fontSize: 19,
-                        height: 0.9,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TransitTypeWidget(
+                          transitType: boardingPass.transitType,
+                          width: 30,
+                          height: 30,
+                          color: theme.labelColor,
+                        ),
                       ),
+                      _FromTo(
+                        data: boardingPass.primaryFields![1],
+                        theme: theme,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  if (boardingPass.auxiliaryFields != null)
+                    _AuxiliaryRow(
+                      auxiliaryRow: pass.pass.boardingPass!.auxiliaryFields!,
+                      theme: theme,
+                    ),
+                  const SizedBox(height: 16),
+                  // secondary fields
+                  _AuxiliaryRow(
+                    auxiliaryRow: pass.pass.boardingPass!.secondaryFields!,
+                    theme: theme,
+                  ),
+
+                  const SizedBox(height: 16),
+                  if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                      null) ...[
+                    const Spacer(),
+                    Footer(footer: pass.footer),
+                    const SizedBox(height: 2),
+                    PasskitBarcode(
+                      barcode: (pass.pass.barcodes?.firstOrNull ??
+                          pass.pass.barcode)!,
+                      fontSize: 12,
                     ),
                   ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _FromTo(
-                  data: boardingPass.primaryFields!.first,
-                  passTheme: passTheme,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TransitTypeWidget(
-                    transitType: boardingPass.transitType,
-                    width: 40,
-                    height: 40,
-                    color: passTheme.foregroundColor,
+                ],
+              ),
+              if (pass.icon != null)
+                // TODO(ueman): check whether this matches Apples design guidelines
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Image.memory(
+                    pass.icon!.forCorrectPixelRatio(devicePixelRatio),
+                    fit: BoxFit.contain,
+                    height: 15,
                   ),
                 ),
-                _FromTo(
-                  data: boardingPass.primaryFields![1],
-                  passTheme: passTheme,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (boardingPass.auxiliaryFields != null)
-              _AuxiliaryRow(
-                auxiliaryRow: pass.pass.boardingPass!.auxiliaryFields!,
-                passTheme: passTheme,
-              ),
-            const SizedBox(height: 16),
-            // secondary fields
-            _AuxiliaryRow(
-              auxiliaryRow: pass.pass.boardingPass!.secondaryFields!,
-              passTheme: passTheme,
-            ),
-
-            const SizedBox(height: 16),
-            Footer(footer: pass.footer),
-            const SizedBox(height: 2),
-            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
-              PasskitBarcode(
-                barcode:
-                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
-                passTheme: passTheme,
-              ),
-
-            if (pass.icon != null)
-              // TODO(ueman): check whether this matches Apples design guidelines
-              Image.memory(
-                pass.icon!.forCorrectPixelRatio(devicePixelRatio),
-                fit: BoxFit.contain,
-                height: 15,
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -158,12 +119,12 @@ class BoardingPass extends StatelessWidget {
 class _FromTo extends StatelessWidget {
   const _FromTo({
     required this.data,
-    required this.passTheme,
+    required this.theme,
     required this.crossAxisAlignment,
   });
 
   final FieldDict data;
-  final PassTheme passTheme;
+  final BoardingPassTheme theme;
   final CrossAxisAlignment crossAxisAlignment;
 
   @override
@@ -174,19 +135,11 @@ class _FromTo extends StatelessWidget {
       children: [
         Text(
           data.label ?? '',
-          style: TextStyle(
-            color: passTheme.labelColor,
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-          ),
+          style: theme.primaryLabelStyle,
         ),
         Text(
-          data.value.toString(),
-          style: TextStyle(
-            color: passTheme.foregroundColor,
-            fontSize: 40,
-            height: 0.9,
-          ),
+          data.formatted() ?? '',
+          style: theme.primaryTextStyle,
         ),
       ],
     );
@@ -196,11 +149,11 @@ class _FromTo extends StatelessWidget {
 class _AuxiliaryRow extends StatelessWidget {
   const _AuxiliaryRow({
     required this.auxiliaryRow,
-    required this.passTheme,
+    required this.theme,
   });
 
   final List<FieldDict> auxiliaryRow;
-  final PassTheme passTheme;
+  final BoardingPassTheme theme;
 
   @override
   Widget build(BuildContext context) {
@@ -215,18 +168,12 @@ class _AuxiliaryRow extends StatelessWidget {
               children: [
                 Text(
                   item.label ?? '',
-                  style: passTheme.labelTextStyle.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: theme.auxiliaryLabelStyle,
                   textAlign: item.textAlignment.toFlutterTextAlign(),
                 ),
                 Text(
-                  item.value.toString(),
-                  style: passTheme.foregroundTextStyle.copyWith(
-                    fontSize: 16,
-                    height: 0.9,
-                  ),
+                  item.formatted() ?? '',
+                  style: theme.auxiliaryTextStyle,
                   textAlign: item.textAlignment.toFlutterTextAlign(),
                 ),
               ],
@@ -236,4 +183,49 @@ class _AuxiliaryRow extends StatelessWidget {
       ],
     );
   }
+}
+
+class _BoarderPassClipper extends CustomClipper<Path> {
+  _BoarderPassClipper({required this.notchRadius});
+
+  final double notchRadius;
+  final offsetFromTop = 108.0;
+  static const roundedBoarder = ShapeBorderClipper(
+    shape: ContinuousRectangleBorder(
+      // TODO(any): put this into the theme
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+    ),
+  );
+
+  @override
+  Path getClip(Size size) {
+    final roundedBorderPath = roundedBoarder.getClip(size);
+
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(0.0, offsetFromTop)
+      ..arcToPoint(
+        Offset(0, offsetFromTop + notchRadius),
+        clockwise: true,
+        radius: const Radius.circular(1),
+      )
+      //--
+      ..lineTo(0.0, size.height) // bottom left corner
+      ..lineTo(size.width, size.height) // bottom right corner
+      //--
+      ..lineTo(size.width, offsetFromTop + notchRadius)
+      ..arcToPoint(
+        Offset(size.width, offsetFromTop),
+        clockwise: true,
+        radius: const Radius.circular(1),
+      )
+      ..lineTo(size.width, 0) // top right corner
+      ..lineTo(0, 0)
+      ..close();
+
+    return Path.combine(PathOperation.intersect, roundedBorderPath, path);
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => oldClipper != this;
 }

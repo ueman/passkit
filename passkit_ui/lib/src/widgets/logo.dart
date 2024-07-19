@@ -20,13 +20,15 @@ class Logo extends StatelessWidget {
 
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
 
-    return FittedBox(
-      clipBehavior: Clip.hardEdge,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minHeight: 30,
+        maxHeight: 30,
+        maxWidth: 96,
+      ),
       child: Image.memory(
         logo!.forCorrectPixelRatio(devicePixelRatio),
-        fit: BoxFit.cover,
-        width: 160,
-        height: 50,
+        fit: BoxFit.contain,
       ),
     );
   }
