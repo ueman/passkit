@@ -26,74 +26,83 @@ class StoreCard extends StatelessWidget {
     final theme = Theme.of(context).extension<StoreCardTheme>()!;
     final storeCard = pass.pass.storeCard!;
 
-    return ColoredBox(
-      color: theme.backgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            HeaderRow(
-              passTheme: theme,
-              headerFields: storeCard.headerFields,
-              logo: pass.logo,
-              logoText: pass.pass.logoText,
-            ),
-            const SizedBox(height: 16),
-            Stack(
-              children: [
-                if (pass.strip != null)
-                  Image.memory(
-                    pass.strip!.forCorrectPixelRatio(devicePixelRatio),
+    return ClipPath(
+      clipper: const ShapeBorderClipper(
+        shape: ContinuousRectangleBorder(
+          // TODO(any): put this into the theme
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+      ),
+      child: ColoredBox(
+        color: theme.backgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HeaderRow(
+                passTheme: theme,
+                headerFields: storeCard.headerFields,
+                logo: pass.logo,
+                logoText: pass.pass.logoText,
+              ),
+              const SizedBox(height: 16),
+              Stack(
+                children: [
+                  if (pass.strip != null)
+                    Image.memory(
+                      pass.strip!.forCorrectPixelRatio(devicePixelRatio),
+                    ),
+                  Column(
+                    crossAxisAlignment: storeCard
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toCrossAxisAlign() ??
+                        CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        storeCard.primaryFields?.firstOrNull?.formatted() ?? '',
+                        style: theme.primaryTextStyle,
+                        textAlign: storeCard
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toFlutterTextAlign(),
+                      ),
+                      Text(
+                        storeCard.primaryFields?.firstOrNull?.label ?? '',
+                        style: theme.primaryLabelStyle,
+                        textAlign: storeCard
+                            .primaryFields?.firstOrNull?.textAlignment
+                            .toFlutterTextAlign(),
+                      ),
+                    ],
                   ),
-                Column(
-                  crossAxisAlignment: storeCard
-                          .primaryFields?.firstOrNull?.textAlignment
-                          .toCrossAxisAlign() ??
-                      CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      storeCard.primaryFields?.firstOrNull?.formatted() ?? '',
-                      style: theme.primaryTextStyle,
-                      textAlign: storeCard
-                          .primaryFields?.firstOrNull?.textAlignment
-                          .toFlutterTextAlign(),
-                    ),
-                    Text(
-                      storeCard.primaryFields?.firstOrNull?.label ?? '',
-                      style: theme.primaryLabelStyle,
-                      textAlign: storeCard
-                          .primaryFields?.firstOrNull?.textAlignment
-                          .toFlutterTextAlign(),
-                    ),
-                  ],
+                ],
+              ),
+              const SizedBox(height: 16),
+              _AuxiliaryRow(
+                passTheme: theme,
+                auxiliaryRow: [
+                  ...?storeCard.secondaryFields,
+                  ...?storeCard.auxiliaryFields,
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Spacer(),
+              if (pass.footer != null)
+                Image.memory(
+                  pass.footer!.forCorrectPixelRatio(devicePixelRatio),
+                  fit: BoxFit.contain,
+                  width: 286,
+                  height: 15,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _AuxiliaryRow(
-              passTheme: theme,
-              auxiliaryRow: [
-                ...?storeCard.secondaryFields,
-                ...?storeCard.auxiliaryFields,
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Spacer(),
-            if (pass.footer != null)
-              Image.memory(
-                pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                fit: BoxFit.contain,
-                width: 286,
-                height: 15,
-              ),
-            if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) != null)
-              PasskitBarcode(
-                barcode:
-                    (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
-                fontSize: 11,
-              ),
-          ],
+              if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                  null)
+                PasskitBarcode(
+                  barcode:
+                      (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                  fontSize: 11,
+                ),
+            ],
+          ),
         ),
       ),
     );

@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
-import 'package:passkit_ui/src/theme/theme.dart';
+import 'package:passkit_ui/src/theme/event_ticket_theme.dart';
 
 /// Event tickets
 ///
@@ -28,7 +28,7 @@ class EventTicket extends StatelessWidget {
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
 
-    final passTheme = pass.theme;
+    final passTheme = Theme.of(context).extension<EventTicketTheme>()!;
     final eventTicket = pass.pass.eventTicket!;
 
     assert(
@@ -39,111 +39,116 @@ class EventTicket extends StatelessWidget {
       "An event ticket can display logo, strip, background, or thumbnail images. However, if you supply a strip image, don't include a background or thumbnail image.",
     );
 
-    return ColoredBox(
-      color: passTheme.backgroundColor,
-      child: Stack(
-        children: [
-          if (pass.background != null)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              top: 0,
-              child: ClipRRect(
-                child: ImageFiltered(
-                  imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Image.memory(
-                    fit: BoxFit.cover,
-                    pass.background!.forCorrectPixelRatio(devicePixelRatio),
+    return ClipPath(
+      // TODO(any): should be part of the theme
+      clipper: _TicketPassClipper(notchRadius: 50),
+      child: ColoredBox(
+        color: passTheme.backgroundColor,
+        child: Stack(
+          children: [
+            if (pass.background != null)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                top: 0,
+                child: ClipRRect(
+                  child: ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Image.memory(
+                      fit: BoxFit.cover,
+                      pass.background!.forCorrectPixelRatio(devicePixelRatio),
+                    ),
                   ),
                 ),
               ),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Logo(logo: pass.logo),
-                    if (pass.pass.logoText != null)
-                      Text(
-                        pass.pass.logoText!,
-                        style: passTheme.foregroundTextStyle,
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Logo(logo: pass.logo),
+                      if (pass.pass.logoText != null)
+                        Text(
+                          pass.pass.logoText!,
+                          style: passTheme.logoTextStyle,
+                        ),
+                      const Spacer(),
+                      // TODO(ueman): The header should be as wide as the thumbnail
+                      Column(
+                        children: [
+                          Text(
+                            eventTicket.headerFields?.first.label ?? '',
+                            style: passTheme.headerLabelStyle,
+                          ),
+                          Text(
+                            eventTicket.headerFields?.first.value?.toString() ??
+                                '',
+                            style: passTheme.headerTextStyle,
+                          ),
+                        ],
                       ),
-                    const Spacer(),
-                    // TODO(ueman): The header should be as wide as the thumbnail
-                    Column(
-                      children: [
-                        Text(
-                          eventTicket.headerFields?.first.label ?? '',
-                          style: passTheme.labelTextStyle,
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _AuxiliaryRow(
+                        passTheme: passTheme,
+                        auxiliaryRow: eventTicket.primaryFields!,
+                      ),
+                      // The thumbnail image (`thumbnail.png`) displayed next to the
+                      // fields on the front of the pass. The allotted space is
+                      // 90 x 90 points. The aspect ratio should be in the range of
+                      // 2:3 to 3:2, otherwise the image is cropped.
+                      if (pass.thumbnail != null)
+                        Image.memory(
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.contain,
+                          pass.thumbnail!
+                              .forCorrectPixelRatio(devicePixelRatio),
                         ),
-                        Text(
-                          eventTicket.headerFields?.first.value?.toString() ??
-                              '',
-                          style: passTheme.foregroundTextStyle,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                    ],
+                  ),
+                  if (eventTicket.secondaryFields != null)
                     _AuxiliaryRow(
                       passTheme: passTheme,
-                      auxiliaryRow: eventTicket.primaryFields!,
+                      auxiliaryRow: eventTicket.secondaryFields!,
                     ),
-                    // The thumbnail image (`thumbnail.png`) displayed next to the
-                    // fields on the front of the pass. The allotted space is
-                    // 90 x 90 points. The aspect ratio should be in the range of
-                    // 2:3 to 3:2, otherwise the image is cropped.
-                    if (pass.thumbnail != null)
-                      Image.memory(
-                        width: 90,
-                        height: 90,
-                        fit: BoxFit.contain,
-                        pass.thumbnail!.forCorrectPixelRatio(devicePixelRatio),
-                      ),
+                  if (eventTicket.auxiliaryFields != null) ...[
+                    const SizedBox(height: 16),
+                    _AuxiliaryRow(
+                      passTheme: passTheme,
+                      auxiliaryRow: eventTicket.auxiliaryFields!,
+                    ),
                   ],
-                ),
-                if (eventTicket.secondaryFields != null)
-                  _AuxiliaryRow(
-                    passTheme: passTheme,
-                    auxiliaryRow: eventTicket.secondaryFields!,
-                  ),
-                if (eventTicket.auxiliaryFields != null) ...[
                   const SizedBox(height: 16),
-                  _AuxiliaryRow(
-                    passTheme: passTheme,
-                    auxiliaryRow: eventTicket.auxiliaryFields!,
-                  ),
+                  if (pass.footer != null)
+                    Image.memory(
+                      pass.footer!.forCorrectPixelRatio(devicePixelRatio),
+                      fit: BoxFit.contain,
+                      width: 286,
+                      height: 15,
+                    ),
+                  if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                      null)
+                    PasskitBarcode(
+                      barcode: (pass.pass.barcodes?.firstOrNull ??
+                          pass.pass.barcode)!,
+                      fontSize: 11,
+                    ),
                 ],
-                const SizedBox(height: 16),
-                if (pass.footer != null)
-                  Image.memory(
-                    pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                    width: 286,
-                    height: 15,
-                  ),
-                if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
-                    null)
-                  PasskitBarcode(
-                    barcode:
-                        (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
-                    fontSize: 11,
-                  ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -156,7 +161,7 @@ class _AuxiliaryRow extends StatelessWidget {
   });
 
   final List<FieldDict> auxiliaryRow;
-  final PassTheme passTheme;
+  final EventTicketTheme passTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -167,12 +172,12 @@ class _AuxiliaryRow extends StatelessWidget {
           children: [
             Text(
               item.label ?? '',
-              style: passTheme.labelTextStyle,
+              style: passTheme.secondaryWithStripLabelStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
             Text(
               item.formatted() ?? '',
-              style: passTheme.foregroundTextStyle,
+              style: passTheme.secondaryWithStripTextStyle,
               textAlign: item.textAlignment.toFlutterTextAlign(),
             ),
           ],
@@ -180,4 +185,36 @@ class _AuxiliaryRow extends StatelessWidget {
       }).toList(),
     );
   }
+}
+
+class _TicketPassClipper extends CustomClipper<Path> {
+  _TicketPassClipper({required this.notchRadius});
+
+  final double notchRadius;
+
+  @override
+  Path getClip(Size size) {
+    final position = (size.width / 2) + (notchRadius / 2);
+    if (position > size.width) {
+      throw Exception('position is greater than width.');
+    }
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(position - notchRadius, 0.0)
+      ..arcToPoint(
+        Offset(position, 0),
+        clockwise: false,
+        radius: const Radius.circular(1),
+      )
+      ..lineTo(size.width, 0.0)
+      ..lineTo(size.width, size.height);
+
+    path.lineTo(0.0, size.height);
+
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => oldClipper != this;
 }

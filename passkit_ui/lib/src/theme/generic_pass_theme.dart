@@ -3,7 +3,7 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/base_pass_theme.dart';
 
-/// ThemeExtension for a event ticket.
+/// ThemeExtension for a generic pass.
 ///
 /// ![](https://docs-assets.developer.apple.com/published/2f8c9366433d611399132b3075659cba/generic@2x.png)
 /// ![](https://docs-assets.developer.apple.com/published/0ea8eaf5a48417f07aed39a2e317710e/generic-pass-layout-1@2x.png)
@@ -62,6 +62,42 @@ class GenericPassTheme extends ThemeExtension<GenericPassTheme>
         fontWeight: FontWeight.w600,
       ),
       auxiliaryTextStyle: foregroundTextStyle.copyWith(
+        fontSize: 12,
+        height: 0.9,
+      ),
+      primaryWithStripLabelStyle: TextStyle(
+        color: foregroundColor,
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+      ),
+      primaryWithStripTextStyle: TextStyle(
+        color: foregroundColor,
+        fontSize: 50,
+        height: 0.9,
+      ),
+      secondaryWithStripLabelStyle: labelTextStyle.copyWith(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+      ),
+      secondaryWithStripTextStyle: foregroundTextStyle.copyWith(
+        fontSize: 12,
+        height: 0.9,
+      ),
+      primaryWithThumbnailLabelStyle: TextStyle(
+        color: foregroundColor,
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+      ),
+      primaryWithThumbnailTextStyle: TextStyle(
+        color: foregroundColor,
+        fontSize: 50,
+        height: 0.9,
+      ),
+      secondaryWithThumbnailLabelStyle: labelTextStyle.copyWith(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+      ),
+      secondaryWithThumbnailTextStyle: foregroundTextStyle.copyWith(
         fontSize: 12,
         height: 0.9,
       ),
