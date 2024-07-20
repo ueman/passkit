@@ -4,6 +4,14 @@ import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/store_card_theme.dart';
 import 'package:passkit_ui/src/widgets/header_row.dart';
 
+/// Store card
+/// Use the store card style for store loyalty cards, discount cards,
+/// points cards, and gift cards. If an account related to a store card carries
+/// a balance, the pass usually shows the current balance.
+///
+/// A store card can display logo and strip images, and it can have up to four
+/// secondary and auxiliary fields, all displayed on one row.
+///
 /// A store card looks like the following:
 ///
 /// ![](https://docs-assets.developer.apple.com/published/f81fefc86a3b46a8052c2164131d2583/store-card@2x.png)
