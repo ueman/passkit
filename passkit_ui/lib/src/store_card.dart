@@ -13,7 +13,6 @@ import 'package:passkit_ui/src/widgets/header_row.dart';
 /// For more information see
 /// - https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW1
 /// - https://developer.apple.com/design/human-interface-guidelines/wallet
-
 class StoreCard extends StatelessWidget {
   const StoreCard({super.key, required this.pass});
 
@@ -26,6 +25,10 @@ class StoreCard extends StatelessWidget {
     final theme = Theme.of(context).extension<StoreCardTheme>()!;
     final storeCard = pass.pass.storeCard!;
 
+    const padding = 16.0;
+    const verticalPadding = EdgeInsets.symmetric(vertical: padding);
+    const horizontalPadding = EdgeInsets.symmetric(horizontal: padding);
+
     return ClipPath(
       clipper: const ShapeBorderClipper(
         shape: ContinuousRectangleBorder(
@@ -36,15 +39,18 @@ class StoreCard extends StatelessWidget {
       child: ColoredBox(
         color: theme.backgroundColor,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: verticalPadding,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HeaderRow(
-                passTheme: theme,
-                headerFields: storeCard.headerFields,
-                logo: pass.logo,
-                logoText: pass.pass.logoText,
+              Padding(
+                padding: horizontalPadding,
+                child: HeaderRow(
+                  passTheme: theme,
+                  headerFields: storeCard.headerFields,
+                  logo: pass.logo,
+                  logoText: pass.pass.logoText,
+                ),
               ),
               const SizedBox(height: 16),
               Stack(
@@ -52,38 +58,45 @@ class StoreCard extends StatelessWidget {
                   if (pass.strip != null)
                     Image.memory(
                       pass.strip!.forCorrectPixelRatio(devicePixelRatio),
+                      height: 123,
+                      width: 320,
+                      fit: BoxFit.cover,
                     ),
-                  Column(
-                    crossAxisAlignment: storeCard
-                            .primaryFields?.firstOrNull?.textAlignment
-                            .toCrossAxisAlign() ??
-                        CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        storeCard.primaryFields?.firstOrNull?.formatted() ?? '',
-                        style: theme.primaryTextStyle,
-                        textAlign: storeCard
-                            .primaryFields?.firstOrNull?.textAlignment
-                            .toFlutterTextAlign(),
-                      ),
-                      Text(
-                        storeCard.primaryFields?.firstOrNull?.label ?? '',
-                        style: theme.primaryLabelStyle,
-                        textAlign: storeCard
-                            .primaryFields?.firstOrNull?.textAlignment
-                            .toFlutterTextAlign(),
-                      ),
-                    ],
+                  Padding(
+                    padding: horizontalPadding.copyWith(top: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          storeCard.primaryFields?.firstOrNull?.formatted() ??
+                              '',
+                          style: theme.primaryTextStyle,
+                          textAlign: storeCard
+                              .primaryFields?.firstOrNull?.textAlignment
+                              .toFlutterTextAlign(),
+                        ),
+                        Text(
+                          storeCard.primaryFields?.firstOrNull?.label ?? '',
+                          style: theme.primaryLabelStyle,
+                          textAlign: storeCard
+                              .primaryFields?.firstOrNull?.textAlignment
+                              .toFlutterTextAlign(),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              _AuxiliaryRow(
-                passTheme: theme,
-                auxiliaryRow: [
-                  ...?storeCard.secondaryFields,
-                  ...?storeCard.auxiliaryFields,
-                ],
+              Padding(
+                padding: horizontalPadding,
+                child: _AuxiliaryRow(
+                  passTheme: theme,
+                  auxiliaryRow: [
+                    ...?storeCard.secondaryFields,
+                    ...?storeCard.auxiliaryFields,
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
               const Spacer(),
@@ -123,19 +136,22 @@ class _AuxiliaryRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
-        return Column(
-          children: [
-            Text(
-              item.label ?? '',
-              style: passTheme.auxiliaryLabelStyle,
-              textAlign: item.textAlignment.toFlutterTextAlign(),
-            ),
-            Text(
-              item.formatted() ?? '',
-              style: passTheme.auxiliaryTextStyle,
-              textAlign: item.textAlignment.toFlutterTextAlign(),
-            ),
-          ],
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                item.label ?? '',
+                style: passTheme.auxiliaryLabelStyle,
+                textAlign: item.textAlignment.toFlutterTextAlign(),
+              ),
+              Text(
+                item.formatted() ?? '',
+                style: passTheme.auxiliaryTextStyle,
+                textAlign: item.textAlignment.toFlutterTextAlign(),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );

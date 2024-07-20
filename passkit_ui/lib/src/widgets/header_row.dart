@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:passkit/passkit.dart';
+import 'package:passkit_ui/src/extensions/pk_text_alignment_extension.dart';
+
 import 'package:passkit_ui/src/theme/base_pass_theme.dart';
 import 'package:passkit_ui/src/widgets/logo.dart';
 
@@ -38,10 +40,14 @@ class HeaderRow extends StatelessWidget {
               Text(
                 headerFields?.first.label ?? '',
                 style: passTheme.headerLabelStyle,
+                textAlign:
+                    headerFields?.first.textAlignment.toFlutterTextAlign(),
               ),
               Text(
                 headerFields?.first.value?.toString() ?? '',
                 style: passTheme.headerTextStyle,
+                textAlign:
+                    headerFields?.first.textAlignment.toFlutterTextAlign(),
               ),
             ],
           ),
