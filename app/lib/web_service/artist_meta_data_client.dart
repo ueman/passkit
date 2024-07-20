@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:app/web_service/app_metadata.dart';
 import 'package:app/web_service/artist_metadata.dart';
 import 'package:http/http.dart';
 
