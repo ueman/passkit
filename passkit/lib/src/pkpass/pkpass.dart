@@ -68,6 +68,7 @@ class PkPass {
     final archive = decoder.decodeBytes(bytes);
 
     final manifest = archive.readManifest();
+    final passData = archive.readPass();
     if (!skipVerification) {
       archive.checkSha1Checksums(manifest);
       final manifestContent =
@@ -77,14 +78,15 @@ class PkPass {
 
       final isValid = verifySignature(
         Uint8List.fromList(signatureContent),
-        Uint8List.fromList(sha1.convert(manifestContent).bytes),
+        Uint8List.fromList(sha256.convert(manifestContent).bytes),
+        passData,
       );
       print(isValid);
     }
 
     return PkPass(
       // data
-      pass: archive.readPass(),
+      pass: passData,
       manifest: manifest,
       personalization: archive.readPersonalization(),
       languageData: archive.getTranslations(),
