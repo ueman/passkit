@@ -5,16 +5,19 @@ class PassSizer extends StatelessWidget {
 
   final Widget child;
 
+  static const width = 320.0;
+  static const height = 460.0;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 460,
-      width: 320,
+      height: height,
+      width: width,
       child: FittedBox(
         fit: BoxFit.contain,
         child: SizedBox(
-          height: 460,
-          width: 320,
+          height: height,
+          width: width,
           child: child,
         ),
       ),
