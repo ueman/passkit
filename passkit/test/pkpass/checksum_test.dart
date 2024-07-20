@@ -50,4 +50,13 @@ void main() {
       returnsNormally,
     );
   });
+
+  test('does not throw for valid checksums', () async {
+    final bytes = File('test/sample_passes/Coupon.pkpass').readAsBytesSync();
+
+    expect(
+      () => PkPass.fromBytes(bytes),
+      returnsNormally,
+    );
+  });
 }
