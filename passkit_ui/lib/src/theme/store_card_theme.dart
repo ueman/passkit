@@ -65,7 +65,7 @@ class StoreCardTheme extends ThemeExtension<StoreCardTheme>
         fontWeight: FontWeight.w600,
       ),
       auxiliaryTextStyle: foregroundTextStyle.copyWith(
-        fontSize: 12,
+        fontSize: 16,
         height: 0.9,
       ),
     );
