@@ -21,6 +21,7 @@ class PkPassWidget extends StatelessWidget {
     required this.pass,
   });
 
+  /// The pass that's visualized by this widget.
   final PkPass pass;
 
   @override
