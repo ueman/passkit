@@ -1,3 +1,5 @@
+## 0.0.4
+
 ## 0.0.3
 
 - Greatly improved visual representation of all pass types
