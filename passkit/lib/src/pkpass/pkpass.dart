@@ -55,7 +55,7 @@ class PkPass {
   /// Parses bytes to a [PkPass] file.
   /// Setting [skipVerification] to true disables any checksum or signature
   /// verification and validation.
-  // TODO(ueman): Provide an async method for this.
+  // TODO(any): Provide an async method for this.
   static PkPass fromBytes(
     final List<int> bytes, {
     bool skipVerification = false,
@@ -76,12 +76,11 @@ class PkPass {
       final signatureContent =
           archive.findFile('signature')!.content as List<int>;
 
-      final isValid = verifySignature(
-        Uint8List.fromList(signatureContent),
-        Uint8List.fromList(sha256.convert(manifestContent).bytes),
-        passData,
+      verifySignature(
+        signature: Uint8List.fromList(signatureContent),
+        manifestHash: Uint8List.fromList(sha256.convert(manifestContent).bytes),
+        pass: passData,
       );
-      print(isValid);
     }
 
     return PkPass(

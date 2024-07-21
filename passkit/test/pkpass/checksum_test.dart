@@ -52,7 +52,8 @@ void main() {
   });
 
   test('does not throw for valid checksums', () async {
-    final bytes = File('test/sample_passes/kino.pkpass').readAsBytesSync();
+    final bytes =
+        File('test/sample_passes/coffee_club.pkpass').readAsBytesSync();
 
     expect(
       () => PkPass.fromBytes(bytes),

@@ -1,27 +1,42 @@
 import 'dart:typed_data';
 import 'package:passkit/passkit.dart';
 import 'package:pkcs7/pkcs7.dart';
+import 'package:collection/collection.dart';
 
-bool verifySignature(
-  Uint8List signature,
-  Uint8List manifestHash,
-  PassData pass,
-) {
-  final wwdrG4 =
-      X509.fromDer(Uint8List.fromList(Worldwide_Developer_Relations_G4));
+// What about old WWDR certs? Apple seemingly accepts them just fine?
+// Only make sure the signing cert matches the pass' contents?
+// Should pass updates just have valid certs, or is it fine
+// as long as the contents match?
+bool verifySignature({
+  required Uint8List signature,
+  required Uint8List manifestHash,
+  required PassData pass,
+  DateTime? now,
+  bool checkOutdatedIssuerCerts = false,
+}) {
   final pkcs7 = Pkcs7.fromDer(signature);
 
-/*
-  final passKitIssuerCert = pkcs7.certificates.firstWhere((x509) {
-    return x509.serialNumber == BigInt.parse(pass.serialNumber);
+  if (checkOutdatedIssuerCerts) {
+    for (final cert in pkcs7.certificates) {
+      if (cert.notAfter.isBefore(now ?? DateTime.now())) {
+        throw Exception('Certificate of the PkPass expired');
+      }
+    }
+  }
+
+  final issuerCert = pkcs7.certificates.firstWhereOrNull((x509) {
+    return x509.subject.firstWhereOrNull((it) => it.key.name == 'UID')?.value ==
+            pass.passTypeIdentifier &&
+        x509.subject
+                .firstWhereOrNull(
+                  (it) => it.key.name == 'organizationalUnitName',
+                )
+                ?.value ==
+            pass.teamIdentifier;
   });
-  passKitIssuerCert.subject.firstWhere((it) => it.key.name == 'UID').value ==
-      pass.passTypeIdentifier;
-  passKitIssuerCert.subject
-          .firstWhere((it) => it.key.name == 'organizationalUnitName')
-          .value ==
-      pass.passTypeIdentifier;
-  */
+  if (issuerCert == null) {
+    throw Exception("Cert from issues doesn't match content of the pass");
+  }
 
   // there must be a certificate in pkcs7.certificates which
   // - has a subject with a UID which matches the passTypeIdentifier
@@ -29,16 +44,22 @@ bool verifySignature(
   // there must be a certificate in there which matches an APPLE WWDR certificate
 
   // From https://developer.apple.com/documentation/walletpasses/building_a_pass
-  // Set the passTypeIdentifier of Pass in the pass.json file to the identifier. Set the serialNumber key to the unique serial number for that identifier.
+  // Set the passTypeIdentifier of Pass in the pass.json file to the identifier.
+  // Set the serialNumber key to the unique serial number for that identifier.
 
-  final si = pkcs7.verify([wwdrG4]);
+  final signerInfo = pkcs7.verify([_wwdrG4]);
   // final algo = si.getDigest(si.digestAlgorithm); Calculate hash based on the algo?
-  return si.listEquality(manifestHash, si.messageDigest!);
+  return signerInfo.listEquality(manifestHash, signerInfo.messageDigest!);
 }
 
-X509 get wwdrG4 =>
+X509 get _wwdrG4 =>
     X509.fromDer(Uint8List.fromList(Worldwide_Developer_Relations_G4));
 
+/// This is the content of https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer .
+/// It was basically read like this `File('AppleWWDRCAG4.cer').readAsBytesSync()` and then just pasted
+/// here.
+///
+/// More info at:
 /// https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/
 /// https://www.apple.com/certificateauthority/
 // ignore: constant_identifier_names
