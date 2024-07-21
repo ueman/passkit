@@ -5,6 +5,8 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/event_ticket_theme.dart';
 import 'package:passkit_ui/src/widgets/header_row.dart';
+import 'package:passkit_ui/src/widgets/strip_image.dart';
+import 'package:passkit_ui/src/widgets/thumbnail.dart';
 
 /// Event ticket
 ///
@@ -74,15 +76,14 @@ class EventTicket extends StatelessWidget {
                     logoText: pass.pass.logoText,
                   ),
                   const SizedBox(height: 16),
-                  _ThumbnailRow(pass: pass, passTheme: passTheme),
-                  const Spacer(),
-                  if (pass.footer != null)
-                    Image.memory(
-                      pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                      fit: BoxFit.contain,
-                      width: 286,
-                      height: 15,
+                  if (pass.thumbnail != null)
+                    _ThumbnailRow(pass: pass, passTheme: passTheme),
+                  if (pass.strip != null)
+                    _StripRow(
+                      pass: pass,
+                      theme: passTheme,
                     ),
+                  const Spacer(),
                   if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
                       null)
                     PasskitBarcode(
@@ -109,7 +110,6 @@ class _ThumbnailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final eventTicket = pass.pass.eventTicket!;
-    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
 
     return Column(
       children: [
@@ -138,17 +138,7 @@ class _ThumbnailRow extends StatelessWidget {
                 ],
               ),
             ),
-            // The thumbnail image (`thumbnail.png`) displayed next to the
-            // fields on the front of the pass. The allotted space is
-            // 90 x 90 points. The aspect ratio should be in the range of
-            // 2:3 to 3:2, otherwise the image is cropped.
-            if (pass.thumbnail != null)
-              Image.memory(
-                width: 90,
-                height: 90,
-                fit: BoxFit.contain,
-                pass.thumbnail!.forCorrectPixelRatio(devicePixelRatio),
-              ),
+            Thumbnail(thumbnail: pass.thumbnail),
           ],
         ),
         if (eventTicket.auxiliaryFields != null) ...[
@@ -202,6 +192,52 @@ class _FieldRow extends StatelessWidget {
           ),
         );
       }).toList(),
+    );
+  }
+}
+
+class _StripRow extends StatelessWidget {
+  const _StripRow({
+    required this.pass,
+    required this.theme,
+  });
+
+  final PkPass pass;
+  final EventTicketTheme theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final eventTicket = pass.pass.eventTicket!;
+
+    const padding = 16.0;
+    //const verticalPadding = EdgeInsets.symmetric(vertical: padding);
+    const horizontalPadding = EdgeInsets.symmetric(horizontal: padding);
+
+    return Stack(
+      children: [
+        if (pass.strip != null)
+          StripImage(image: pass.strip, type: PassType.storeCard),
+        Padding(
+          padding: horizontalPadding.copyWith(top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                eventTicket.primaryFields?.firstOrNull?.formatted() ?? '',
+                style: theme.primaryWithStripLabelStyle,
+                textAlign: eventTicket.primaryFields?.firstOrNull?.textAlignment
+                    .toFlutterTextAlign(),
+              ),
+              Text(
+                eventTicket.primaryFields?.firstOrNull?.label ?? '',
+                style: theme.primaryWithStripTextStyle,
+                textAlign: eventTicket.primaryFields?.firstOrNull?.textAlignment
+                    .toFlutterTextAlign(),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
