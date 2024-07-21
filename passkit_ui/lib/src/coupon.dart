@@ -21,8 +21,6 @@ class Coupon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
-
     final theme = Theme.of(context).extension<CouponTheme>()!;
     final coupon = pass.pass.coupon!;
 
@@ -82,13 +80,6 @@ class Coupon extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Spacer(),
-              if (pass.footer != null)
-                Image.memory(
-                  pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                  fit: BoxFit.contain,
-                  width: 286,
-                  height: 15,
-                ),
               if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
                   null)
                 PasskitBarcode(
