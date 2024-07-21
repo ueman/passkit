@@ -31,8 +31,8 @@ extension ArchiveX on Archive {
     return _utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
   }
 
-  PkPassImage? loadImage(String name) {
-    return PkPassImage.fromImages(
+  PkImage? loadImage(String name) {
+    return PkImage.fromImages(
       image1: findUint8ListForFile('$name.png'),
       image2: findUint8ListForFile('$name@2.png'),
       image3: findUint8ListForFile('$name@3.png'),

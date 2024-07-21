@@ -12,7 +12,7 @@ import 'package:passkit_ui/src/extensions/pk_pass_image_extension.dart';
 class Logo extends StatelessWidget {
   const Logo({super.key, this.logo});
 
-  final PkPassImage? logo;
+  final PkImage? logo;
 
   @override
   Widget build(BuildContext context) {

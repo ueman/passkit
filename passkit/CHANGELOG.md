@@ -1,5 +1,9 @@
 ## 0.0.5
 
+- Rename `PkPassImage` to `PkImage`.
+  - This is a breaking change
+- Export [Wallet Order Tracking](https://developer.apple.com/documentation/walletorders) related classes
+
 ## 0.0.4
 
 - Add missing `toJson` methods.

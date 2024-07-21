@@ -10,7 +10,7 @@ import 'package:passkit_ui/src/extensions/pk_pass_image_extension.dart';
 class Thumbnail extends StatelessWidget {
   const Thumbnail({super.key, this.thumbnail});
 
-  final PkPassImage? thumbnail;
+  final PkImage? thumbnail;
 
   @override
   Widget build(BuildContext context) {

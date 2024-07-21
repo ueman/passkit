@@ -14,7 +14,7 @@ import 'package:passkit_ui/passkit_ui.dart';
 class StripImage extends StatelessWidget {
   const StripImage({super.key, this.image, required this.type});
 
-  final PkPassImage? image;
+  final PkImage? image;
   final PassType type;
 
   @override
