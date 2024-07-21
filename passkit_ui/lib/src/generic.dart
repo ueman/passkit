@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/generic_pass_theme.dart';
+import 'package:passkit_ui/src/widgets/header_row.dart';
+import 'package:passkit_ui/src/widgets/thumbnail.dart';
 
 /// https://developer.apple.com/design/human-interface-guidelines/wallet#Generic-passes
 class Generic extends StatelessWidget {
@@ -11,7 +13,6 @@ class Generic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
     final passTheme = Theme.of(context).extension<GenericPassTheme>()!;
     final generic = pass.pass.generic!;
 
@@ -29,30 +30,11 @@ class Generic extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Logo(logo: pass.logo),
-                  if (pass.pass.logoText != null)
-                    Text(
-                      pass.pass.logoText!,
-                      style: passTheme.logoTextStyle,
-                    ),
-                  const Spacer(),
-                  // TODO(ueman): The header should be as wide as the thumbnail
-                  Column(
-                    children: [
-                      Text(
-                        generic.headerFields?.first.label ?? '',
-                        style: passTheme.headerLabelStyle,
-                      ),
-                      Text(
-                        generic.headerFields?.first.value?.toString() ?? '',
-                        style: passTheme.headerTextStyle,
-                      ),
-                    ],
-                  ),
-                ],
+              HeaderRow(
+                passTheme: passTheme,
+                headerFields: generic.headerFields,
+                logo: pass.logo,
+                logoText: pass.pass.logoText,
               ),
               const SizedBox(height: 16),
               Row(
@@ -60,43 +42,35 @@ class Generic extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _AuxiliaryRow(
-                    passTheme: passTheme,
-                    auxiliaryRow: generic.primaryFields!,
+                  Expanded(
+                    child: _AuxiliaryRow(
+                      passTheme: passTheme,
+                      auxiliaryRow: generic.primaryFields!,
+                      primary: true,
+                    ),
                   ),
                   // The thumbnail image (`thumbnail.png`) displayed next to the
                   // fields on the front of the pass. The allotted space is
                   // 90 x 90 points. The aspect ratio should be in the range of
                   // 2:3 to 3:2, otherwise the image is cropped.
-                  if (pass.thumbnail != null)
-                    Image.memory(
-                      width: 90,
-                      height: 90,
-                      fit: BoxFit.contain,
-                      pass.thumbnail!.forCorrectPixelRatio(devicePixelRatio),
-                    ),
+                  Thumbnail(thumbnail: pass.thumbnail),
                 ],
               ),
               if (generic.secondaryFields != null)
                 _AuxiliaryRow(
                   passTheme: passTheme,
                   auxiliaryRow: generic.secondaryFields!,
+                  primary: false,
                 ),
               if (generic.auxiliaryFields != null) ...[
                 const SizedBox(height: 16),
                 _AuxiliaryRow(
                   passTheme: passTheme,
                   auxiliaryRow: generic.auxiliaryFields!,
+                  primary: false,
                 ),
               ],
-              const SizedBox(height: 16),
-              if (pass.footer != null)
-                Image.memory(
-                  pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                  fit: BoxFit.contain,
-                  width: 286,
-                  height: 15,
-                ),
+              const Spacer(),
               if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
                   null)
                 PasskitBarcode(
@@ -116,29 +90,39 @@ class _AuxiliaryRow extends StatelessWidget {
   const _AuxiliaryRow({
     required this.auxiliaryRow,
     required this.passTheme,
+    required this.primary,
   });
 
   final List<FieldDict> auxiliaryRow;
   final GenericPassTheme passTheme;
+  final bool primary;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
-        return Column(
-          children: [
-            Text(
-              item.label ?? '',
-              style: passTheme.secondaryWithStripLabelStyle,
-              textAlign: item.textAlignment.toFlutterTextAlign(),
-            ),
-            Text(
-              item.formatted() ?? '',
-              style: passTheme.secondaryWithStripTextStyle,
-              textAlign: item.textAlignment.toFlutterTextAlign(),
-            ),
-          ],
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                item.label ?? '',
+                style: primary
+                    ? passTheme.primaryWithThumbnailLabelStyle
+                    : passTheme.secondaryWithThumbnailLabelStyle,
+                textAlign: item.textAlignment.toFlutterTextAlign(),
+              ),
+              Text(
+                item.formatted() ?? '',
+                style: primary
+                    ? passTheme.primaryWithThumbnailTextStyle
+                    : passTheme.secondaryWithThumbnailTextStyle,
+                textAlign: item.textAlignment.toFlutterTextAlign(),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );
