@@ -64,7 +64,7 @@ class CouponTheme extends ThemeExtension<CouponTheme> implements BasePassTheme {
         fontWeight: FontWeight.w600,
       ),
       auxiliaryTextStyle: foregroundTextStyle.copyWith(
-        fontSize: 12,
+        fontSize: 18,
         height: 0.9,
       ),
     );

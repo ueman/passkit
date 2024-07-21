@@ -18,12 +18,8 @@ class GenericPassTheme extends ThemeExtension<GenericPassTheme>
     required this.auxiliaryTextStyle,
     required this.headerLabelStyle,
     required this.headerTextStyle,
-    required this.primaryWithStripLabelStyle,
-    required this.primaryWithStripTextStyle,
     required this.primaryWithThumbnailLabelStyle,
     required this.primaryWithThumbnailTextStyle,
-    required this.secondaryWithStripLabelStyle,
-    required this.secondaryWithStripTextStyle,
     required this.secondaryWithThumbnailLabelStyle,
     required this.secondaryWithThumbnailTextStyle,
     required this.backgroundColor,
@@ -65,24 +61,6 @@ class GenericPassTheme extends ThemeExtension<GenericPassTheme>
         fontSize: 12,
         height: 0.9,
       ),
-      primaryWithStripLabelStyle: TextStyle(
-        color: foregroundColor,
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-      ),
-      primaryWithStripTextStyle: TextStyle(
-        color: foregroundColor,
-        fontSize: 50,
-        height: 0.9,
-      ),
-      secondaryWithStripLabelStyle: labelTextStyle.copyWith(
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-      ),
-      secondaryWithStripTextStyle: foregroundTextStyle.copyWith(
-        fontSize: 12,
-        height: 0.9,
-      ),
       primaryWithThumbnailLabelStyle: TextStyle(
         color: foregroundColor,
         fontSize: 11,
@@ -90,7 +68,7 @@ class GenericPassTheme extends ThemeExtension<GenericPassTheme>
       ),
       primaryWithThumbnailTextStyle: TextStyle(
         color: foregroundColor,
-        fontSize: 50,
+        fontSize: 30,
         height: 0.9,
       ),
       secondaryWithThumbnailLabelStyle: labelTextStyle.copyWith(
@@ -125,14 +103,8 @@ class GenericPassTheme extends ThemeExtension<GenericPassTheme>
   @override
   final TextStyle headerTextStyle;
 
-  final TextStyle primaryWithStripLabelStyle;
-  final TextStyle primaryWithStripTextStyle;
-
   final TextStyle primaryWithThumbnailLabelStyle;
   final TextStyle primaryWithThumbnailTextStyle;
-
-  final TextStyle secondaryWithStripLabelStyle;
-  final TextStyle secondaryWithStripTextStyle;
 
   final TextStyle secondaryWithThumbnailLabelStyle;
   final TextStyle secondaryWithThumbnailTextStyle;

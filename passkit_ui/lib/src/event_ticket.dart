@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/event_ticket_theme.dart';
+import 'package:passkit_ui/src/widgets/header_row.dart';
+import 'package:passkit_ui/src/widgets/strip_image.dart';
+import 'package:passkit_ui/src/widgets/thumbnail.dart';
 
-/// Event tickets
+/// Event ticket
 ///
 /// Use the event ticket style to give people entry into events like concerts,
 /// movies, plays, and sporting events. Typically, each pass corresponds to a
@@ -15,8 +18,7 @@ import 'package:passkit_ui/src/theme/event_ticket_theme.dart';
 /// An event ticket can display logo, strip, background, or thumbnail images.
 /// However, if you supply a strip image, don’t include a background or
 /// thumbnail image. You can also include an extra row of up to four auxiliary
-/// fields (for developer guidance, see the `row` property of
-/// `PassFields.AuxiliaryFields`).
+/// fields (for developer guidance, see the `row` property of [FieldDict.row]).
 ///
 /// https://developer.apple.com/design/human-interface-guidelines/wallet#Event-tickets
 class EventTicket extends StatelessWidget {
@@ -67,76 +69,21 @@ class EventTicket extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Logo(logo: pass.logo),
-                      if (pass.pass.logoText != null)
-                        Text(
-                          pass.pass.logoText!,
-                          style: passTheme.logoTextStyle,
-                        ),
-                      const Spacer(),
-                      // TODO(ueman): The header should be as wide as the thumbnail
-                      Column(
-                        children: [
-                          Text(
-                            eventTicket.headerFields?.first.label ?? '',
-                            style: passTheme.headerLabelStyle,
-                          ),
-                          Text(
-                            eventTicket.headerFields?.first.value?.toString() ??
-                                '',
-                            style: passTheme.headerTextStyle,
-                          ),
-                        ],
-                      ),
-                    ],
+                  HeaderRow(
+                    passTheme: passTheme,
+                    headerFields: eventTicket.headerFields,
+                    logo: pass.logo,
+                    logoText: pass.pass.logoText,
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _AuxiliaryRow(
-                        passTheme: passTheme,
-                        auxiliaryRow: eventTicket.primaryFields!,
-                      ),
-                      // The thumbnail image (`thumbnail.png`) displayed next to the
-                      // fields on the front of the pass. The allotted space is
-                      // 90 x 90 points. The aspect ratio should be in the range of
-                      // 2:3 to 3:2, otherwise the image is cropped.
-                      if (pass.thumbnail != null)
-                        Image.memory(
-                          width: 90,
-                          height: 90,
-                          fit: BoxFit.contain,
-                          pass.thumbnail!
-                              .forCorrectPixelRatio(devicePixelRatio),
-                        ),
-                    ],
-                  ),
-                  if (eventTicket.secondaryFields != null)
-                    _AuxiliaryRow(
-                      passTheme: passTheme,
-                      auxiliaryRow: eventTicket.secondaryFields!,
+                  if (pass.thumbnail != null)
+                    _ThumbnailRow(pass: pass, passTheme: passTheme),
+                  if (pass.strip != null)
+                    _StripRow(
+                      pass: pass,
+                      theme: passTheme,
                     ),
-                  if (eventTicket.auxiliaryFields != null) ...[
-                    const SizedBox(height: 16),
-                    _AuxiliaryRow(
-                      passTheme: passTheme,
-                      auxiliaryRow: eventTicket.auxiliaryFields!,
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  if (pass.footer != null)
-                    Image.memory(
-                      pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                      fit: BoxFit.contain,
-                      width: 286,
-                      height: 15,
-                    ),
+                  const Spacer(),
                   if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
                       null)
                     PasskitBarcode(
@@ -154,35 +101,143 @@ class EventTicket extends StatelessWidget {
   }
 }
 
-class _AuxiliaryRow extends StatelessWidget {
-  const _AuxiliaryRow({
-    required this.auxiliaryRow,
-    required this.passTheme,
-  });
+class _ThumbnailRow extends StatelessWidget {
+  const _ThumbnailRow({required this.pass, required this.passTheme});
 
-  final List<FieldDict> auxiliaryRow;
+  final PkPass pass;
   final EventTicketTheme passTheme;
 
   @override
   Widget build(BuildContext context) {
+    final eventTicket = pass.pass.eventTicket!;
+
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (eventTicket.primaryFields != null)
+                    _FieldRow(
+                      passTheme: passTheme,
+                      auxiliaryRow: eventTicket.primaryFields!,
+                      isPrimary: true,
+                    ),
+                  const SizedBox(height: 8),
+                  if (eventTicket.secondaryFields != null)
+                    _FieldRow(
+                      passTheme: passTheme,
+                      auxiliaryRow: eventTicket.secondaryFields!,
+                    ),
+                ],
+              ),
+            ),
+            Thumbnail(thumbnail: pass.thumbnail),
+          ],
+        ),
+        if (eventTicket.auxiliaryFields != null) ...[
+          const SizedBox(height: 16),
+          _FieldRow(
+            passTheme: passTheme,
+            auxiliaryRow: eventTicket.auxiliaryFields!,
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _FieldRow extends StatelessWidget {
+  const _FieldRow({
+    required this.auxiliaryRow,
+    required this.passTheme,
+    this.isPrimary = false,
+  });
+
+  final List<FieldDict> auxiliaryRow;
+  final EventTicketTheme passTheme;
+  final bool isPrimary;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
-        return Column(
-          children: [
-            Text(
-              item.label ?? '',
-              style: passTheme.secondaryWithStripLabelStyle,
-              textAlign: item.textAlignment.toFlutterTextAlign(),
-            ),
-            Text(
-              item.formatted() ?? '',
-              style: passTheme.secondaryWithStripTextStyle,
-              textAlign: item.textAlignment.toFlutterTextAlign(),
-            ),
-          ],
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                item.label ?? '',
+                style: isPrimary
+                    ? passTheme.primaryWithThumbnailLabelStyle
+                    : passTheme.secondaryWithThumbnailLabelStyle,
+                textAlign: item.textAlignment.toFlutterTextAlign(),
+              ),
+              Text(
+                item.formatted() ?? '',
+                style: isPrimary
+                    ? passTheme.primaryWithThumbnailTextStyle
+                    : passTheme.secondaryWithThumbnailTextStyle,
+                textAlign: item.textAlignment.toFlutterTextAlign(),
+              ),
+            ],
+          ),
         );
       }).toList(),
+    );
+  }
+}
+
+class _StripRow extends StatelessWidget {
+  const _StripRow({
+    required this.pass,
+    required this.theme,
+  });
+
+  final PkPass pass;
+  final EventTicketTheme theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final eventTicket = pass.pass.eventTicket!;
+
+    const padding = 16.0;
+    //const verticalPadding = EdgeInsets.symmetric(vertical: padding);
+    const horizontalPadding = EdgeInsets.symmetric(horizontal: padding);
+
+    return Stack(
+      children: [
+        if (pass.strip != null)
+          StripImage(image: pass.strip, type: PassType.storeCard),
+        Padding(
+          padding: horizontalPadding.copyWith(top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                eventTicket.primaryFields?.firstOrNull?.formatted() ?? '',
+                style: theme.primaryWithStripLabelStyle,
+                textAlign: eventTicket.primaryFields?.firstOrNull?.textAlignment
+                    .toFlutterTextAlign(),
+              ),
+              Text(
+                eventTicket.primaryFields?.firstOrNull?.label ?? '',
+                style: theme.primaryWithStripTextStyle,
+                textAlign: eventTicket.primaryFields?.firstOrNull?.textAlignment
+                    .toFlutterTextAlign(),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

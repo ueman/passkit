@@ -154,30 +154,30 @@ class PkPass {
   }
 
   /// The image displayed as the background of the front of the pass.
-  final PkPassImage? background;
+  final PkImage? background;
 
   /// The image displayed on the front of the pass near the barcode.
-  final PkPassImage? footer;
+  final PkImage? footer;
 
   /// The pass’s icon. This is displayed in notifications and in emails that
   /// have a pass attached, and on the lock screen.
   /// When it is displayed, the icon gets a shine effect and rounded corners.
-  final PkPassImage? icon;
+  final PkImage? icon;
 
   /// The image displayed on the front of the pass in the top left.
-  final PkPassImage? logo;
+  final PkImage? logo;
 
   /// The image displayed behind the primary fields on the front of the pass.
-  final PkPassImage? strip;
+  final PkImage? strip;
 
   /// An additional image displayed on the front of the pass.
   /// For example, on a membership card, the thumbnail could be used
   /// to a picture of the cardholder.
-  final PkPassImage? thumbnail;
+  final PkImage? thumbnail;
 
   /// Use a 150 x 40 point png file.
   /// This logo is displayed at the top of the signup form.
-  final PkPassImage? personalizationLogo;
+  final PkImage? personalizationLogo;
 
   /// This file specifies the personal information requested by the signup form.
   /// It also contains a description of the program and (optionally) the
@@ -269,8 +269,8 @@ extension on Archive {
     return _utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
   }
 
-  PkPassImage? loadImage(String name) {
-    return PkPassImage.fromImages(
+  PkImage? loadImage(String name) {
+    return PkImage.fromImages(
       image1: findUint8ListForFile('$name.png'),
       image2: findUint8ListForFile('$name@2x.png'),
       image3: findUint8ListForFile('$name@3x.png'),

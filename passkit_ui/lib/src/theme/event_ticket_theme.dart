@@ -65,12 +65,12 @@ class EventTicketTheme extends ThemeExtension<EventTicketTheme>
         fontSize: 12,
         height: 0.9,
       ),
-      primaryWithStripLabelStyle: TextStyle(
+      primaryWithStripLabelStyle: labelTextStyle.copyWith(
         color: foregroundColor,
         fontSize: 11,
         fontWeight: FontWeight.w600,
       ),
-      primaryWithStripTextStyle: TextStyle(
+      primaryWithStripTextStyle: foregroundTextStyle.copyWith(
         color: foregroundColor,
         fontSize: 50,
         height: 0.9,
@@ -83,14 +83,13 @@ class EventTicketTheme extends ThemeExtension<EventTicketTheme>
         fontSize: 12,
         height: 0.9,
       ),
-      primaryWithThumbnailLabelStyle: TextStyle(
-        color: foregroundColor,
+      primaryWithThumbnailLabelStyle: labelTextStyle.copyWith(
         fontSize: 11,
         fontWeight: FontWeight.w600,
       ),
-      primaryWithThumbnailTextStyle: TextStyle(
+      primaryWithThumbnailTextStyle: foregroundTextStyle.copyWith(
         color: foregroundColor,
-        fontSize: 50,
+        fontSize: 16,
         height: 0.9,
       ),
       secondaryWithThumbnailLabelStyle: labelTextStyle.copyWith(

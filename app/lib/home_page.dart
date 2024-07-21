@@ -8,6 +8,7 @@ import 'package:app/widgets/app_icon.dart';
 import 'package:app/widgets/pass_list_tile.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:passkit/passkit.dart';
@@ -73,6 +74,12 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const AppIcon(),
           centerTitle: true,
+          leading: kDebugMode
+              ? IconButton(
+                  onPressed: () => router.push('/examples'),
+                  icon: const Icon(Icons.card_giftcard),
+                )
+              : null,
           actions: [
             IconButton(
               onPressed: () => pickPass(context),

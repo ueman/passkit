@@ -10,7 +10,7 @@ import 'package:passkit_ui/src/extensions/pk_pass_image_extension.dart';
 class Footer extends StatelessWidget {
   const Footer({super.key, this.footer});
 
-  final PkPassImage? footer;
+  final PkImage? footer;
 
   @override
   Widget build(BuildContext context) {

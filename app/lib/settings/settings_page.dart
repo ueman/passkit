@@ -1,7 +1,5 @@
 import 'package:app/db/preferences.dart';
-import 'package:app/router.dart';
 import 'package:app/widgets/show_about_dialog.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,11 +17,6 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).settings),
         actions: [
-          if (kDebugMode)
-            IconButton(
-              onPressed: () => router.push('/examples'),
-              icon: const Icon(Icons.card_giftcard),
-            ),
           IconButton(
             onPressed: () => showAboutWalletApp(context),
             icon: const Icon(Icons.info),

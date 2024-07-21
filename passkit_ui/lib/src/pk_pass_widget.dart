@@ -12,6 +12,8 @@ import 'package:passkit_ui/src/theme/event_ticket_theme.dart';
 import 'package:passkit_ui/src/theme/generic_pass_theme.dart';
 import 'package:passkit_ui/src/theme/store_card_theme.dart';
 
+/// A widget which visualizes a [PkPass] file.
+/// See the Apple docs for how it looks like:
 /// https://developer.apple.com/design/human-interface-guidelines/wallet
 class PkPassWidget extends StatelessWidget {
   const PkPassWidget({
@@ -19,6 +21,7 @@ class PkPassWidget extends StatelessWidget {
     required this.pass,
   });
 
+  /// The pass that's visualized by this widget.
   final PkPass pass;
 
   @override

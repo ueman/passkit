@@ -3,6 +3,7 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/coupon_theme.dart';
 import 'package:passkit_ui/src/widgets/header_row.dart';
+import 'package:passkit_ui/src/widgets/strip_image.dart';
 
 /// A coupon looks like the following:
 ///
@@ -20,15 +21,12 @@ class Coupon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
-
     final theme = Theme.of(context).extension<CouponTheme>()!;
     final coupon = pass.pass.coupon!;
 
     return ClipPath(
       clipBehavior: Clip.antiAlias,
-      clipper: CouponClipper(
-        Sides.vertical,
+      clipper: _CouponClipper(
         heightOfPoint: 8,
         numberOfPoints: 40,
       ),
@@ -49,14 +47,9 @@ class Coupon extends StatelessWidget {
               Stack(
                 children: [
                   if (pass.strip != null)
-                    Image.memory(
-                      pass.strip!.forCorrectPixelRatio(devicePixelRatio),
-                    ),
+                    StripImage(image: pass.strip, type: PassType.coupon),
                   Column(
-                    crossAxisAlignment: coupon
-                            .primaryFields?.firstOrNull?.textAlignment
-                            .toCrossAxisAlign() ??
-                        CrossAxisAlignment.stretch,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         coupon.primaryFields?.firstOrNull?.formatted() ?? '',
@@ -78,21 +71,15 @@ class Coupon extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _AuxiliaryRow(
+                auxiliaryRow: coupon.secondaryFields ?? [],
                 passTheme: theme,
-                auxiliaryRow: [
-                  ...?coupon.secondaryFields,
-                  ...?coupon.auxiliaryFields,
-                ],
+              ),
+              _AuxiliaryRow(
+                auxiliaryRow: coupon.auxiliaryFields ?? [],
+                passTheme: theme,
               ),
               const SizedBox(height: 16),
               const Spacer(),
-              if (pass.footer != null)
-                Image.memory(
-                  pass.footer!.forCorrectPixelRatio(devicePixelRatio),
-                  fit: BoxFit.contain,
-                  width: 286,
-                  height: 15,
-                ),
               if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
                   null)
                 PasskitBarcode(
@@ -122,37 +109,36 @@ class _AuxiliaryRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
-        return Column(
-          children: [
-            Text(
-              item.label ?? '',
-              style: passTheme.auxiliaryLabelStyle,
-              textAlign: item.textAlignment.toFlutterTextAlign(),
-            ),
-            Text(
-              item.formatted() ?? '',
-              style: passTheme.auxiliaryTextStyle,
-              textAlign: item.textAlignment.toFlutterTextAlign(),
-            ),
-          ],
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                item.label ?? '',
+                style: passTheme.auxiliaryLabelStyle,
+                textAlign: item.textAlignment.toFlutterTextAlign(),
+              ),
+              Text(
+                item.formatted() ?? '',
+                style: passTheme.auxiliaryTextStyle,
+                textAlign: item.textAlignment.toFlutterTextAlign(),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );
   }
 }
 
-enum Sides { bottom, vertical }
-
-class CouponClipper extends CustomClipper<Path> {
-  CouponClipper(
-    this.side, {
+class _CouponClipper extends CustomClipper<Path> {
+  _CouponClipper({
     this.heightOfPoint = 12,
     this.numberOfPoints = 16,
   }); // final Sides side;
 
   final double heightOfPoint;
   final int numberOfPoints;
-  final Sides side;
 
   @override
   Path getClip(Size size) {
@@ -163,31 +149,28 @@ class CouponClipper extends CustomClipper<Path> {
     double yControlPoint = size.height - heightOfPoint;
     double increment = size.width / numberOfPoints;
 
-    if (side == Sides.bottom || side == Sides.vertical) {
-      while (x < size.width) {
-        path.quadraticBezierTo(
-          x + increment / 2,
-          yControlPoint,
-          x + increment,
-          y,
-        );
-        x += increment;
-      }
+    while (x < size.width) {
+      path.quadraticBezierTo(
+        x + increment / 2,
+        yControlPoint,
+        x + increment,
+        y,
+      );
+      x += increment;
     }
 
     path.lineTo(size.width, 0.0);
 
-    if (side == Sides.vertical) {
-      while (x > 0) {
-        path.quadraticBezierTo(
-          x - increment / 2,
-          heightOfPoint,
-          x - increment,
-          0,
-        );
-        x -= increment;
-      }
+    while (x > 0) {
+      path.quadraticBezierTo(
+        x - increment / 2,
+        heightOfPoint,
+        x - increment,
+        0,
+      );
+      x -= increment;
     }
+
     path.close();
     return path;
   }
