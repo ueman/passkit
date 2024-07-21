@@ -3,6 +3,7 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/coupon_theme.dart';
 import 'package:passkit_ui/src/widgets/header_row.dart';
+import 'package:passkit_ui/src/widgets/strip_image.dart';
 
 /// A coupon looks like the following:
 ///
@@ -48,9 +49,7 @@ class Coupon extends StatelessWidget {
               Stack(
                 children: [
                   if (pass.strip != null)
-                    Image.memory(
-                      pass.strip!.forCorrectPixelRatio(devicePixelRatio),
-                    ),
+                    StripImage(image: pass.strip, type: PassType.coupon),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -74,11 +73,12 @@ class Coupon extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _AuxiliaryRow(
+                auxiliaryRow: coupon.secondaryFields ?? [],
                 passTheme: theme,
-                auxiliaryRow: [
-                  ...?coupon.secondaryFields,
-                  ...?coupon.auxiliaryFields,
-                ],
+              ),
+              _AuxiliaryRow(
+                auxiliaryRow: coupon.auxiliaryFields ?? [],
+                passTheme: theme,
               ),
               const SizedBox(height: 16),
               const Spacer(),
