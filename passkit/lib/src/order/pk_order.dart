@@ -64,7 +64,7 @@ class PkOrder {
 
   // TODO(any): Do proper image loading for orders
   //            Do a sanity check for paths that already contains @2x/@3x modifier
-  PkPassImage loadImage(String path, {String? locale}) {
+  PkImage loadImage(String path, {String? locale}) {
     assert(path.isNotEmpty);
 
     final fileExtension = path.split('.').last;
@@ -73,7 +73,7 @@ class PkOrder {
     final threeXResPath =
         path.replaceAll('.$fileExtension', '@3x.$fileExtension');
 
-    return PkPassImage(
+    return PkImage(
       image1: _archive.findFile(path)?.content as Uint8List?,
       image2: _archive.findFile(twoXResPath)?.content as Uint8List?,
       image3: _archive.findFile(threeXResPath)?.content as Uint8List?,
