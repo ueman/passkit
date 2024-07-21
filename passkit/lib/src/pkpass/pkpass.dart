@@ -76,7 +76,7 @@ class PkPass {
       final signatureContent =
           archive.findFile('signature')!.content as List<int>;
 
-      verifySignature(
+      verifySignatureOfPkPass(
         signature: Uint8List.fromList(signatureContent),
         manifestHash: Uint8List.fromList(sha256.convert(manifestContent).bytes),
         pass: passData,

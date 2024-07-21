@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:passkit/passkit.dart';
+import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:pkcs7/pkcs7.dart';
 import 'package:collection/collection.dart';
 
@@ -7,7 +8,7 @@ import 'package:collection/collection.dart';
 // Only make sure the signing cert matches the pass' contents?
 // Should pass updates just have valid certs, or is it fine
 // as long as the contents match?
-bool verifySignature({
+bool verifySignatureOfPkPass({
   required Uint8List signature,
   required Uint8List manifestHash,
   required PassData pass,
@@ -19,7 +20,7 @@ bool verifySignature({
   if (checkOutdatedIssuerCerts) {
     for (final cert in pkcs7.certificates) {
       if (cert.notAfter.isBefore(now ?? DateTime.now())) {
-        throw Exception('Certificate of the PkPass expired');
+        throw const CertificateExpiredException();
       }
     }
   }
@@ -35,7 +36,7 @@ bool verifySignature({
             pass.teamIdentifier;
   });
   if (issuerCert == null) {
-    throw Exception("Cert from issues doesn't match content of the pass");
+    throw const SignatureMismatchException();
   }
 
   // there must be a certificate in pkcs7.certificates which
