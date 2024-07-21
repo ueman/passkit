@@ -5,6 +5,7 @@ import 'package:archive/archive_io.dart';
 import 'package:passkit/src/archive_extensions.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pk_pass_image.dart';
+import 'package:passkit/src/pkpass/pkpass.dart';
 
 import 'order_data.dart';
 
