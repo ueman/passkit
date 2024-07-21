@@ -10,6 +10,7 @@
 
 > 🚧 API is subject to change! 🚧
 > All passkit types can be shown, but might not look perfect.
+> Please create an issue and attach a sample PkPass file for wrongly displayed passes.
 
 ## What is PassKit?
 
