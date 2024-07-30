@@ -1,11 +1,15 @@
 ## 0.0.5
 
 - Add signature validation
-- Rename `skipVerification` to `skipChecksumVerification`. This is a breaking change.
+- Export [Wallet Order Tracking](https://developer.apple.com/documentation/walletorders) related classes
+- Rename `skipVerification` to `skipChecksumVerification`. 
+  - This is a breaking change.
+- Rename `PkPassImage` to `PkImage`.
+  - This is a breaking change
 
 ## 0.0.4
 
-- Add some missing `toJson` methods.
+- Add missing `toJson` methods.
 - Improve readme
 - Add checksum validation (signature verification is still missing)
 - Change `webServiceUrl` from `String?` to `Uri?`. This is a breaking change
@@ -13,7 +17,7 @@
 - Remove `formatType` from `Barcode`. `Barcode.format` is an enum instead. 
   - This is a breaking change
   - Also drop the dependency on `package:barcode`
-- Fix loading of the correct resolution
+- Fix loading of the correct resolution for images
 
 ## 0.0.3
 

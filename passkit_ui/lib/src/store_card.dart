@@ -3,6 +3,7 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/store_card_theme.dart';
 import 'package:passkit_ui/src/widgets/header_row.dart';
+import 'package:passkit_ui/src/widgets/strip_image.dart';
 
 /// Store card
 /// Use the store card style for store loyalty cards, discount cards,
@@ -64,12 +65,7 @@ class StoreCard extends StatelessWidget {
               Stack(
                 children: [
                   if (pass.strip != null)
-                    Image.memory(
-                      pass.strip!.forCorrectPixelRatio(devicePixelRatio),
-                      height: 123,
-                      width: 320,
-                      fit: BoxFit.cover,
-                    ),
+                    StripImage(image: pass.strip, type: PassType.storeCard),
                   Padding(
                     padding: horizontalPadding.copyWith(top: 20),
                     child: Column(

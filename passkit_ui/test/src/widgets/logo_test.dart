@@ -17,7 +17,7 @@ void main() {
       (tester) async {
         tester.view.display.devicePixelRatio = 1.0;
 
-        final footer = PkPassImage.fromImages(
+        final footer = PkImage.fromImages(
           image1: transparentPixelPng,
           image2: transparentPixelPng,
           image3: transparentPixelPng,

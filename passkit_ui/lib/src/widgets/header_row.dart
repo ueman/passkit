@@ -14,7 +14,7 @@ class HeaderRow extends StatelessWidget {
     required this.passTheme,
   });
 
-  final PkPassImage? logo;
+  final PkImage? logo;
   final String? logoText;
   final List<FieldDict>? headerFields;
   final BasePassTheme passTheme;
