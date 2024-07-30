@@ -40,8 +40,11 @@ void main() {
   test('has correct images', () async {
     final bytes = loadSample(PassType.eventTicket);
 
-    final pkPass = PkPass.fromBytes(bytes,
-        skipChecksumVerification: true, skipSignatureVerification: true);
+    final pkPass = PkPass.fromBytes(
+      bytes,
+      skipChecksumVerification: true,
+      skipSignatureVerification: true,
+    );
     expect(pkPass.background, isNotNull);
     expect(pkPass.background?.image1, isNotNull);
     expect(pkPass.background?.image2, isNotNull);
