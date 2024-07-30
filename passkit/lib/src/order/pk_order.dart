@@ -47,7 +47,7 @@ class PkOrder {
           signatureBytes: signatureContent,
           manifestBytes: manifestContent,
           identifier: order.orderTypeIdentifier,
-          teamIdentifier: null,
+          teamIdentifier: order.merchant.merchantIdentifier,
         );
       }
     }

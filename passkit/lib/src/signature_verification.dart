@@ -18,7 +18,7 @@ bool verifySignature({
   required Uint8List signatureBytes,
   required List<int> manifestBytes,
   required String identifier,
-  required String? teamIdentifier,
+  required String teamIdentifier,
   DateTime? now,
   bool checkOutdatedIssuerCerts = false,
 }) {
@@ -38,15 +38,13 @@ bool verifySignature({
         x509.subject.firstWhereOrNull((it) => it.key.name == 'UID')?.value ==
             identifier;
 
-    bool teamIdentifierMatches = true;
-    if (teamIdentifier == null) {
-      teamIdentifierMatches = x509.subject
-              .firstWhereOrNull(
-                (it) => it.key.name == 'organizationalUnitName',
-              )
-              ?.value ==
-          teamIdentifier;
-    }
+    final teamIdentifierMatches = x509.subject
+            .firstWhereOrNull(
+              (it) => it.key.name == 'organizationalUnitName',
+            )
+            ?.value ==
+        teamIdentifier;
+
     return identifierMatches && teamIdentifierMatches;
   });
   if (issuerCert == null) {
