@@ -20,7 +20,7 @@ bool verifySignature({
   required String identifier,
   required String teamIdentifier,
   DateTime? now,
-  bool checkOutdatedIssuerCerts = false,
+  bool checkOutdatedIssuerCerts = true,
 }) {
   final manifestHash = Uint8List.fromList(sha256.convert(manifestBytes).bytes);
   final pkcs7 = Pkcs7.fromDer(signatureBytes);
@@ -33,20 +33,9 @@ bool verifySignature({
     }
   }
 
-  final issuerCert = pkcs7.certificates.firstWhereOrNull((x509) {
-    final identifierMatches =
-        x509.subject.firstWhereOrNull((it) => it.key.name == 'UID')?.value ==
-            identifier;
+  final issuerCert = pkcs7.certificates
+      .firstWhereOrNull(_verifier(teamIdentifier, identifier));
 
-    final teamIdentifierMatches = x509.subject
-            .firstWhereOrNull(
-              (it) => it.key.name == 'organizationalUnitName',
-            )
-            ?.value ==
-        teamIdentifier;
-
-    return identifierMatches && teamIdentifierMatches;
-  });
   if (issuerCert == null) {
     throw const SignatureMismatchException();
   }
@@ -63,4 +52,21 @@ bool verifySignature({
   final signerInfo = pkcs7.verify([wwdrG4]);
   // final algo = si.getDigest(si.digestAlgorithm); Calculate hash based on the algo?
   return signerInfo.listEquality(manifestHash, signerInfo.messageDigest!);
+}
+
+bool Function(X509) _verifier(String teamIdentifier, String identifier) {
+  return (X509 x509) {
+    final identifierMatches =
+        x509.subject.firstWhereOrNull((it) => it.key.name == 'UID')?.value ==
+            identifier;
+
+    final teamIdentifierMatches = x509.subject
+            .firstWhereOrNull(
+              (it) => it.key.name == 'organizationalUnitName',
+            )
+            ?.value ==
+        teamIdentifier;
+
+    return identifierMatches && teamIdentifierMatches;
+  };
 }

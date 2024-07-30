@@ -83,7 +83,7 @@ void main() {
 
     expect(
       () => PkPass.fromBytes(bytes),
-      returnsNormally,
+      throwsA(isA<CertificateExpiredException>()),
     );
   });
 }

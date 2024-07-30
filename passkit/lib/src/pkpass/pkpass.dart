@@ -78,7 +78,7 @@ class PkPass {
     final passData = archive.readPass();
     if (!skipChecksumVerification) {
       archive.checkSha1Checksums(manifest);
-      if (skipSignatureVerification) {
+      if (!skipSignatureVerification) {
         final manifestContent =
             archive.findFile('manifest.json')!.content as List<int>;
         final signatureContent = Uint8List.fromList(
