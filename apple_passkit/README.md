@@ -58,6 +58,11 @@ After that, use `await ApplePassKit().passes()` to load your installed passes.
 - [Loyalty passes](https://developer.apple.com/wallet/loyalty-passes/)
 - [Wallet Developer Guide](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195-CH1-SW1)
 
+## Failure to add passes
+
+If you run into problems adding a pass to the wallet, you can try
+to use ['passkit'](https://pub.dev/packages/passkit) which may give you more specific error messages to work with.
+
 ## Contributors
 
 Thanks a lot to all the awesome contributors:

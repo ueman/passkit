@@ -65,6 +65,12 @@ void main() {
 }
 ```
 
+## Signature & Checksums
+
+In case iOS runs into an issue with a PkPass it just shows a generic error message. This library is able to point out a more specific error, if a PkPass is malformatted, signed, or whatever.
+
+Due to the closed source nature of the Apple Wallet software, there might be slight differences in this how the Wallet app and this package are working. If you run into such a problem, please create an issue.
+
 ## Apple Wallet PassKit docs
 
 - [Wallet Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/wallet)

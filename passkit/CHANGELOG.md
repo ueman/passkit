@@ -1,14 +1,17 @@
 ## 0.0.5
 
+- Add signature validation
+- Export [Wallet Order Tracking](https://developer.apple.com/documentation/walletorders) related classes
+- Rename `skipVerification` to `skipChecksumVerification`. 
+  - This is a breaking change.
 - Rename `PkPassImage` to `PkImage`.
   - This is a breaking change
-- Export [Wallet Order Tracking](https://developer.apple.com/documentation/walletorders) related classes
 
 ## 0.0.4
 
 - Add missing `toJson` methods.
 - Improve readme
-- Add checksum verification (signature verification is still missing)
+- Add checksum validation (signature verification is still missing)
 - Change `webServiceUrl` from `String?` to `Uri?`. This is a breaking change
 - Fix building URLs for the PassKit web service
 - Remove `formatType` from `Barcode`. `Barcode.format` is an enum instead. 

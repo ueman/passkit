@@ -7,28 +7,44 @@ void main() {
   test('can read Event sample pass', () async {
     final bytes = loadSample(PassType.eventTicket);
 
-    final pkPass = PkPass.fromBytes(bytes);
+    final pkPass = PkPass.fromBytes(
+      bytes,
+      skipChecksumVerification: true,
+      skipSignatureVerification: true,
+    );
     expect(pkPass.pass.serialNumber, 'nmyuxofgna');
   });
 
   test('has correct type', () async {
     final bytes = loadSample(PassType.eventTicket);
 
-    final pkPass = PkPass.fromBytes(bytes);
+    final pkPass = PkPass.fromBytes(
+      bytes,
+      skipChecksumVerification: true,
+      skipSignatureVerification: true,
+    );
     expect(pkPass.type, PassType.eventTicket);
   });
 
   test('has correct type property', () async {
     final bytes = loadSample(PassType.eventTicket);
 
-    final pkPass = PkPass.fromBytes(bytes);
+    final pkPass = PkPass.fromBytes(
+      bytes,
+      skipChecksumVerification: true,
+      skipSignatureVerification: true,
+    );
     expect(pkPass.pass.eventTicket, isNotNull);
   });
 
   test('has correct images', () async {
     final bytes = loadSample(PassType.eventTicket);
 
-    final pkPass = PkPass.fromBytes(bytes);
+    final pkPass = PkPass.fromBytes(
+      bytes,
+      skipChecksumVerification: true,
+      skipSignatureVerification: true,
+    );
     expect(pkPass.background, isNotNull);
     expect(pkPass.background?.image1, isNotNull);
     expect(pkPass.background?.image2, isNotNull);
