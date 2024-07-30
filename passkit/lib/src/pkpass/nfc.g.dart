@@ -12,8 +12,18 @@ Nfc _$NfcFromJson(Map<String, dynamic> json) => Nfc(
       requiresAuthentication: json['requiresAuthentication'] as bool?,
     );
 
-Map<String, dynamic> _$NfcToJson(Nfc instance) => <String, dynamic>{
-      'message': instance.message,
-      'encryptionPublicKey': instance.encryptionPublicKey,
-      'requiresAuthentication': instance.requiresAuthentication,
-    };
+Map<String, dynamic> _$NfcToJson(Nfc instance) {
+  final val = <String, dynamic>{
+    'message': instance.message,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('encryptionPublicKey', instance.encryptionPublicKey);
+  writeNotNull('requiresAuthentication', instance.requiresAuthentication);
+  return val;
+}

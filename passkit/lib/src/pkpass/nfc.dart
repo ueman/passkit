@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'nfc.g.dart';
 
 /// Information about the NFC payload passed to an Apple Pay terminal.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Nfc {
   Nfc({
     required this.message,

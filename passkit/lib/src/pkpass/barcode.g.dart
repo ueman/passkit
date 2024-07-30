@@ -13,12 +13,21 @@ Barcode _$BarcodeFromJson(Map<String, dynamic> json) => Barcode(
       messageEncoding: json['messageEncoding'] as String,
     );
 
-Map<String, dynamic> _$BarcodeToJson(Barcode instance) => <String, dynamic>{
-      'altText': instance.altText,
-      'format': _$PkPassBarcodeTypeEnumMap[instance.format]!,
-      'message': instance.message,
-      'messageEncoding': instance.messageEncoding,
-    };
+Map<String, dynamic> _$BarcodeToJson(Barcode instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('altText', instance.altText);
+  val['format'] = _$PkPassBarcodeTypeEnumMap[instance.format]!;
+  val['message'] = instance.message;
+  val['messageEncoding'] = instance.messageEncoding;
+  return val;
+}
 
 const _$PkPassBarcodeTypeEnumMap = {
   PkPassBarcodeType.qr: 'PKBarcodeFormatQR',

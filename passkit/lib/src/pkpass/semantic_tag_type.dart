@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'semantic_tag_type.g.dart';
 
 /// An object that contains information required to connect to a WiFi network.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class SemanticTagTypeWifiNetwork {
   SemanticTagTypeWifiNetwork({required this.password, required this.ssid});
   factory SemanticTagTypeWifiNetwork.fromJson(Map<String, dynamic> json) =>
@@ -18,7 +18,7 @@ class SemanticTagTypeWifiNetwork {
 }
 
 /// An object that represents an amount of money and type of currency.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class SemanticTagTypeCurrencyAmount {
   SemanticTagTypeCurrencyAmount({
     required this.amount,
@@ -39,7 +39,7 @@ class SemanticTagTypeCurrencyAmount {
 }
 
 /// An object that represents the coordinates of a location.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class SemanticTagTypeLocation {
   SemanticTagTypeLocation({required this.latitude, required this.longitude});
 
@@ -57,7 +57,7 @@ class SemanticTagTypeLocation {
 
 /// An object that represents the identification of a seat for a transit journey
 /// or an event.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class SemanticTagTypeSeat {
   SemanticTagTypeSeat({
     this.seatDescription,
@@ -99,7 +99,7 @@ class SemanticTagTypeSeat {
 }
 
 /// An object that represents the coordinates of a location.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class SemanticTagTypePersonNameComponents {
   SemanticTagTypePersonNameComponents({
     this.familyName,

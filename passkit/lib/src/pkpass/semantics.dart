@@ -4,7 +4,7 @@ import 'package:passkit/src/pkpass/semantic_tag_type.dart';
 part 'semantics.g.dart';
 
 /// https://developer.apple.com/documentation/walletpasses/pass/supporting_semantic_tags_in_wallet_passes
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Semantics {
   Semantics({
     this.airlineCode,

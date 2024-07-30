@@ -6,7 +6,7 @@ part 'pass_structure.g.dart';
 /// Keys that define the structure of the pass.
 /// These keys are used for all pass styles and partition the fields into the
 /// various parts of the pass.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PassStructure {
   PassStructure({
     this.auxiliaryFields,

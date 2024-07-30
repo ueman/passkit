@@ -4,7 +4,7 @@ part 'beacon.g.dart';
 
 /// Information about a location beacon.
 /// Available in iOS 7.0.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Beacon {
   Beacon({
     this.major,

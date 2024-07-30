@@ -13,9 +13,18 @@ Location _$LocationFromJson(Map<String, dynamic> json) => Location(
       relevantText: json['relevantText'] as String?,
     );
 
-Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
-      'altitude': instance.altitude,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-      'relevantText': instance.relevantText,
-    };
+Map<String, dynamic> _$LocationToJson(Location instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('altitude', instance.altitude);
+  val['latitude'] = instance.latitude;
+  val['longitude'] = instance.longitude;
+  writeNotNull('relevantText', instance.relevantText);
+  return val;
+}

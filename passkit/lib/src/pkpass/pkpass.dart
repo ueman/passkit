@@ -226,6 +226,52 @@ class PkPass {
 
   /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => pass.webServiceURL != null;
+
+  /// Creates a PkPass file. If this instance was created via [PkPass.fromBytes]
+  /// it overwrites the signature if possible.
+  ///
+  /// When written to disk, the file should have an ending of `.pkpass`.
+  ///
+  /// Remarks:
+  /// - There's no support for a signature
+  /// - There's no support for localization
+  /// - There's no support for personalization
+  List<int>? write() {
+    final archive = Archive();
+
+    final encoder = JsonEncoder.withIndent('  ');
+
+    archive.addFile(
+      ArchiveFile.string('pass.json', encoder.convert(pass.toJson())),
+    );
+    /*
+    if (personalization != null) {
+      encoder.addFile(
+        ArchiveFile.string(
+          'personalization.json',
+          jsonEncode(personalization!.toJson()),
+        ),
+      );
+    }
+    */
+
+    logo?.writeToArchive(archive, 'logo');
+    background?.writeToArchive(archive, 'background');
+    icon?.writeToArchive(archive, 'icon');
+    footer?.writeToArchive(archive, 'footer');
+    strip?.writeToArchive(archive, 'strip');
+    thumbnail?.writeToArchive(archive, 'thumbnail');
+
+    final manifest = <String, String>{};
+    for (final file in archive.files) {
+      manifest[file.name] = sha1.convert(file.content as List<int>).toString();
+    }
+    archive.addFile(
+      ArchiveFile.string('manifest.json', encoder.convert(manifest)),
+    );
+
+    return ZipEncoder().encode(archive);
+  }
 }
 
 // This is intentionally not exposed to keep this an implementation detail.
@@ -371,6 +417,22 @@ extension on Archive {
       if (checksumInManifest != digest.toString()) {
         throw ChecksumMismatchException(file.name);
       }
+    }
+  }
+}
+
+extension on PkImage {
+  void writeToArchive(Archive archive, String name) {
+    if (image1 != null) {
+      archive.addFile(ArchiveFile('$name.png', image1!.lengthInBytes, image1));
+    }
+    if (image2 != null) {
+      archive
+          .addFile(ArchiveFile('$name@2x.png', image2!.lengthInBytes, image2));
+    }
+    if (image3 != null) {
+      archive
+          .addFile(ArchiveFile('$name@3x.png', image3!.lengthInBytes, image3));
     }
   }
 }

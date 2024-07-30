@@ -31,25 +31,36 @@ FieldDict _$FieldDictFromJson(Map<String, dynamic> json) => FieldDict(
       row: (json['row'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$FieldDictToJson(FieldDict instance) => <String, dynamic>{
-      'attributedValue': instance.attributedValue,
-      'changeMessage': instance.changeMessage,
-      'dataDetectorTypes': instance.dataDetectorTypes
+Map<String, dynamic> _$FieldDictToJson(FieldDict instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('attributedValue', instance.attributedValue);
+  writeNotNull('changeMessage', instance.changeMessage);
+  writeNotNull(
+      'dataDetectorTypes',
+      instance.dataDetectorTypes
           ?.map((e) => _$DataDetectorTypesEnumMap[e]!)
-          .toList(),
-      'key': instance.key,
-      'label': instance.label,
-      'textAlignment': _$PkTextAlignmentEnumMap[instance.textAlignment]!,
-      'value': instance.value,
-      'currencyCode': instance.currencyCode,
-      'dateStyle': _$DateStyleEnumMap[instance.dateStyle],
-      'timeStyle': _$DateStyleEnumMap[instance.timeStyle],
-      'numberStyle': _$NumberStyleEnumMap[instance.numberStyle],
-      'ignoresTimeZone': instance.ignoresTimeZone,
-      'isRelative': instance.isRelative,
-      'semantics': instance.semantics,
-      'row': instance.row,
-    };
+          .toList());
+  val['key'] = instance.key;
+  writeNotNull('label', instance.label);
+  val['textAlignment'] = _$PkTextAlignmentEnumMap[instance.textAlignment]!;
+  writeNotNull('value', instance.value);
+  writeNotNull('currencyCode', instance.currencyCode);
+  writeNotNull('dateStyle', _$DateStyleEnumMap[instance.dateStyle]);
+  writeNotNull('timeStyle', _$DateStyleEnumMap[instance.timeStyle]);
+  writeNotNull('numberStyle', _$NumberStyleEnumMap[instance.numberStyle]);
+  writeNotNull('ignoresTimeZone', instance.ignoresTimeZone);
+  writeNotNull('isRelative', instance.isRelative);
+  writeNotNull('semantics', instance.semantics);
+  writeNotNull('row', instance.row);
+  return val;
+}
 
 const _$DataDetectorTypesEnumMap = {
   DataDetectorTypes.phoneNumber: 'PKDataDetectorTypePhoneNumber',

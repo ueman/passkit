@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'barcode.g.dart';
 
 /// Information about a pass’s barcode.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Barcode {
   Barcode({
     this.altText,
