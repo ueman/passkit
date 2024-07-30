@@ -8,7 +8,8 @@ import 'package:collection/collection.dart';
 /// [identifier] corresponds to the `passTypeIdentifier` in PkPasses or the
 /// `orderTypeIdentifier` for PkOrders.
 ///
-/// [teamIdentifier] is only used for PkPasses.
+/// [teamIdentifier] corresponds to the `teamIdentifier` in PkPasses or the
+/// `merchantIdentifier` for PkOrders.
 //
 // What about old WWDR certs? Apple seemingly accepts them just fine?
 // Only make sure the signing cert matches the pass' contents?
