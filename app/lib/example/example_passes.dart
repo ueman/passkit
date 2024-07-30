@@ -69,8 +69,10 @@ class _ExamplePassesState extends State<ExamplePasses> {
     for (final path in examples) {
       try {
         final data = await rootBundle.load(path);
-        final pass =
-            PkPass.fromBytes(data.buffer.asUint8List(), skipVerification: true);
+        final pass = PkPass.fromBytes(
+          data.buffer.asUint8List(),
+          skipChecksumVerification: true,
+        );
         passes.add(pass);
       } catch (exception, stackTrace) {
         log('$exception\n$stackTrace');

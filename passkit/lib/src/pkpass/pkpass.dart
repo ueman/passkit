@@ -52,13 +52,20 @@ class PkPass {
     this.personalizationLogo,
   });
 
-  /// Parses bytes to a [PkPass] file.
-  /// Setting [skipVerification] to true disables any checksum or signature
+  /// Parses bytes to a [PkPass] instance.
+  ///
+  /// Setting [skipChecksumVerification] to true disables any checksum
   /// verification and validation.
+  ///
+  /// Setting [skipSignatureVerification] to true disables any signature
+  /// verification and validation. This may be needed for older passes which are
+  /// signed with an out of date [Apple WWDR](https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/)
+  /// certificate.
   // TODO(any): Provide an async method for this.
   static PkPass fromBytes(
     final List<int> bytes, {
-    bool skipVerification = false,
+    bool skipChecksumVerification = false,
+    bool skipSignatureVerification = false,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -69,18 +76,21 @@ class PkPass {
 
     final manifest = archive.readManifest();
     final passData = archive.readPass();
-    if (!skipVerification) {
+    if (!skipChecksumVerification) {
       archive.checkSha1Checksums(manifest);
-      final manifestContent =
-          archive.findFile('manifest.json')!.content as List<int>;
-      final signatureContent =
-          archive.findFile('signature')!.content as List<int>;
+      if (skipSignatureVerification) {
+        final manifestContent =
+            archive.findFile('manifest.json')!.content as List<int>;
+        final signatureContent = Uint8List.fromList(
+          archive.findFile('signature')!.content as List<int>,
+        );
 
-      verifySignatureOfPkPass(
-        signature: Uint8List.fromList(signatureContent),
-        manifestHash: Uint8List.fromList(sha256.convert(manifestContent).bytes),
-        pass: passData,
-      );
+        verifySignature(
+          signatureBytes: signatureContent,
+          manifestBytes: manifestContent,
+          pass: passData,
+        );
+      }
     }
 
     return PkPass(
@@ -132,7 +142,7 @@ class PkPass {
         .map(
           (file) => fromBytes(
             file.content as List<int>,
-            skipVerification: skipVerification,
+            skipChecksumVerification: skipVerification,
           ),
         )
         .toList();
