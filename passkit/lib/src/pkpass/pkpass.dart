@@ -88,7 +88,8 @@ class PkPass {
         verifySignature(
           signatureBytes: signatureContent,
           manifestBytes: manifestContent,
-          pass: passData,
+          teamIdentifier: passData.teamIdentifier,
+          identifier: passData.passTypeIdentifier,
         );
       }
     }

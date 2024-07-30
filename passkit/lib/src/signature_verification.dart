@@ -1,11 +1,15 @@
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
-import 'package:passkit/passkit.dart';
 import 'package:passkit/src/apple_wwdr_certificate.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:pkcs7/pkcs7.dart';
 import 'package:collection/collection.dart';
 
+/// [identifier] corresponds to the `passTypeIdentifier` in PkPasses or the
+/// `orderTypeIdentifier` for PkOrders.
+///
+/// [teamIdentifier] is only used for PkPasses.
+//
 // What about old WWDR certs? Apple seemingly accepts them just fine?
 // Only make sure the signing cert matches the pass' contents?
 // Should pass updates just have valid certs, or is it fine
@@ -13,7 +17,8 @@ import 'package:collection/collection.dart';
 bool verifySignature({
   required Uint8List signatureBytes,
   required List<int> manifestBytes,
-  required PassData pass,
+  required String identifier,
+  required String? teamIdentifier,
   DateTime? now,
   bool checkOutdatedIssuerCerts = false,
 }) {
@@ -29,14 +34,20 @@ bool verifySignature({
   }
 
   final issuerCert = pkcs7.certificates.firstWhereOrNull((x509) {
-    return x509.subject.firstWhereOrNull((it) => it.key.name == 'UID')?.value ==
-            pass.passTypeIdentifier &&
-        x509.subject
-                .firstWhereOrNull(
-                  (it) => it.key.name == 'organizationalUnitName',
-                )
-                ?.value ==
-            pass.teamIdentifier;
+    final identifierMatches =
+        x509.subject.firstWhereOrNull((it) => it.key.name == 'UID')?.value ==
+            identifier;
+
+    bool teamIdentifierMatches = true;
+    if (teamIdentifier == null) {
+      teamIdentifierMatches = x509.subject
+              .firstWhereOrNull(
+                (it) => it.key.name == 'organizationalUnitName',
+              )
+              ?.value ==
+          teamIdentifier;
+    }
+    return identifierMatches && teamIdentifierMatches;
   });
   if (issuerCert == null) {
     throw const SignatureMismatchException();
