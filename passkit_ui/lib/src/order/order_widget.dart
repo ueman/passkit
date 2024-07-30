@@ -5,6 +5,7 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/src/extensions/pk_pass_image_extension.dart';
 import 'package:passkit_ui/src/order/l10n.dart';
 import 'package:passkit_ui/src/order/order_details_model_sheet.dart';
+import 'package:passkit_ui/src/widgets/squircle.dart';
 
 class OrderWidget extends StatelessWidget {
   const OrderWidget({
@@ -78,13 +79,16 @@ class OrderWidget extends StatelessWidget {
           if (order.order.merchant.logo != null)
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Image.memory(
-                order
-                    .loadImage(order.order.merchant.logo!)
-                    .forCorrectPixelRatio(devicePixelRatio),
-                fit: BoxFit.contain,
-                width: 150,
-                height: 150,
+              child: Squircle(
+                radius: 20,
+                child: Image.memory(
+                  order
+                      .loadImage(order.order.merchant.logo!)
+                      .forCorrectPixelRatio(devicePixelRatio),
+                  fit: BoxFit.contain,
+                  width: 150,
+                  height: 150,
+                ),
               ),
             ),
           Text(
