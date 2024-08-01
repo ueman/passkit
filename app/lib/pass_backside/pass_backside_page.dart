@@ -206,7 +206,9 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
   void _sharePassAsImage() async {
     final imageData = await exportPassAsImage(widget.pass);
     if (imageData != null) {
-      await Share.shareXFiles([XFile.fromData(imageData)]);
+      await Share.shareXFiles(
+        [XFile.fromData(imageData, name: 'pass.png', mimeType: 'image/png')],
+      );
     }
   }
 

@@ -34,7 +34,11 @@ class _HomePageState extends State<HomePage> {
   Future<void> loadPasses() async {
     final dbPasses = await database.pass.select(distinct: true).get();
     final mappedPasses = dbPasses.map((p) {
-      return PkPass.fromBytes(p.binaryPass);
+      return PkPass.fromBytes(
+        p.binaryPass,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      );
     }).toList();
     setState(() {
       passes = mappedPasses;

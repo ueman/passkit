@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'dart:ui' as ui;
 
 import 'package:passkit/passkit.dart';
@@ -46,14 +45,17 @@ Future<Uint8List?> exportPassAsImage(
     final RenderObjectToWidgetElement<RenderBox> rootElement =
         RenderObjectToWidgetAdapter<RenderBox>(
       container: repaintBoundary,
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: Column(
-          // image is center aligned
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MaterialApp(home: PkPassWidget(pass: pass)),
-          ],
+      child: MediaQuery(
+        data: const MediaQueryData(devicePixelRatio: 1.0),
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Column(
+            // image is center aligned
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MaterialApp(home: PkPassWidget(pass: pass)),
+            ],
+          ),
         ),
       ),
     ).attachToRenderTree(buildOwner);
