@@ -1,5 +1,7 @@
 # Web Service
 
+## App lookup
+
 This is a service to lookup the associated app store IDs from PassKit files.
 This is done via the iTunes API.
 
@@ -220,6 +222,27 @@ and the response looks something like
             "primaryGenreName": "News",
             "primaryGenreId": 6009,
             "userRatingCount": 291262
+        }
+    ]
+}
+```
+
+## Artist lookup
+
+```json
+{
+ "resultCount":1,
+ "results": 
+    [
+        {
+            "wrapperType":"artist",
+            "artistType":"Artist",
+            "artistName":"Rihanna",
+            "artistLinkUrl":"https://music.apple.com/us/artist/rihanna/63346553?uo=4",
+            "artistId":63346553,
+            "amgArtistId":704560,
+            "primaryGenreName":"Pop",
+            "primaryGenreId":14
         }
     ]
 }

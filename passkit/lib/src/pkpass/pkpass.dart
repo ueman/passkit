@@ -8,6 +8,7 @@ import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
 import 'package:passkit/src/pkpass/personalization.dart';
 import 'package:passkit/src/pkpass/pk_pass_image.dart';
+import 'package:passkit/src/signature_verification.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
@@ -51,13 +52,20 @@ class PkPass {
     this.personalizationLogo,
   });
 
-  /// Parses bytes to a [PkPass] file.
-  /// Setting [skipVerification] to true disables any checksum or signature
+  /// Parses bytes to a [PkPass] instance.
+  ///
+  /// Setting [skipChecksumVerification] to true disables any checksum
   /// verification and validation.
-  // TODO(ueman): Provide an async method for this.
+  ///
+  /// Setting [skipSignatureVerification] to true disables any signature
+  /// verification and validation. This may be needed for older passes which are
+  /// signed with an out of date [Apple WWDR](https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/)
+  /// certificate.
+  // TODO(any): Provide an async method for this.
   static PkPass fromBytes(
     final List<int> bytes, {
-    bool skipVerification = false,
+    bool skipChecksumVerification = false,
+    bool skipSignatureVerification = false,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -67,13 +75,28 @@ class PkPass {
     final archive = decoder.decodeBytes(bytes);
 
     final manifest = archive.readManifest();
-    if (!skipVerification) {
+    final passData = archive.readPass();
+    if (!skipChecksumVerification) {
       archive.checkSha1Checksums(manifest);
+      if (!skipSignatureVerification) {
+        final manifestContent =
+            archive.findFile('manifest.json')!.content as List<int>;
+        final signatureContent = Uint8List.fromList(
+          archive.findFile('signature')!.content as List<int>,
+        );
+
+        verifySignature(
+          signatureBytes: signatureContent,
+          manifestBytes: manifestContent,
+          teamIdentifier: passData.teamIdentifier,
+          identifier: passData.passTypeIdentifier,
+        );
+      }
     }
 
     return PkPass(
       // data
-      pass: archive.readPass(),
+      pass: passData,
       manifest: manifest,
       personalization: archive.readPersonalization(),
       languageData: archive.getTranslations(),
@@ -120,7 +143,7 @@ class PkPass {
         .map(
           (file) => fromBytes(
             file.content as List<int>,
-            skipVerification: skipVerification,
+            skipChecksumVerification: skipVerification,
           ),
         )
         .toList();
@@ -154,30 +177,30 @@ class PkPass {
   }
 
   /// The image displayed as the background of the front of the pass.
-  final PkPassImage? background;
+  final PkImage? background;
 
   /// The image displayed on the front of the pass near the barcode.
-  final PkPassImage? footer;
+  final PkImage? footer;
 
   /// The pass’s icon. This is displayed in notifications and in emails that
   /// have a pass attached, and on the lock screen.
   /// When it is displayed, the icon gets a shine effect and rounded corners.
-  final PkPassImage? icon;
+  final PkImage? icon;
 
   /// The image displayed on the front of the pass in the top left.
-  final PkPassImage? logo;
+  final PkImage? logo;
 
   /// The image displayed behind the primary fields on the front of the pass.
-  final PkPassImage? strip;
+  final PkImage? strip;
 
   /// An additional image displayed on the front of the pass.
   /// For example, on a membership card, the thumbnail could be used
   /// to a picture of the cardholder.
-  final PkPassImage? thumbnail;
+  final PkImage? thumbnail;
 
   /// Use a 150 x 40 point png file.
   /// This logo is displayed at the top of the signup form.
-  final PkPassImage? personalizationLogo;
+  final PkImage? personalizationLogo;
 
   /// This file specifies the personal information requested by the signup form.
   /// It also contains a description of the program and (optionally) the
@@ -269,8 +292,8 @@ extension on Archive {
     return _utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
   }
 
-  PkPassImage? loadImage(String name) {
-    return PkPassImage.fromImages(
+  PkImage? loadImage(String name) {
+    return PkImage.fromImages(
       image1: findUint8ListForFile('$name.png'),
       image2: findUint8ListForFile('$name@2x.png'),
       image3: findUint8ListForFile('$name@3x.png'),

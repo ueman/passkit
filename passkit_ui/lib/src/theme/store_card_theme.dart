@@ -10,6 +10,7 @@ import 'package:passkit_ui/src/theme/base_pass_theme.dart';
 ///
 /// See:
 /// - https://developer.apple.com/design/human-interface-guidelines/wallet#Store-cards
+/// - https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW8
 class StoreCardTheme extends ThemeExtension<StoreCardTheme>
     implements BasePassTheme {
   StoreCardTheme({
@@ -52,7 +53,7 @@ class StoreCardTheme extends ThemeExtension<StoreCardTheme>
       ),
       primaryLabelStyle: TextStyle(
         color: foregroundColor,
-        fontSize: 11,
+        fontSize: 14,
         fontWeight: FontWeight.w600,
       ),
       primaryTextStyle: TextStyle(
@@ -65,7 +66,7 @@ class StoreCardTheme extends ThemeExtension<StoreCardTheme>
         fontWeight: FontWeight.w600,
       ),
       auxiliaryTextStyle: foregroundTextStyle.copyWith(
-        fontSize: 12,
+        fontSize: 16,
         height: 0.9,
       ),
     );

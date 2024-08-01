@@ -11,7 +11,7 @@ void main() {
             .readAsBytesSync();
 
     expect(
-      () => PkPass.fromBytes(bytes),
+      () => PkPass.fromBytes(bytes, skipSignatureVerification: true),
       throwsA(isA<ChecksumMismatchException>()),
     );
   });
@@ -23,7 +23,11 @@ void main() {
             .readAsBytesSync();
 
     expect(
-      () => PkPass.fromBytes(bytes, skipVerification: true),
+      () => PkPass.fromBytes(
+        bytes,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      ),
       returnsNormally,
     );
   });
@@ -34,7 +38,7 @@ void main() {
             .readAsBytesSync();
 
     expect(
-      () => PkPass.fromBytes(bytes),
+      () => PkPass.fromBytes(bytes, skipSignatureVerification: true),
       throwsA(isA<MissingChecksumException>()),
     );
   });
@@ -46,8 +50,40 @@ void main() {
             .readAsBytesSync();
 
     expect(
-      () => PkPass.fromBytes(bytes, skipVerification: true),
+      () => PkPass.fromBytes(
+        bytes,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      ),
       returnsNormally,
+    );
+  });
+
+  test('does not throw for valid checksums', () async {
+    final bytes =
+        File('test/sample_passes/coffee_club.pkpass').readAsBytesSync();
+
+    expect(
+      () => PkPass.fromBytes(bytes, skipSignatureVerification: true),
+      returnsNormally,
+    );
+  });
+
+  test('does not throw for valid signature', () async {
+    final bytes = File('test/sample_passes/cinema.pkpass').readAsBytesSync();
+
+    expect(
+      () => PkPass.fromBytes(bytes),
+      returnsNormally,
+    );
+  });
+
+  test('throws for invalid signature', () async {
+    final bytes = File('test/sample_passes/Coupon.pkpass').readAsBytesSync();
+
+    expect(
+      () => PkPass.fromBytes(bytes),
+      throwsA(isA<CertificateExpiredException>()),
     );
   });
 }

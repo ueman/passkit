@@ -25,7 +25,6 @@ class BoardingPass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
     final theme = Theme.of(context).extension<BoardingPassTheme>()!;
     final boardingPass = pass.pass.boardingPass!;
 
@@ -35,79 +34,65 @@ class BoardingPass extends StatelessWidget {
         color: theme.backgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(14.0),
-          child: Stack(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
+              HeaderRow(
+                passTheme: theme,
+                logoText: pass.pass.logoText,
+                headerFields: boardingPass.headerFields,
+                logo: pass.logo,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  HeaderRow(
-                    passTheme: theme,
-                    logoText: pass.pass.logoText,
-                    headerFields: boardingPass.headerFields,
-                    logo: pass.logo,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _FromTo(
-                        data: boardingPass.primaryFields!.first,
-                        theme: theme,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TransitTypeWidget(
-                          transitType: boardingPass.transitType,
-                          width: 30,
-                          height: 30,
-                          color: theme.labelColor,
-                        ),
-                      ),
-                      _FromTo(
-                        data: boardingPass.primaryFields![1],
-                        theme: theme,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  if (boardingPass.auxiliaryFields != null)
-                    _AuxiliaryRow(
-                      auxiliaryRow: pass.pass.boardingPass!.auxiliaryFields!,
-                      theme: theme,
-                    ),
-                  const SizedBox(height: 16),
-                  // secondary fields
-                  _AuxiliaryRow(
-                    auxiliaryRow: pass.pass.boardingPass!.secondaryFields!,
+                  _FromTo(
+                    data: boardingPass.primaryFields!.first,
                     theme: theme,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                   ),
-
-                  const SizedBox(height: 16),
-                  if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
-                      null) ...[
-                    const Spacer(),
-                    Footer(footer: pass.footer),
-                    const SizedBox(height: 2),
-                    PasskitBarcode(
-                      barcode: (pass.pass.barcodes?.firstOrNull ??
-                          pass.pass.barcode)!,
-                      fontSize: 12,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TransitTypeWidget(
+                      transitType: boardingPass.transitType,
+                      width: 30,
+                      height: 30,
+                      color: theme.labelColor,
                     ),
-                  ],
+                  ),
+                  _FromTo(
+                    data: boardingPass.primaryFields![1],
+                    theme: theme,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                  ),
                 ],
               ),
-              if (pass.icon != null)
-                // TODO(ueman): check whether this matches Apples design guidelines
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Image.memory(
-                    pass.icon!.forCorrectPixelRatio(devicePixelRatio),
-                    fit: BoxFit.contain,
-                    height: 15,
-                  ),
+              const SizedBox(height: 16),
+              if (boardingPass.auxiliaryFields != null)
+                _AuxiliaryRow(
+                  auxiliaryRow: pass.pass.boardingPass!.auxiliaryFields!,
+                  theme: theme,
                 ),
+              const SizedBox(height: 16),
+              // secondary fields
+              _AuxiliaryRow(
+                auxiliaryRow: pass.pass.boardingPass!.secondaryFields!,
+                theme: theme,
+              ),
+
+              const SizedBox(height: 16),
+              if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
+                  null) ...[
+                const Spacer(),
+                Footer(footer: pass.footer),
+                const SizedBox(height: 2),
+                PasskitBarcode(
+                  barcode:
+                      (pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode)!,
+                  fontSize: 12,
+                ),
+              ],
             ],
           ),
         ),

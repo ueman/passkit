@@ -10,13 +10,19 @@
 [![GitHub followers](https://img.shields.io/github/followers/ueman?style=social)](https://github.com/ueman)
 
 > 🚧 API is subject to change! 🚧
-> The API should become a lot more stable once this package fully supports localization.
 
-PassKit allows you to work with Apple's PkPass files. This is a pure Dart library. No Flutter needed.
+PassKit allows you to work with Apple's PkPass and Order files. This is a pure Dart library and works in Flutter, on the web and on servers. No Flutter needed.
 
-In order to show PassKit files in Flutter, use the [`passkit_ui`](https://pub.dev/packages/passkit_ui) package, which includes ready made widgets.
+In order to show PassKit and Order files in Flutter, use the [`passkit_ui`](https://pub.dev/packages/passkit_ui) package, which includes ready made widgets.
 
 Want to work with Apple's native PassKit APIs? Consider using [`apple_passkit`](https://pub.dev/packages/apple_passkit).
+
+## Table of Content
+
+- [Passes](#passes)
+- [Orders](#orders)
+
+# Passes
 
 ## What is PassKit?
 
@@ -27,7 +33,7 @@ Want to work with Apple's native PassKit APIs? Consider using [`apple_passkit`](
 > - A web service API for updating passes, implemented on your server.
 > - An API used by your apps to interact with the user’s pass library.
 
-A PkPass file looks something like this when rendered:
+A PkPass file looks something like this when rendered in the iOS  Wallet app or via [`passkit_ui`](https://pub.dev/packages/passkit_ui):
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/ueman/passkit/master/passkit/assets/boarding_pass.webp"/>
@@ -59,14 +65,11 @@ void main() {
 }
 ```
 
-## Currently unsupported or experimental functionality
+## Signature & Checksums
 
-Please feel encouraged to create PRs for the following features.
+In case iOS runs into an issue with a PkPass it just shows a generic error message. This library is able to point out a more specific error, if a PkPass is malformatted, signed, or whatever.
 
-- PassKit Web Service: This functionality is existing, but might not work. Please file an issue or create a PR with a fix for bugs you encounter.
-- Localization: Existing, but still inconvenient to use. There might be issues due to localizations being UTF-16 formatted, but the library currently uses UTF-8 to read localizations.
-- [Passkit creation](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54)
-- Signature verification is missing
+Due to the closed source nature of the Apple Wallet software, there might be slight differences in this how the Wallet app and this package are working. If you run into such a problem, please create an issue.
 
 ## Apple Wallet PassKit docs
 
@@ -75,9 +78,51 @@ Please feel encouraged to create PRs for the following features.
 - [Loyalty passes](https://developer.apple.com/wallet/loyalty-passes/)
 - [Wallet Developer Guide](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195-CH1-SW1)
 
+# Orders
+
+## What is order tracking?
+
+> When you support order tracking, Wallet can display information about an order a customer placed through your app or website, updating the information whenever the status of the order changes. You can help people start tracking their order right from your app or website and offer additional ways to add their order to Wallet.
+
+When rendered, orders look something like this in the iOS Wallet app or via [`passkit_ui`](https://pub.dev/packages/passkit_ui):
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ueman/passkit/master/passkit/assets/order_tracking.png"/>
+</p>
+
+## How to read an order file?
+
+```dart
+import 'package:passkit/passkit.dart';
+
+void main() {
+  final orderBytes = ... // get bytes for the PassKit from somewhere
+  final order = PkOrder.fromBytes(orderBytes);
+}
+```
+
+## Apple Order Tracking docs
+
+- [Order Tracking Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/wallet#Order-tracking)
+- [Order Tracking](https://developer.apple.com/documentation/walletorders)
+- [Order Tracking Demo](https://applepaydemo.apple.com/order-tracking)
+
+# Closing notes
+
+## Unsupported or experimental functionality
+
+Please feel encouraged to create PRs for the following features.
+
+- PassKit Web Service: This functionality is existing, but might not work. Please file an issue or create a PR with a fix for bugs you encounter.
+  - Push Notification update registration is only working on iOS due to this whole specification being an Apple thingy.
+- Localization: Existing, but still inconvenient to use. There might be issues due to localizations being UTF-16 formatted, but the library currently uses UTF-8 to read localizations.
+- [Passkit creation](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54)
+- Signature verification is missing
+
+
 ## Bugs and parsing issues
 
-If you hit an issue with parsing, please create an issue and attach the PkPass (if possible).
+If you hit an issue with parsing, please create an issue and attach the pass or order file if possible.
 
 ## Contributors
 

@@ -9,7 +9,7 @@ void main() {
     group('forCorrectPixelRatio', () {
       test('should return a Uint8List object', () {
         final uint8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
-        final passImage = PkPassImage.fromImages(
+        final passImage = PkImage.fromImages(
           image1: uint8List,
           image2: uint8List,
           image3: uint8List,
