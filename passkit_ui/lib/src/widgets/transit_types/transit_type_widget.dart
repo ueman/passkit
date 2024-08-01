@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/src/widgets/transit_types/bus_icon.dart';
-import 'package:passkit_ui/src/widgets/transit_types/generic_transit_type.dart';
 import 'package:passkit_ui/src/widgets/transit_types/plane_icon.dart';
 
 class TransitTypeWidget extends StatelessWidget {
@@ -28,7 +27,8 @@ class TransitTypeWidget extends StatelessWidget {
       TransitType.bus => BusIcon(color: color, width: width),
       TransitType.train =>
         Icon(CupertinoIcons.train_style_one, size: width, color: color),
-      TransitType.generic => GenericTransitType(color: color, size: width),
+      TransitType.generic =>
+        Icon(Icons.arrow_right_alt_rounded, size: width + 10, color: color),
     };
   }
 }
