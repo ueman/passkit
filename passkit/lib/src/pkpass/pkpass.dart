@@ -238,12 +238,13 @@ class PkPass {
   /// - There's no support for personalization
   List<int>? write() {
     final archive = Archive();
-
     final encoder = JsonEncoder.withIndent('  ');
 
-    archive.addFile(
-      ArchiveFile.string('pass.json', encoder.convert(pass.toJson())),
+    final passFile = ArchiveFile.string(
+      'pass.json',
+      encoder.convert(pass.toJson()),
     );
+    archive.addFile(passFile);
     /*
     if (personalization != null) {
       encoder.addFile(
@@ -266,9 +267,12 @@ class PkPass {
     for (final file in archive.files) {
       manifest[file.name] = sha1.convert(file.content as List<int>).toString();
     }
-    archive.addFile(
-      ArchiveFile.string('manifest.json', encoder.convert(manifest)),
+
+    final manifestFile = ArchiveFile.string(
+      'manifest.json',
+      encoder.convert(manifest),
     );
+    archive.addFile(manifestFile);
 
     return ZipEncoder().encode(archive);
   }
