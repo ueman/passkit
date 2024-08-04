@@ -21,9 +21,17 @@ class PkPassImportSource {
   Future<PkPass> getPass() async {
     if (path != null) {
       final Content content = await ContentResolver.resolveContent(path!);
-      return PkPass.fromBytes(content.data);
+      return PkPass.fromBytes(
+        content.data,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      );
     } else if (bytes != null) {
-      return PkPass.fromBytes(bytes!);
+      return PkPass.fromBytes(
+        bytes!,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      );
     }
     throw Exception('No data');
   }

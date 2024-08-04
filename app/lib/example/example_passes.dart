@@ -72,6 +72,7 @@ class _ExamplePassesState extends State<ExamplePasses> {
         final pass = PkPass.fromBytes(
           data.buffer.asUint8List(),
           skipChecksumVerification: true,
+          skipSignatureVerification: true,
         );
         passes.add(pass);
       } catch (exception, stackTrace) {

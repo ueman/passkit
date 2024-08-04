@@ -4,6 +4,7 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:passkit_ui/src/theme/boarding_pass_theme.dart';
 import 'package:passkit_ui/src/widgets/header_row.dart';
+import 'package:passkit_ui/src/widgets/transit_types/transit_type_widget.dart';
 
 /// A boarding pass looks like the following:
 ///
