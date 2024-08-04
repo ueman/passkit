@@ -13,8 +13,10 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:path/path.dart' as p;
 
 class PassBackSidePageArgs {
   PassBackSidePageArgs(this.pass, this.showDelete);
@@ -204,11 +206,18 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
   }
 
   void _sharePassAsImage() async {
+    final name = widget.pass.pass.serialNumber;
     final imageData = await exportPassAsImage(widget.pass);
-    if (imageData != null) {
-      await Share.shareXFiles(
-        [XFile.fromData(imageData, name: 'pass.png', mimeType: 'image/png')],
-      );
+    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      final dir = await getApplicationDocumentsDirectory();
+
+      await File(p.join(dir.path, '$name.png')).writeAsBytes(imageData!);
+    } else {
+      if (imageData != null) {
+        await Share.shareXFiles(
+          [XFile.fromData(imageData, name: 'pass.png', mimeType: 'image/png')],
+        );
+      }
     }
   }
 

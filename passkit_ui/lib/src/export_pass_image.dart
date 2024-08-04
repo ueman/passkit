@@ -31,7 +31,7 @@ Future<Uint8List?> exportPassAsImage(
       ),
       configuration: ViewConfiguration(
         logicalConstraints: BoxConstraints.tight(logicalSize),
-        devicePixelRatio: 1.0,
+        devicePixelRatio: pixelRatio,
       ),
     );
 
@@ -46,14 +46,17 @@ Future<Uint8List?> exportPassAsImage(
         RenderObjectToWidgetAdapter<RenderBox>(
       container: repaintBoundary,
       child: MediaQuery(
-        data: const MediaQueryData(devicePixelRatio: 1.0),
+        data: MediaQueryData(devicePixelRatio: pixelRatio),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Column(
             // image is center aligned
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              MaterialApp(home: PkPassWidget(pass: pass)),
+              Material(
+                color: Colors.transparent,
+                child: PkPassWidget(pass: pass),
+              ),
             ],
           ),
         ),
