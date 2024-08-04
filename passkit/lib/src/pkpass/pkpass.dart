@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
+import 'package:meta/meta.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
@@ -130,7 +131,8 @@ class PkPass {
   // TODO(ueman): Provide an async method for this.
   static List<PkPass> passesFromBytes(
     final List<int> bytes, {
-    bool skipVerification = false,
+    bool skipChecksumVerification = false,
+    bool skipSignatureVerification = false,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -143,7 +145,8 @@ class PkPass {
         .map(
           (file) => fromBytes(
             file.content as List<int>,
-            skipChecksumVerification: skipVerification,
+            skipChecksumVerification: skipChecksumVerification,
+            skipSignatureVerification: skipSignatureVerification,
           ),
         )
         .toList();
@@ -233,10 +236,15 @@ class PkPass {
   /// When written to disk, the file should have an ending of `.pkpass`.
   ///
   /// Remarks:
-  /// - There's no support for a signature
+  /// - There's no support for signature, which means pass created by this
+  ///   can't be added to the Apple wallet
+  ///   - There's no support for verifying that the signature matches the PkPass
   /// - There's no support for localization
   /// - There's no support for personalization
-  List<int>? write() {
+  /// - Image sizes aren't checked, which means it's possible to create passes
+  ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
+  @experimental
+  Uint8List? write() {
     final archive = Archive();
     final encoder = JsonEncoder.withIndent('  ');
 
@@ -274,7 +282,11 @@ class PkPass {
     );
     archive.addFile(manifestFile);
 
-    return ZipEncoder().encode(archive);
+    final pkpass = ZipEncoder().encode(archive);
+    if (pkpass == null) {
+      return null;
+    }
+    return Uint8List.fromList(pkpass);
   }
 }
 
