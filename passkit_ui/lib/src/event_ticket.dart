@@ -163,7 +163,7 @@ class _ThumbnailRow extends StatelessWidget {
               passTheme: passTheme,
               auxiliaryRow: auxiliaryRowOne,
             ),
-          ]
+          ],
         ],
       ],
     );
