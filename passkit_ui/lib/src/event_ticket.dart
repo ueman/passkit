@@ -76,13 +76,17 @@ class EventTicket extends StatelessWidget {
                     logoText: pass.pass.logoText,
                   ),
                   const SizedBox(height: 16),
-                  if (pass.thumbnail != null)
-                    _ThumbnailRow(pass: pass, passTheme: passTheme),
                   if (pass.strip != null)
                     _StripRow(
                       pass: pass,
                       theme: passTheme,
                     ),
+                  // An event ticket without a strip doesn't necessarily need to
+                  // have a thumbnail, that's why we check for the absence of
+                  // the strip image instead of the presence of the thumbnail
+                  // image.
+                  if (pass.strip == null)
+                    _ThumbnailRow(pass: pass, passTheme: passTheme),
                   const Spacer(),
                   if ((pass.pass.barcodes?.firstOrNull ?? pass.pass.barcode) !=
                       null)
@@ -110,6 +114,12 @@ class _ThumbnailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final eventTicket = pass.pass.eventTicket!;
+
+    final auxiliaryRowZero = eventTicket.auxiliaryFields
+        ?.where((row) => row.row == null || row.row == 0)
+        .toList();
+    final auxiliaryRowOne =
+        eventTicket.auxiliaryFields?.where((row) => row.row == 1).toList();
 
     return Column(
       children: [
@@ -141,12 +151,19 @@ class _ThumbnailRow extends StatelessWidget {
             Thumbnail(thumbnail: pass.thumbnail),
           ],
         ),
-        if (eventTicket.auxiliaryFields != null) ...[
+        if (auxiliaryRowZero != null && auxiliaryRowZero.isNotEmpty) ...[
           const SizedBox(height: 16),
           _FieldRow(
             passTheme: passTheme,
-            auxiliaryRow: eventTicket.auxiliaryFields!,
+            auxiliaryRow: auxiliaryRowZero,
           ),
+          if (auxiliaryRowOne != null && auxiliaryRowOne.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            _FieldRow(
+              passTheme: passTheme,
+              auxiliaryRow: auxiliaryRowOne,
+            ),
+          ]
         ],
       ],
     );
@@ -170,6 +187,9 @@ class _FieldRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: auxiliaryRow.map((item) {
+        // TODO(any): Use IntrinsicWidth instead, which looks more like the
+        // UI in Apple Wallet.
+        // TODO(any): Properly handle text overflow
         return Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
