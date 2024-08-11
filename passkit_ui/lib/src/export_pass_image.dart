@@ -11,7 +11,8 @@ import 'package:passkit_ui/passkit_ui.dart';
 /// Creates a PNG from the given [pass]
 ///
 /// Remarks:
-/// - Sometimes, images aren't correctly rendered on a pass
+/// - Sometimes, images aren't correctly rendered on a pass. Calling this method
+///   a second time with the same pass resolves that issue.
 @experimental
 Future<Uint8List?> exportPassAsImage(
   PkPass pass, {
