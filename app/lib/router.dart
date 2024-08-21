@@ -1,5 +1,5 @@
 import 'package:app/example/example_passes.dart';
-import 'package:app/home_page.dart';
+import 'package:app/home/home_page.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/settings/settings_page.dart';

@@ -47,5 +47,10 @@ Future<void> _onIntent(Intent? receivedIntent) async {
     // TODO(ueman): show error popup?
     return;
   }
-  unawaited(router.push('/import', extra: PkPassImportSource(path: path)));
+  unawaited(
+    router.push(
+      '/import',
+      extra: PkPassImportSource(contentResolverPath: path),
+    ),
+  );
 }

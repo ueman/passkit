@@ -1,7 +1,10 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:app/db/database.dart';
 import 'package:app/db/db.dart';
+import 'package:app/db/pass_entry.dart';
+import 'package:app/home/pass_list_notifier.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/router.dart';
 import 'package:content_resolver/content_resolver.dart';
@@ -12,15 +15,19 @@ import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 
 class PkPassImportSource {
-  PkPassImportSource({this.path, this.bytes})
-      : assert(path != null || bytes != null);
+  PkPassImportSource({this.contentResolverPath, this.bytes, this.filePath})
+      : assert(
+          contentResolverPath != null || bytes != null || filePath != null,
+        );
 
-  final String? path;
+  final String? contentResolverPath;
+  final String? filePath;
   final List<int>? bytes;
 
   Future<PkPass> getPass() async {
-    if (path != null) {
-      final Content content = await ContentResolver.resolveContent(path!);
+    if (contentResolverPath != null) {
+      final Content content =
+          await ContentResolver.resolveContent(contentResolverPath!);
       return PkPass.fromBytes(
         content.data,
         skipChecksumVerification: true,
@@ -29,6 +36,12 @@ class PkPassImportSource {
     } else if (bytes != null) {
       return PkPass.fromBytes(
         bytes!,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      );
+    } else if (filePath != null) {
+      return PkPass.fromBytes(
+        await File(filePath!).readAsBytes(),
         skipChecksumVerification: true,
         skipSignatureVerification: true,
       );
@@ -85,12 +98,13 @@ class _ImportPassPageState extends State<ImportPassPage> {
           // TODO(ueman): only offer this button if the pass isn't yet added
           ElevatedButton(
             onPressed: () async {
-              await database.into(database.pass).insert(
-                    PassCompanion.insert(
-                      id: pass!.pass.serialNumber,
-                      binaryPass: Uint8List.fromList(pass!.sourceData),
-                    ),
-                  );
+              await db.passEntryDao.insertPassEntry(
+                PassEntry(
+                  id: pass!.pass.serialNumber,
+                  pass: Uint8List.fromList(pass!.sourceData),
+                  description: pass!.pass.description,
+                ),
+              );
               if (context.mounted) {
                 // If this page is opened via a file open intent, it can't be
                 // popped via the navigator. Instead the button should be hidden.
@@ -100,6 +114,7 @@ class _ImportPassPageState extends State<ImportPassPage> {
                   // TODO(ueman): hide the import button
                 }
               }
+              unawaited(passListNotifier.loadPasses());
             },
             child: Text(AppLocalizations.of(context).importPass),
           ),

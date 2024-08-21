@@ -1,4 +1,4 @@
-import 'package:app/db/database.dart';
+import 'package:app/home/pass_list_notifier.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/import_pass/pick_pass.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
@@ -6,11 +6,9 @@ import 'package:app/router.dart';
 import 'package:app/widgets/app_icon.dart';
 import 'package:app/widgets/pass_list_tile.dart';
 import 'package:desktop_drop/desktop_drop.dart';
-import 'package:drift/drift.dart' as drift;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,28 +19,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<PkPass> passes = [];
-
   PassView passView = PassView.preview;
 
   @override
   void initState() {
     super.initState();
-    loadPasses();
-  }
-
-  Future<void> loadPasses() async {
-    final dbPasses = await database.pass.select(distinct: true).get();
-    final mappedPasses = dbPasses.map((p) {
-      return PkPass.fromBytes(
-        p.binaryPass,
-        skipChecksumVerification: true,
-        skipSignatureVerification: true,
-      );
-    }).toList();
-    setState(() {
-      passes = mappedPasses;
-    });
+    passListNotifier.loadPasses();
   }
 
   @override
@@ -85,55 +67,60 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            ViewChooser(
-              selected: passView,
-              onViewChanged: (newViewSelection) {
-                setState(() {
-                  passView = newViewSelection;
-                });
-              },
-            ),
-            passes.isEmpty
-                ? const Center(child: Text('No passes'))
-                : Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: () => loadPasses(),
-                      child: ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                        itemCount: passes.length,
-                        itemBuilder: (context, index) {
-                          final pass = passes[index];
-                          if (passView == PassView.compact) {
-                            return PassListTile(
-                              pass: pass,
-                              onTap: () {
-                                router.push(
-                                  '/backside',
-                                  extra: PassBackSidePageArgs(pass, true),
+        body: ListenableBuilder(
+          listenable: passListNotifier,
+          builder: (context, child) {
+            return Column(
+              children: [
+                ViewChooser(
+                  selected: passView,
+                  onViewChanged: (newViewSelection) {
+                    setState(() {
+                      passView = newViewSelection;
+                    });
+                  },
+                ),
+                passListNotifier.passes?.isEmpty ?? true
+                    ? const Center(child: Text('No passes'))
+                    : Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () => passListNotifier.loadPasses(),
+                          child: ListView.builder(
+                            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                            itemCount: passListNotifier.passes!.length,
+                            itemBuilder: (context, index) {
+                              final pass = passListNotifier.passes![index];
+                              if (passView == PassView.compact) {
+                                return PassListTile(
+                                  pass: pass,
+                                  onTap: () {
+                                    router.push(
+                                      '/backside',
+                                      extra: PassBackSidePageArgs(pass, true),
+                                    );
+                                  },
                                 );
-                              },
-                            );
-                          } else {
-                            return Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: InkWell(
-                                child: PkPassWidget(pass: pass),
-                                onTap: () {
-                                  router.push(
-                                    '/backside',
-                                    extra: PassBackSidePageArgs(pass, true),
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        },
+                              } else {
+                                return Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: InkWell(
+                                    child: PkPassWidget(pass: pass),
+                                    onTap: () {
+                                      router.push(
+                                        '/backside',
+                                        extra: PassBackSidePageArgs(pass, true),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );

@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:app/db/db.dart';
+import 'package:app/home/pass_list_notifier.dart';
 import 'package:app/pass_backside/app_metadata_tile.dart';
 import 'package:app/pass_backside/placemark_tile.dart';
 import 'package:app/web_service/app_meta_data_client.dart';
@@ -185,12 +188,20 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
                 MaterialLocalizations.of(context).deleteButtonTooltip,
                 style: const TextStyle(color: Colors.red),
               ),
-              onTap: () {},
+              onTap: delete,
             ),
           ],
         ],
       ),
     );
+  }
+
+  Future<void> delete() async {
+    await db.passEntryDao.deletePassEntry(widget.pass.pass.serialNumber);
+    if (context.mounted) {
+      await Navigator.maybePop(context);
+    }
+    unawaited(passListNotifier.loadPasses());
   }
 
   void _sharePass() {

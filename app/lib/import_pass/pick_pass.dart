@@ -24,11 +24,11 @@ Future<void> pickPass(BuildContext context) async {
     return;
   }
 
-  if ({'.pkpass', '.pass'}.contains(extension(firstPath))) {
+  if (!{'.pkpass', '.pass'}.contains(extension(firstPath))) {
     // This is probably not a valid PkPass
     // TOOD show a hint to the user, that the user picked an ivalid file
     return;
   }
 
-  await router.push('/import', extra: PkPassImportSource(path: firstPath));
+  await router.push('/import', extra: PkPassImportSource(filePath: firstPath));
 }
