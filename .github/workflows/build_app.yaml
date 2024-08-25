@@ -31,7 +31,7 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
-        flutter-version-file: app/pubspec.yaml # path to pubspec.yaml
+        flutter-version-file: app/pubspec.yaml
     # write key.properties
     #- run: echo "$KEY_PROPERTIES" > android/key.properties
     #  env:

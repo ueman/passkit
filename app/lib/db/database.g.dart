@@ -122,6 +122,15 @@ class _$PassEntryDao extends PassEntryDao {
                   'id': item.id,
                   'description': item.description,
                   'pass': item.pass
+                }),
+        _passEntryUpdateAdapter = UpdateAdapter(
+            database,
+            'PassEntry',
+            ['id'],
+            (PassEntry item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description,
+                  'pass': item.pass
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -131,6 +140,8 @@ class _$PassEntryDao extends PassEntryDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<PassEntry> _passEntryInsertionAdapter;
+
+  final UpdateAdapter<PassEntry> _passEntryUpdateAdapter;
 
   @override
   Future<List<PassEntry>> findAll() async {
@@ -150,5 +161,10 @@ class _$PassEntryDao extends PassEntryDao {
   @override
   Future<void> insertPassEntry(PassEntry entry) async {
     await _passEntryInsertionAdapter.insert(entry, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updatePassEntry(PassEntry entry) async {
+    await _passEntryUpdateAdapter.update(entry, OnConflictStrategy.replace);
   }
 }

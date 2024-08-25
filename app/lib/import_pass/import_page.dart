@@ -86,7 +86,7 @@ class _ImportPassPageState extends State<ImportPassPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: InkWell(
-              child: PkPassWidget(pass: pass!),
+              child: Center(child: PkPassWidget(pass: pass!)),
               onTap: () {
                 router.push(
                   '/backside',

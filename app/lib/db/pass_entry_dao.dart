@@ -11,4 +11,7 @@ abstract class PassEntryDao {
 
   @Query('DELETE FROM PassEntry WHERE id = :serial')
   Future<void> deletePassEntry(String serial);
+
+  @Update(onConflict: OnConflictStrategy.replace)
+  Future<void> updatePassEntry(PassEntry entry);
 }

@@ -72,6 +72,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, child) {
             return Column(
               children: [
+                /*
                 ViewChooser(
                   selected: passView,
                   onViewChanged: (newViewSelection) {
@@ -80,13 +81,14 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                 ),
+                */
                 passListNotifier.passes?.isEmpty ?? true
-                    ? const Center(child: Text('No passes'))
+                    ? const HomePageEmptyState()
                     : Expanded(
                         child: RefreshIndicator(
                           onRefresh: () => passListNotifier.loadPasses(),
                           child: ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 25, 0, 25),
                             itemCount: passListNotifier.passes!.length,
                             itemBuilder: (context, index) {
                               final pass = passListNotifier.passes![index];
@@ -121,6 +123,32 @@ class _HomePageState extends State<HomePage> {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class HomePageEmptyState extends StatelessWidget {
+  const HomePageEmptyState({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final translations = AppLocalizations.of(context);
+    return Expanded(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(translations.noPassesToShow),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => pickPass(context),
+              child: Text(translations.import),
+            ),
+          ],
         ),
       ),
     );

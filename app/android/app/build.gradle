@@ -46,7 +46,7 @@ android {
     defaultConfig {
         applicationId "dev.uekoetter.passkit"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 35 //flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
