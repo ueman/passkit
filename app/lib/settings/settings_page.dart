@@ -1,7 +1,9 @@
 import 'package:app/db/preferences.dart';
+import 'package:app/widgets/app_version.dart';
 import 'package:app/widgets/show_about_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -36,6 +38,25 @@ class _SettingsPageState extends State<SettingsPage> {
               AppPreferences().overrideShareProhibitedFlag = value;
               setState(() {});
             },
+          ),
+          ListTile(
+            title: Text(AppLocalizations.of(context).reportIssue),
+            leading: const Icon(Icons.bug_report),
+            onTap: () {
+              final bugReportUrl = Uri.parse(
+                'https://github.com/ueman/passkit/issues/new?template=app_bug_report.yaml',
+              );
+              launchUrl(bugReportUrl);
+            },
+          ),
+          ListTile(
+            title: Text(
+              MaterialLocalizations.of(context)
+                  .aboutListTileTitle(AppLocalizations.of(context).appName),
+            ),
+            subtitle: const AppVersion(),
+            leading: const Icon(Icons.info),
+            onTap: () => showAboutWalletApp(context),
           ),
         ],
       ),
