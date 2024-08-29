@@ -1,3 +1,5 @@
+## 0.0.5
+
 ## 0.0.4
 
 - Improved fidelity in the visual representation of all pass types
