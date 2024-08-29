@@ -6,6 +6,8 @@
   - This is a breaking change.
 - Rename `PkPassImage` to `PkImage`.
   - This is a breaking change
+- Experimental support for creating a PkPass file. Use the `PkPass().write()` method.
+  - The file will not yet be accepted by Apple Wallet due to missing support for writing the pass signature 
 
 ## 0.0.4
 
