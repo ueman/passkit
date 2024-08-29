@@ -11,9 +11,11 @@ class SemanticTagTypeWifiNetwork {
   Map<String, dynamic> toJson() => _$SemanticTagTypeWifiNetworkToJson(this);
 
   /// The password for the WiFi network.
+  @JsonKey(name: 'password')
   final String password;
 
   /// The name for the WiFi network.
+  @JsonKey(name: 'ssid')
   final String ssid;
 }
 
@@ -31,10 +33,12 @@ class SemanticTagTypeCurrencyAmount {
   Map<String, dynamic> toJson() => _$SemanticTagTypeCurrencyAmountToJson(this);
 
   /// The amount of money.
+  @JsonKey(name: 'amount')
   final String? amount;
 
   /// The currency code for amount.
   // ISO 4217 currency code as a string
+  @JsonKey(name: 'currencyCode')
   final String? currencyCode;
 }
 
@@ -49,9 +53,11 @@ class SemanticTagTypeLocation {
   Map<String, dynamic> toJson() => _$SemanticTagTypeLocationToJson(this);
 
   /// The latitude, in degrees.
+  @JsonKey(name: 'latitude')
   final double latitude;
 
   /// The longitude, in degrees.
+  @JsonKey(name: 'longitude')
   final double longitude;
 }
 
@@ -75,26 +81,32 @@ class SemanticTagTypeSeat {
 
   /// A description of the seat, such as “A flat bed seat”.
   // localizable string
+  @JsonKey(name: 'seatDescription')
   final String? seatDescription;
 
   /// The identifier code for the seat.
   // localizable string
+  @JsonKey(name: 'seatIdentifier')
   final String? seatIdentifier;
 
   /// The number of the seat.
   // localizable string
+  @JsonKey(name: 'seatNumber')
   final String? seatNumber;
 
   /// The row that contains the seat.
   // localizable string
+  @JsonKey(name: 'seatRow')
   final String? seatRow;
 
   /// The section that contains the seat.
   // localizable string
+  @JsonKey(name: 'seatSection')
   final String? seatSection;
 
   /// The type of seat, such as “Reserved seating”.
   // localizable string
+  @JsonKey(name: 'seatType')
   final String? seatType;
 }
 
@@ -120,23 +132,30 @@ class SemanticTagTypePersonNameComponents {
       _$SemanticTagTypePersonNameComponentsToJson(this);
 
   /// The person’s family name or last name.
+  @JsonKey(name: 'familyName')
   final String? familyName;
 
   /// The person’s given name; also called the forename or first name in some countries.
+  @JsonKey(name: 'givenName')
   final String? givenName;
 
   /// The person’s middle name.
+  @JsonKey(name: 'middleName')
   final String? middleName;
 
   /// The prefix for the person’s name, such as “Dr”.
+  @JsonKey(name: 'namePrefix')
   final String? namePrefix;
 
   /// The suffix for the person’s name, such as “Junior”.
+  @JsonKey(name: 'nameSuffix')
   final String? nameSuffix;
 
   /// The person’s nickname.
+  @JsonKey(name: 'nickname')
   final String? nickname;
 
   /// The phonetic representation of the person’s name.
+  @JsonKey(name: 'phoneticRepresentation')
   final String? phoneticRepresentation;
 }

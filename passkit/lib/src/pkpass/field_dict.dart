@@ -39,6 +39,7 @@ class FieldDict {
   /// This key’s value overrides the text specified by the value key.
   /// Available in iOS 7.0.
   // localizable string, ISO 8601 date as a string, or number
+  @JsonKey(name: 'attributedValue')
   final String? attributedValue;
 
   /// Optional. Format string for the alert text that is displayed when the pass
@@ -47,6 +48,7 @@ class FieldDict {
   /// If you don’t specify a change message, the user isn’t notified when the
   /// field changes.
   // localizable format string
+  @JsonKey(name: 'changeMessage')
   final String? changeMessage;
 
   /// Optional. Data detectors that are applied to the field’s value.
@@ -60,14 +62,17 @@ class FieldDict {
   ///   no data detectors.
   ///
   /// Data detectors are applied only to back fields.
+  @JsonKey(name: 'dataDetectorTypes')
   final List<DataDetectorTypes>? dataDetectorTypes;
 
   /// Required. The key must be unique within the scope of the entire pass.
   /// For example, “departure-gate.”
+  @JsonKey(name: 'key')
   final String key;
 
   /// Optional. Label text for the field.
   // localizable string
+  @JsonKey(name: 'label')
   final String? label;
 
   /// Optional. Alignment for the field’s contents.
@@ -82,25 +87,31 @@ class FieldDict {
   /// appropriately based on its script direction.
   ///
   /// This key is not allowed for primary fields or back fields.
+  @JsonKey(name: 'textAlignment')
   final PkTextAlignment textAlignment;
 
   /// Required. Value of the field, for example, 42.
   /// This can contain a localizable string, ISO 8601 date as a string,
   /// or a number (double/int)
+  @JsonKey(name: 'value')
   final Object? value;
 
   /// The currency code to use for the value of the field.
   /// ISO 4217 currency code as a string
+  @JsonKey(name: 'currencyCode')
   final String? currencyCode;
 
   /// The style of the date to display in the field.
+  @JsonKey(name: 'dateStyle')
   final DateStyle? dateStyle;
 
   /// The style of the time displayed in the field.
+  @JsonKey(name: 'timeStyle')
   final DateStyle? timeStyle;
 
   /// The style of the number to display in the field. Formatter styles have the same meaning as the formats with corresponding names in NumberFormatter.Style.
   /// Possible Values: PKNumberStyleDecimal, PKNumberStylePercent, PKNumberStyleScientific, PKNumberStyleSpellOut
+  @JsonKey(name: 'numberStyle')
   final NumberStyle? numberStyle;
 
   /// A Boolean value that controls the time zone for the time and date to
@@ -109,12 +120,14 @@ class FieldDict {
   /// date appear in the time zone associated with the date and time of value.
   ///
   /// This key doesn’t affect the pass relevance calculation.
+  @JsonKey(name: 'ignoresTimeZone')
   final bool? ignoresTimeZone;
 
   /// A Boolean value that controls whether the date appears as a relative date.
   /// The default value is false, which displays the date as an absolute date.
   ///
   /// This key doesn’t affect the pass relevance calculation.
+  @JsonKey(name: 'isRelative')
   final bool? isRelative;
 
   /// You can augment the user-visible information on Wallet passes with
@@ -124,6 +137,7 @@ class FieldDict {
   ///
   /// An object that contains machine-readable metadata the system uses to offer
   /// a pass and suggest related actions.
+  @JsonKey(name: 'semantics')
   final Semantics? semantics;
 
   /// A number you use to add a row to the auxiliary field in an event ticket
@@ -132,6 +146,7 @@ class FieldDict {
   ///
   /// Possible Values: 0, 1
   /// This field is only valid for event pass types.
+  @JsonKey(name: 'row')
   final int? row;
 
   String? formatted({String? locale}) {
