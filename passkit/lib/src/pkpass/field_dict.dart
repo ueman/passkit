@@ -4,7 +4,7 @@ import 'package:passkit/src/pkpass/semantics.dart';
 
 part 'field_dict.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class FieldDict {
   FieldDict({
     this.attributedValue,

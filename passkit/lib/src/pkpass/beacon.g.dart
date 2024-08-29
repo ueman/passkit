@@ -13,9 +13,18 @@ Beacon _$BeaconFromJson(Map<String, dynamic> json) => Beacon(
       relevantText: json['relevantText'] as String?,
     );
 
-Map<String, dynamic> _$BeaconToJson(Beacon instance) => <String, dynamic>{
-      'major': instance.major,
-      'minor': instance.minor,
-      'proximityUUID': instance.proximityUUID,
-      'relevantText': instance.relevantText,
-    };
+Map<String, dynamic> _$BeaconToJson(Beacon instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('major', instance.major);
+  writeNotNull('minor', instance.minor);
+  val['proximityUUID'] = instance.proximityUUID;
+  writeNotNull('relevantText', instance.relevantText);
+  return val;
+}

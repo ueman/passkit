@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'location.g.dart';
 
 /// Information about a location.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Location {
   Location({
     this.altitude,

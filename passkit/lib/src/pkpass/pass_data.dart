@@ -10,7 +10,7 @@ import 'package:passkit/src/pkpass/semantics.dart';
 
 part 'pass_data.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PassData {
   PassData({
     required this.description,
