@@ -1,6 +1,14 @@
-import 'package:app/db/db.dart';
+import 'dart:async';
+import 'dart:typed_data';
+import 'package:floor/floor.dart';
+import 'package:sqflite/sqflite.dart' as sqflite;
 
-late final AppDatabase database;
-void initDb() {
-  database = AppDatabase();
+import 'pass_entry_dao.dart';
+import 'pass_entry.dart';
+
+part 'database.g.dart';
+
+@Database(version: 1, entities: [PassEntry])
+abstract class AppDatabase extends FloorDatabase {
+  PassEntryDao get passEntryDao;
 }
