@@ -1,7 +1,7 @@
 {
   "appName": "Cards",
-  "import": "Import new card",
-  "importPass": "Import this card",
+  "import": "Import new pass",
+  "importPass": "Import this pass",
   "pickPasses": "Pick passes",
   "associatediOSApps": "Associated iOS Apps",
   "associatediOSAppsDisclaimer": "Due to limitations of the Pass files, it's only possible to show iOS apps.",
@@ -16,5 +16,8 @@
     }
   },
   "settings": "Settings",
-  "overrideShareProhibitedFlag": "Share passes even if they disallow it"
+  "overrideShareProhibitedFlag": "Share passes even if they disallow it",
+  "reportIssue": "Report a bug",
+  "noPassesToShow": "You haven't added any passes yet.",
+  "updateButton": "Update"
 }

@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:app/db/db.dart';
+import 'package:app/db/pass_entry.dart';
+import 'package:app/home/pass_list_notifier.dart';
 import 'package:app/pass_backside/app_metadata_tile.dart';
 import 'package:app/pass_backside/placemark_tile.dart';
 import 'package:app/web_service/app_meta_data_client.dart';
@@ -192,12 +196,44 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
                 MaterialLocalizations.of(context).deleteButtonTooltip,
                 style: const TextStyle(color: Colors.red),
               ),
-              onTap: () {},
+              onTap: delete,
             ),
           ],
+          if (widget.pass.isWebServiceAvailable)
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context).updateButton,
+                style: const TextStyle(color: Colors.green),
+              ),
+              onTap: update,
+            ),
         ],
       ),
     );
+  }
+
+  Future<void> delete() async {
+    await db.passEntryDao.deletePassEntry(widget.pass.pass.serialNumber);
+    if (mounted) {
+      await Navigator.maybePop(context);
+    }
+    unawaited(passListNotifier.loadPasses());
+  }
+
+  Future<void> update() async {
+    final updatedPass = await PassKitWebClient().getLatestVersion(widget.pass);
+    if (updatedPass == null) {
+      return;
+    }
+    await db.passEntryDao.updatePassEntry(
+      PassEntry(
+        id: updatedPass.pass.serialNumber,
+        description: updatedPass.pass.description,
+        pass: Uint8List.fromList(updatedPass.sourceData),
+      ),
+    );
+
+    unawaited(passListNotifier.loadPasses());
   }
 
   void _sharePass() {

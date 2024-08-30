@@ -46,9 +46,18 @@ android {
     defaultConfig {
         applicationId "dev.uekoetter.passkit"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 35 //flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("keystore.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias "cards_keystore"
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
     }
 
     buildTypes {

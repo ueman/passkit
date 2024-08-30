@@ -65,6 +65,22 @@ void main() {
 }
 ```
 
+## How to write a PassKit file?
+
+> [!WARNING]
+> This is experimental.
+> The resulting file not yet get accepted by Apple Wallet due to missing support for writing the pass signature.
+
+```dart
+import 'package:passkit/passkit.dart';
+
+void main() {
+  final pkPass = PkPass(...);
+  final pkPassFile = pass.write();
+  await File('path/to/pass.pkpass').writeAsBytes(pkPassFile);
+}
+```
+
 ## Signature & Checksums
 
 In case iOS runs into an issue with a PkPass it just shows a generic error message. This library is able to point out a more specific error, if a PkPass is malformatted, signed, or whatever.
@@ -116,9 +132,7 @@ Please feel encouraged to create PRs for the following features.
 - PassKit Web Service: This functionality is existing, but might not work. Please file an issue or create a PR with a fix for bugs you encounter.
   - Push Notification update registration is only working on iOS due to this whole specification being an Apple thingy.
 - Localization: Existing, but still inconvenient to use. There might be issues due to localizations being UTF-16 formatted, but the library currently uses UTF-8 to read localizations.
-- [Passkit creation](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54)
-- Signature verification is missing
-
+- [Passkit creation](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54) is partially supported. See note further above.
 
 ## Bugs and parsing issues
 

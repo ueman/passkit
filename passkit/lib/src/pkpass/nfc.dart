@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'nfc.g.dart';
 
 /// Information about the NFC payload passed to an Apple Pay terminal.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Nfc {
   Nfc({
     required this.message,
@@ -18,11 +18,13 @@ class Nfc {
   /// Required. The payload to be transmitted to the Apple Pay terminal.
   /// Must be 64 bytes or less. Messages longer than 64 bytes are truncated by
   /// the system.
+  @JsonKey(name: 'message')
   final String message;
 
   /// Optional. The public encryption key used by the Value Added Services
   /// protocol. Use a Base64 encoded X.509 SubjectPublicKeyInfo structure
   /// containing a ECDH public key for group P256.
+  @JsonKey(name: 'encryptionPublicKey')
   final String? encryptionPublicKey;
 
   /// A Boolean value that indicates whether the NFC pass requires
@@ -32,5 +34,6 @@ class Nfc {
   /// This key is valid in iOS 13.1 and later. Set sharingProhibited to  `true`
   /// to prevent users from sharing passes with older iOS versions and bypassing
   /// the authentication requirement.
+  @JsonKey(name: 'requiresAuthentication')
   final bool? requiresAuthentication;
 }

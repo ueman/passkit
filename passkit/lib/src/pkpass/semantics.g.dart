@@ -121,76 +121,92 @@ Semantics _$SemanticsFromJson(Map<String, dynamic> json) => Semantics(
               json['passengerName'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$SemanticsToJson(Semantics instance) => <String, dynamic>{
-      'airlineCode': instance.airlineCode,
-      'artistIDs': instance.artistIDs,
-      'awayTeamAbbreviation': instance.awayTeamAbbreviation,
-      'awayTeamLocation': instance.awayTeamLocation,
-      'awayTeamName': instance.awayTeamName,
-      'balance': instance.balance,
-      'boardingGroup': instance.boardingGroup,
-      'boardingSequenceNumber': instance.boardingSequenceNumber,
-      'carNumber': instance.carNumber,
-      'confirmationNumber': instance.confirmationNumber,
-      'currentArrivalDate': instance.currentArrivalDate?.toIso8601String(),
-      'currentBoardingDate': instance.currentBoardingDate?.toIso8601String(),
-      'currentDepartureDate': instance.currentDepartureDate?.toIso8601String(),
-      'departureAirportCode': instance.departureAirportCode,
-      'departureAirportName': instance.departureAirportName,
-      'departureGate': instance.departureGate,
-      'departureLocation': instance.departureLocation,
-      'departureLocationDescription': instance.departureLocationDescription,
-      'departurePlatform': instance.departurePlatform,
-      'departureStationName': instance.departureStationName,
-      'departureTerminal': instance.departureTerminal,
-      'destinationAirportCode': instance.destinationAirportCode,
-      'destinationAirportName': instance.destinationAirportName,
-      'destinationGate': instance.destinationGate,
-      'destinationLocation': instance.destinationLocation,
-      'destinationLocationDescription': instance.destinationLocationDescription,
-      'destinationPlatform': instance.destinationPlatform,
-      'destinationStationName': instance.destinationStationName,
-      'destinationTerminal': instance.destinationTerminal,
-      'duration': instance.duration,
-      'eventEndDate': instance.eventEndDate?.toIso8601String(),
-      'eventName': instance.eventName,
-      'eventStartDate': instance.eventStartDate?.toIso8601String(),
-      'eventType': _$EventTypeEnumMap[instance.eventType],
-      'flightCode': instance.flightCode,
-      'flightNumber': instance.flightNumber,
-      'genre': instance.genre,
-      'homeTeamAbbreviation': instance.homeTeamAbbreviation,
-      'homeTeamLocation': instance.homeTeamLocation,
-      'homeTeamName': instance.homeTeamName,
-      'leagueAbbreviation': instance.leagueAbbreviation,
-      'leagueName': instance.leagueName,
-      'membershipProgramName': instance.membershipProgramName,
-      'membershipProgramNumber': instance.membershipProgramNumber,
-      'originalArrivalDate': instance.originalArrivalDate?.toIso8601String(),
-      'originalBoardingDate': instance.originalBoardingDate?.toIso8601String(),
-      'originalDepartureDate':
-          instance.originalDepartureDate?.toIso8601String(),
-      'passengerName': instance.passengerName,
-      'performerNames': instance.performerNames,
-      'priorityStatus': instance.priorityStatus,
-      'seats': instance.seats,
-      'securityScreening': instance.securityScreening,
-      'silenceRequested': instance.silenceRequested,
-      'sportName': instance.sportName,
-      'totalPrice': instance.totalPrice,
-      'transitProvider': instance.transitProvider,
-      'transitStatus': instance.transitStatus,
-      'transitStatusReason': instance.transitStatusReason,
-      'vehicleName': instance.vehicleName,
-      'vehicleNumber': instance.vehicleNumber,
-      'vehicleType': instance.vehicleType,
-      'venueEntrance': instance.venueEntrance,
-      'venueLocation': instance.venueLocation,
-      'venueName': instance.venueName,
-      'venuePhoneNumber': instance.venuePhoneNumber,
-      'venueRoom': instance.venueRoom,
-      'wifiAccess': instance.wifiAccess,
-    };
+Map<String, dynamic> _$SemanticsToJson(Semantics instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('airlineCode', instance.airlineCode);
+  writeNotNull('artistIDs', instance.artistIDs);
+  writeNotNull('awayTeamAbbreviation', instance.awayTeamAbbreviation);
+  writeNotNull('awayTeamLocation', instance.awayTeamLocation);
+  writeNotNull('awayTeamName', instance.awayTeamName);
+  writeNotNull('balance', instance.balance);
+  writeNotNull('boardingGroup', instance.boardingGroup);
+  writeNotNull('boardingSequenceNumber', instance.boardingSequenceNumber);
+  writeNotNull('carNumber', instance.carNumber);
+  writeNotNull('confirmationNumber', instance.confirmationNumber);
+  writeNotNull(
+      'currentArrivalDate', instance.currentArrivalDate?.toIso8601String());
+  writeNotNull(
+      'currentBoardingDate', instance.currentBoardingDate?.toIso8601String());
+  writeNotNull(
+      'currentDepartureDate', instance.currentDepartureDate?.toIso8601String());
+  writeNotNull('departureAirportCode', instance.departureAirportCode);
+  writeNotNull('departureAirportName', instance.departureAirportName);
+  writeNotNull('departureGate', instance.departureGate);
+  writeNotNull('departureLocation', instance.departureLocation);
+  writeNotNull(
+      'departureLocationDescription', instance.departureLocationDescription);
+  writeNotNull('departurePlatform', instance.departurePlatform);
+  writeNotNull('departureStationName', instance.departureStationName);
+  writeNotNull('departureTerminal', instance.departureTerminal);
+  writeNotNull('destinationAirportCode', instance.destinationAirportCode);
+  writeNotNull('destinationAirportName', instance.destinationAirportName);
+  writeNotNull('destinationGate', instance.destinationGate);
+  writeNotNull('destinationLocation', instance.destinationLocation);
+  writeNotNull('destinationLocationDescription',
+      instance.destinationLocationDescription);
+  writeNotNull('destinationPlatform', instance.destinationPlatform);
+  writeNotNull('destinationStationName', instance.destinationStationName);
+  writeNotNull('destinationTerminal', instance.destinationTerminal);
+  writeNotNull('duration', instance.duration);
+  writeNotNull('eventEndDate', instance.eventEndDate?.toIso8601String());
+  writeNotNull('eventName', instance.eventName);
+  writeNotNull('eventStartDate', instance.eventStartDate?.toIso8601String());
+  writeNotNull('eventType', _$EventTypeEnumMap[instance.eventType]);
+  writeNotNull('flightCode', instance.flightCode);
+  writeNotNull('flightNumber', instance.flightNumber);
+  writeNotNull('genre', instance.genre);
+  writeNotNull('homeTeamAbbreviation', instance.homeTeamAbbreviation);
+  writeNotNull('homeTeamLocation', instance.homeTeamLocation);
+  writeNotNull('homeTeamName', instance.homeTeamName);
+  writeNotNull('leagueAbbreviation', instance.leagueAbbreviation);
+  writeNotNull('leagueName', instance.leagueName);
+  writeNotNull('membershipProgramName', instance.membershipProgramName);
+  writeNotNull('membershipProgramNumber', instance.membershipProgramNumber);
+  writeNotNull(
+      'originalArrivalDate', instance.originalArrivalDate?.toIso8601String());
+  writeNotNull(
+      'originalBoardingDate', instance.originalBoardingDate?.toIso8601String());
+  writeNotNull('originalDepartureDate',
+      instance.originalDepartureDate?.toIso8601String());
+  writeNotNull('passengerName', instance.passengerName);
+  writeNotNull('performerNames', instance.performerNames);
+  writeNotNull('priorityStatus', instance.priorityStatus);
+  writeNotNull('seats', instance.seats);
+  writeNotNull('securityScreening', instance.securityScreening);
+  writeNotNull('silenceRequested', instance.silenceRequested);
+  writeNotNull('sportName', instance.sportName);
+  writeNotNull('totalPrice', instance.totalPrice);
+  writeNotNull('transitProvider', instance.transitProvider);
+  writeNotNull('transitStatus', instance.transitStatus);
+  writeNotNull('transitStatusReason', instance.transitStatusReason);
+  writeNotNull('vehicleName', instance.vehicleName);
+  writeNotNull('vehicleNumber', instance.vehicleNumber);
+  writeNotNull('vehicleType', instance.vehicleType);
+  writeNotNull('venueEntrance', instance.venueEntrance);
+  writeNotNull('venueLocation', instance.venueLocation);
+  writeNotNull('venueName', instance.venueName);
+  writeNotNull('venuePhoneNumber', instance.venuePhoneNumber);
+  writeNotNull('venueRoom', instance.venueRoom);
+  writeNotNull('wifiAccess', instance.wifiAccess);
+  return val;
+}
 
 const _$EventTypeEnumMap = {
   EventType.generic: 'PKEventTypeGeneric',

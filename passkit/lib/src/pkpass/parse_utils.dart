@@ -7,6 +7,9 @@ Color? parseColor(String? color) {
   return Color.css(color);
 }
 
-Color? colorToString(Color? color) {
-  return null;
+String? colorToString(Color? color) {
+  if (color == null) {
+    return null;
+  }
+  return color.cssExpression;
 }

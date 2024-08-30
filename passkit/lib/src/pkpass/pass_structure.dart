@@ -6,7 +6,7 @@ part 'pass_structure.g.dart';
 /// Keys that define the structure of the pass.
 /// These keys are used for all pass styles and partition the fields into the
 /// various parts of the pass.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PassStructure {
   PassStructure({
     this.auxiliaryFields,
@@ -24,30 +24,35 @@ class PassStructure {
 
   /// Optional. Additional fields to be displayed on the front of the pass.
   // array of field dictionaries
+  @JsonKey(name: 'auxiliaryFields')
   final List<FieldDict>? auxiliaryFields;
 
   /// Optional. Fields to be on the back of the pass.
   // array of field dictionaries
+  @JsonKey(name: 'backFields')
   final List<FieldDict>? backFields;
 
   /// Optional. Fields to be displayed in the header on the front of the pass.
   /// Use header fields sparingly; unlike all other fields, they remain visible
   /// when a stack of passes are displayed.
   // array of field dictionaries
+  @JsonKey(name: 'headerFields')
   final List<FieldDict>? headerFields;
 
   /// Optional. Fields to be displayed prominently on the front of the pass.
   // array of field dictionaries
+  @JsonKey(name: 'primaryFields')
   final List<FieldDict>? primaryFields;
 
   /// Optional. Fields to be displayed on the front of the pass.
   // array of field dictionaries
+  @JsonKey(name: 'secondaryFields')
   final List<FieldDict>? secondaryFields;
 
   /// Required for boarding passes; otherwise not allowed. Type of transit.
   /// Must be one of the following values: PKTransitTypeAir, PKTransitTypeBoat,
   /// PKTransitTypeBus, PKTransitTypeGeneric,PKTransitTypeTrain.
-  @JsonKey(defaultValue: TransitType.generic)
+  @JsonKey(name: 'transitType', defaultValue: TransitType.generic)
   final TransitType transitType;
 }
 

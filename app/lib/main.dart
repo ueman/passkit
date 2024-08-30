@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app/db/database.dart';
+import 'package:app/db/db.dart';
 import 'package:app/db/preferences.dart';
 import 'package:app/import_pass/receive_pass.dart';
 import 'package:app/main_app.dart';
@@ -12,7 +12,7 @@ Future<void> main() async {
   if (Platform.isAndroid) {
     await FlutterDisplayMode.setHighRefreshRate();
   }
-  initDb();
+  await initDb();
   await AppPreferences().init();
   runApp(const MainApp());
   if (Platform.isAndroid) {

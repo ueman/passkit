@@ -23,3 +23,5 @@ analyzer:
     missing_required_param: error
     missing_return: error
     todo: ignore
+  exclude:
+    - '**/*.g.dart'
