@@ -21,6 +21,7 @@ dependencies:
   csslib: ^1.0.0
   flutter:
     sdk: flutter
+  meta: any
   passkit: ^0.0.5
 
 dev_dependencies:

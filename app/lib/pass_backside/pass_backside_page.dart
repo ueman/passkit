@@ -16,8 +16,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:passkit/passkit.dart';
+import 'package:passkit_ui/passkit_ui.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:path/path.dart' as p;
 
 class PassBackSidePageArgs {
   PassBackSidePageArgs(this.pass, this.showDelete);
@@ -131,6 +134,10 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
               icon: Icon(Icons.adaptive.share),
               onPressed: _sharePass,
             ),
+          IconButton(
+            icon: const Icon(Icons.image),
+            onPressed: _sharePassAsImage,
+          ),
         ],
       ),
       body: ListView(
@@ -232,6 +239,22 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
   void _sharePass() {
     final data = Uint8List.fromList(widget.pass.sourceData);
     Share.shareXFiles([XFile.fromData(data)]);
+  }
+
+  void _sharePassAsImage() async {
+    final name = widget.pass.pass.serialNumber;
+    final imageData = await exportPassAsImage(widget.pass);
+    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      final dir = await getApplicationDocumentsDirectory();
+
+      await File(p.join(dir.path, '$name.png')).writeAsBytes(imageData!);
+    } else {
+      if (imageData != null) {
+        await Share.shareXFiles(
+          [XFile.fromData(imageData, name: 'pass.png', mimeType: 'image/png')],
+        );
+      }
+    }
   }
 
   void _onAppClick(Uri url) {
