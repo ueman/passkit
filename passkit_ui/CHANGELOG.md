@@ -1,5 +1,7 @@
 ## 0.0.5
 
+- Add ability to create an image from a PkPass
+
 ## 0.0.4
 
 - Improved fidelity in the visual representation of all pass types
