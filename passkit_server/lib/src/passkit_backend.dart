@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:passkit/passkit.dart';
 
 abstract class PassKitBackend {
@@ -23,8 +25,24 @@ abstract class PassKitBackend {
   Future<PkPass?> getUpdatedPass(
     String identifier,
     String serial,
-    String authenticationToken,
   );
+
+  Future<NotificationRegistrationReponse> setupNotifications(
+    String deviceId,
+    String passTypeId,
+    String serialNumber,
+    String pushToken,
+  );
+
+  Future<bool> stopNotifications(
+    String deviceId,
+    String passTypeId,
+    String serialNumber,
+  );
+
+  /// Should return true if the [serial] and [authToken] match and are valid.
+  /// Otherwise it should return false.
+  FutureOr<bool> isValidAuthToken(String serial, String authToken);
 }
 
 class UpdatablePassResponse {
@@ -48,4 +66,9 @@ class UpdatablePassResponse {
 class DevPassKitBackend extends PassKitBackend {
   @override
   void noSuchMethod(Invocation invocation) {}
+}
+
+enum NotificationRegistrationReponse {
+  created,
+  existing,
 }
