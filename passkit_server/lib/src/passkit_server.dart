@@ -9,18 +9,18 @@ extension PasskitServerExtension on Router {
   void addPassKitServer(PassKitBackend backend) {
     post(
       '/v1/devices/<deviceID>/registrations/<passTypeID>/<serial>',
-      setupNotifications,
+      setupNotifications(backend),
     );
     get(
       '/v1/devices/<deviceID>/registrations/<typeID>',
-      getListOfUpdatablePasses,
+      getListOfUpdatablePasses(backend),
     );
     delete(
       '/v1/devices/<deviceID>/registrations/<passTypeID>/<serial>',
-      stopNotifications,
+      stopNotifications(backend),
     );
-    get('/v1/passes/<identifier>/<serial>', getLatestVersion);
-    post('/v1/log', logMessages);
+    get('/v1/passes/<identifier>/<serial>', getLatestVersion(backend));
+    post('/v1/log', logMessages(backend));
   }
 }
 
@@ -32,24 +32,21 @@ extension PasskitServerExtension on Router {
 /// server response:
 /// --> if auth token is correct: 200, with pass data payload
 /// --> if auth token is incorrect: 401
-Future<Response> getLatestVersion(
-  Request request,
-  String identifier,
-  String serial,
-) async {
-  final backend = DevPassKitBackend();
-  final response = await backend.validateAuthToken(request, serial);
-  if (response != null) {
-    return response;
-  }
+Function getLatestVersion(PassKitBackend backend) {
+  return (Request request, String identifier, String serial) async {
+    final response = await backend.validateAuthToken(request, serial);
+    if (response != null) {
+      return response;
+    }
 
-  final pass = await backend.getUpdatedPass(identifier, serial);
+    final pass = await backend.getUpdatedPass(identifier, serial);
 
-  if (pass == null) {
-    return Response.unauthorized(null);
-  }
+    if (pass == null) {
+      return Response.unauthorized(null);
+    }
 
-  return Response.ok(pass.sourceData);
+    return Response.ok(pass.sourceData);
+  };
 }
 
 /// Logging/Debugging from the device
@@ -59,14 +56,17 @@ Future<Response> getLatestVersion(
 /// JSON payload: { "description" : <human-readable description of error> }
 ///
 /// server response: 200
-Future<Response> logMessages(Request request) async {
-  final content = await request.readAsString();
-  // There's no need to wait for the log message to be written, instead return
-  // a 200 status code response right away
-  unawaited(
-    DevPassKitBackend().logMessage(jsonDecode(content) as Map<String, dynamic>),
-  );
-  return Response.ok(null);
+Function logMessages(PassKitBackend backend) {
+  return (Request request) async {
+    final content = await request.readAsString();
+    // There's no need to wait for the log message to be written, instead return
+    // a 200 status code response right away
+    unawaited(
+      DevPassKitBackend()
+          .logMessage(jsonDecode(content) as Map<String, dynamic>),
+    );
+    return Response.ok(null);
+  };
 }
 
 /// Registration
@@ -93,35 +93,36 @@ Future<Response> logMessages(Request request) async {
 /// --> if registration succeeded: 201
 /// --> if this serial number was already registered for this device: 304
 /// --> if not authorized: 401
-Future<Response> setupNotifications(
-  Request request,
-  String deviceId,
-  String passTypeId,
-  String serialNumber,
-) async {
-  final backend = DevPassKitBackend();
-  final response = await backend.validateAuthToken(request, serialNumber);
-  if (response != null) {
-    return response;
-  }
-  final body = await request.readAsString();
-  final bodyJson = jsonDecode(body) as Map<String, dynamic>;
-  final pushToken = bodyJson['pushToken'] as String?;
-  if (pushToken == null) {
-    // TODO(anyone): include more information in debug mode?
-    return Response.badRequest();
-  }
+Function setupNotifications(PassKitBackend backend) {
+  return (
+    Request request,
+    String deviceId,
+    String passTypeId,
+    String serialNumber,
+  ) async {
+    final response = await backend.validateAuthToken(request, serialNumber);
+    if (response != null) {
+      return response;
+    }
+    final body = await request.readAsString();
+    final bodyJson = jsonDecode(body) as Map<String, dynamic>;
+    final pushToken = bodyJson['pushToken'] as String?;
+    if (pushToken == null) {
+      // TODO(anyone): include more information in debug mode?
+      return Response.badRequest();
+    }
 
-  final notificationRegistrationReponse = await backend.setupNotifications(
-    deviceId,
-    passTypeId,
-    serialNumber,
-    pushToken,
-  );
+    final notificationRegistrationReponse = await backend.setupNotifications(
+      deviceId,
+      passTypeId,
+      serialNumber,
+      pushToken,
+    );
 
-  return switch (notificationRegistrationReponse) {
-    NotificationRegistrationReponse.created => Response(201),
-    NotificationRegistrationReponse.existing => Response.ok(null),
+    return switch (notificationRegistrationReponse) {
+      NotificationRegistrationReponse.created => Response(201),
+      NotificationRegistrationReponse.existing => Response.ok(null),
+    };
   };
 }
 
@@ -137,28 +138,30 @@ Future<Response> setupNotifications(
 /// server response:
 /// --> if disassociation succeeded: 200
 /// --> if not authorized: 401
-Future<Response> stopNotifications(
-  Request request,
-  String deviceId,
-  String passTypeId,
-  String serialNumber,
-) async {
-  final backend = DevPassKitBackend();
-  final response = await backend.validateAuthToken(request, serialNumber);
-  if (response != null) {
-    return response;
-  }
-  final success = await backend.stopNotifications(
-    deviceId,
-    passTypeId,
-    serialNumber,
-  );
-  if (success) {
-    return Response.ok(null);
-  }
+Function stopNotifications(PassKitBackend backend) {
+  return (
+    Request request,
+    String deviceId,
+    String passTypeId,
+    String serialNumber,
+  ) async {
+    final backend = DevPassKitBackend();
+    final response = await backend.validateAuthToken(request, serialNumber);
+    if (response != null) {
+      return response;
+    }
+    final success = await backend.stopNotifications(
+      deviceId,
+      passTypeId,
+      serialNumber,
+    );
+    if (success) {
+      return Response.ok(null);
+    }
 
-  // TODO(anyone): Is this correct?
-  return Response.internalServerError();
+    // TODO(anyone): Is this correct?
+    return Response.internalServerError();
+  };
 }
 
 /// Updatable passes
@@ -174,12 +177,10 @@ Future<Response> stopNotifications(
 /// --> if there are matching passes: 200, with JSON payload: { "lastUpdated" : <new tag>, "serialNumbers" : [ <array of serial #s> ] }
 /// --> if there are no matching passes: 204
 /// --> if unknown device identifier: 404
-Future<Response> getListOfUpdatablePasses(
-  Request request,
-  String deviceId,
-  String typeId,
-) async {
-  return Response.notFound(null);
+Function getListOfUpdatablePasses(PassKitBackend backend) {
+  return (Request request, String deviceId, String typeId) async {
+    return Response.notFound(null);
+  };
 }
 
 extension on Request {
