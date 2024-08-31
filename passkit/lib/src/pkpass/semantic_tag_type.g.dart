@@ -28,11 +28,19 @@ SemanticTagTypeCurrencyAmount _$SemanticTagTypeCurrencyAmountFromJson(
     );
 
 Map<String, dynamic> _$SemanticTagTypeCurrencyAmountToJson(
-        SemanticTagTypeCurrencyAmount instance) =>
-    <String, dynamic>{
-      'amount': instance.amount,
-      'currencyCode': instance.currencyCode,
-    };
+    SemanticTagTypeCurrencyAmount instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('amount', instance.amount);
+  writeNotNull('currencyCode', instance.currencyCode);
+  return val;
+}
 
 SemanticTagTypeLocation _$SemanticTagTypeLocationFromJson(
         Map<String, dynamic> json) =>
@@ -58,16 +66,23 @@ SemanticTagTypeSeat _$SemanticTagTypeSeatFromJson(Map<String, dynamic> json) =>
       seatType: json['seatType'] as String?,
     );
 
-Map<String, dynamic> _$SemanticTagTypeSeatToJson(
-        SemanticTagTypeSeat instance) =>
-    <String, dynamic>{
-      'seatDescription': instance.seatDescription,
-      'seatIdentifier': instance.seatIdentifier,
-      'seatNumber': instance.seatNumber,
-      'seatRow': instance.seatRow,
-      'seatSection': instance.seatSection,
-      'seatType': instance.seatType,
-    };
+Map<String, dynamic> _$SemanticTagTypeSeatToJson(SemanticTagTypeSeat instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('seatDescription', instance.seatDescription);
+  writeNotNull('seatIdentifier', instance.seatIdentifier);
+  writeNotNull('seatNumber', instance.seatNumber);
+  writeNotNull('seatRow', instance.seatRow);
+  writeNotNull('seatSection', instance.seatSection);
+  writeNotNull('seatType', instance.seatType);
+  return val;
+}
 
 SemanticTagTypePersonNameComponents
     _$SemanticTagTypePersonNameComponentsFromJson(Map<String, dynamic> json) =>
@@ -82,13 +97,21 @@ SemanticTagTypePersonNameComponents
         );
 
 Map<String, dynamic> _$SemanticTagTypePersonNameComponentsToJson(
-        SemanticTagTypePersonNameComponents instance) =>
-    <String, dynamic>{
-      'familyName': instance.familyName,
-      'givenName': instance.givenName,
-      'middleName': instance.middleName,
-      'namePrefix': instance.namePrefix,
-      'nameSuffix': instance.nameSuffix,
-      'nickname': instance.nickname,
-      'phoneticRepresentation': instance.phoneticRepresentation,
-    };
+    SemanticTagTypePersonNameComponents instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('familyName', instance.familyName);
+  writeNotNull('givenName', instance.givenName);
+  writeNotNull('middleName', instance.middleName);
+  writeNotNull('namePrefix', instance.namePrefix);
+  writeNotNull('nameSuffix', instance.nameSuffix);
+  writeNotNull('nickname', instance.nickname);
+  writeNotNull('phoneticRepresentation', instance.phoneticRepresentation);
+  return val;
+}

@@ -28,15 +28,23 @@ PassStructure _$PassStructureFromJson(Map<String, dynamic> json) =>
               TransitType.generic,
     );
 
-Map<String, dynamic> _$PassStructureToJson(PassStructure instance) =>
-    <String, dynamic>{
-      'auxiliaryFields': instance.auxiliaryFields,
-      'backFields': instance.backFields,
-      'headerFields': instance.headerFields,
-      'primaryFields': instance.primaryFields,
-      'secondaryFields': instance.secondaryFields,
-      'transitType': _$TransitTypeEnumMap[instance.transitType]!,
-    };
+Map<String, dynamic> _$PassStructureToJson(PassStructure instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('auxiliaryFields', instance.auxiliaryFields);
+  writeNotNull('backFields', instance.backFields);
+  writeNotNull('headerFields', instance.headerFields);
+  writeNotNull('primaryFields', instance.primaryFields);
+  writeNotNull('secondaryFields', instance.secondaryFields);
+  val['transitType'] = _$TransitTypeEnumMap[instance.transitType]!;
+  return val;
+}
 
 const _$TransitTypeEnumMap = {
   TransitType.air: 'PKTransitTypeAir',

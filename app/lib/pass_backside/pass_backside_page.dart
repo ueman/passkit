@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:app/db/db.dart';
+import 'package:app/db/pass_entry.dart';
+import 'package:app/home/pass_list_notifier.dart';
 import 'package:app/pass_backside/app_metadata_tile.dart';
 import 'package:app/pass_backside/placemark_tile.dart';
 import 'package:app/web_service/app_meta_data_client.dart';
@@ -12,8 +16,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:passkit/passkit.dart';
+import 'package:passkit_ui/passkit_ui.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:path/path.dart' as p;
 
 class PassBackSidePageArgs {
   PassBackSidePageArgs(this.pass, this.showDelete);
@@ -127,6 +134,10 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
               icon: Icon(Icons.adaptive.share),
               onPressed: _sharePass,
             ),
+          IconButton(
+            icon: const Icon(Icons.image),
+            onPressed: _sharePassAsImage,
+          ),
         ],
       ),
       body: ListView(
@@ -185,17 +196,65 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
                 MaterialLocalizations.of(context).deleteButtonTooltip,
                 style: const TextStyle(color: Colors.red),
               ),
-              onTap: () {},
+              onTap: delete,
             ),
           ],
+          if (widget.pass.isWebServiceAvailable)
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context).updateButton,
+                style: const TextStyle(color: Colors.green),
+              ),
+              onTap: update,
+            ),
         ],
       ),
     );
   }
 
+  Future<void> delete() async {
+    await db.passEntryDao.deletePassEntry(widget.pass.pass.serialNumber);
+    if (mounted) {
+      await Navigator.maybePop(context);
+    }
+    unawaited(passListNotifier.loadPasses());
+  }
+
+  Future<void> update() async {
+    final updatedPass = await PassKitWebClient().getLatestVersion(widget.pass);
+    if (updatedPass == null) {
+      return;
+    }
+    await db.passEntryDao.updatePassEntry(
+      PassEntry(
+        id: updatedPass.pass.serialNumber,
+        description: updatedPass.pass.description,
+        pass: Uint8List.fromList(updatedPass.sourceData),
+      ),
+    );
+
+    unawaited(passListNotifier.loadPasses());
+  }
+
   void _sharePass() {
     final data = Uint8List.fromList(widget.pass.sourceData);
     Share.shareXFiles([XFile.fromData(data)]);
+  }
+
+  void _sharePassAsImage() async {
+    final name = widget.pass.pass.serialNumber;
+    final imageData = await exportPassAsImage(widget.pass);
+    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      final dir = await getApplicationDocumentsDirectory();
+
+      await File(p.join(dir.path, '$name.png')).writeAsBytes(imageData!);
+    } else {
+      if (imageData != null) {
+        await Share.shareXFiles(
+          [XFile.fromData(imageData, name: 'pass.png', mimeType: 'image/png')],
+        );
+      }
+    }
   }
 
   void _onAppClick(Uri url) {
