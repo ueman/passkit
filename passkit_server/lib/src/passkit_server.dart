@@ -8,8 +8,10 @@ import 'package:shelf_router/shelf_router.dart';
 extension PasskitServerExtension on Router {
   void addPassKitServer(PassKitBackend backend) {
     get('/v1/passes/<identifier>/<serial>', getLatestVersion);
-    get('/v1/devices/<deviceID>/registrations/<typeID>',
-        getListOfUpdatablePasses);
+    get(
+      '/v1/devices/<deviceID>/registrations/<typeID>',
+      getListOfUpdatablePasses,
+    );
     delete(
       '/v1/devices/<deviceID>/registrations/<passTypeID>/<serial>',
       stopNotifications,
@@ -57,7 +59,8 @@ FutureOr<Response> getLatestVersion(
 /// URL must end with "v1/log"
 FutureOr<Response> logMessages(Request request) async {
   final content = await request.readAsString();
-  DevPassKitBackend().logMessage(jsonDecode(content) as Map<String, dynamic>);
+  await DevPassKitBackend()
+      .logMessage(jsonDecode(content) as Map<String, dynamic>);
   return Response.ok(null);
 }
 

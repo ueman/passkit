@@ -6,7 +6,10 @@ abstract class PassKitBackend {
 
   /// "/v1/passes/{identifier}/{serial}""
   Future<UpdatablePassResponse?> returnUpdatablePasses(
-      String identifier, String serial, String updatedSince);
+    String identifier,
+    String serial,
+    String updatedSince,
+  );
 
   /// URL must end with "v1/passes/{identifier}/{serial}"
   /// Pass delivery
@@ -18,7 +21,10 @@ abstract class PassKitBackend {
   /// --> if auth token is correct: 200, with pass data payload
   /// --> if auth token is incorrect: 401
   Future<PkPass?> getUpdatedPass(
-      String identifier, String serial, String authenticationToken);
+    String identifier,
+    String serial,
+    String authenticationToken,
+  );
 }
 
 class UpdatablePassResponse {
@@ -39,4 +45,7 @@ class UpdatablePassResponse {
   final int response;
 }
 
-class DevPassKitBackend extends PassKitBackend {}
+class DevPassKitBackend extends PassKitBackend {
+  @override
+  void noSuchMethod(Invocation invocation) {}
+}
