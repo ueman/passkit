@@ -16,9 +16,17 @@ class PkOrderImportSource {
   Future<PkOrder> getOrder() async {
     if (path != null) {
       final Content content = await ContentResolver.resolveContent(path!);
-      return PkOrder.fromBytes(content.data, skipVerification: true);
+      return PkOrder.fromBytes(
+        content.data,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      );
     } else if (bytes != null) {
-      return PkOrder.fromBytes(bytes!, skipVerification: true);
+      return PkOrder.fromBytes(
+        bytes!,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      );
     }
     throw Exception('No data');
   }
