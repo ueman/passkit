@@ -3,11 +3,13 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
+import 'package:meta/meta.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
 import 'package:passkit/src/pkpass/personalization.dart';
 import 'package:passkit/src/pkpass/pk_pass_image.dart';
+import 'package:passkit/src/signature_verification.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
@@ -51,13 +53,20 @@ class PkPass {
     this.personalizationLogo,
   });
 
-  /// Parses bytes to a [PkPass] file.
-  /// Setting [skipVerification] to true disables any checksum or signature
+  /// Parses bytes to a [PkPass] instance.
+  ///
+  /// Setting [skipChecksumVerification] to true disables any checksum
   /// verification and validation.
-  // TODO(ueman): Provide an async method for this.
+  ///
+  /// Setting [skipSignatureVerification] to true disables any signature
+  /// verification and validation. This may be needed for older passes which are
+  /// signed with an out of date [Apple WWDR](https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/)
+  /// certificate.
+  // TODO(any): Provide an async method for this.
   static PkPass fromBytes(
     final List<int> bytes, {
-    bool skipVerification = false,
+    bool skipChecksumVerification = false,
+    bool skipSignatureVerification = false,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -67,13 +76,28 @@ class PkPass {
     final archive = decoder.decodeBytes(bytes);
 
     final manifest = archive.readManifest();
-    if (!skipVerification) {
+    final passData = archive.readPass();
+    if (!skipChecksumVerification) {
       archive.checkSha1Checksums(manifest);
+      if (!skipSignatureVerification) {
+        final manifestContent =
+            archive.findFile('manifest.json')!.content as List<int>;
+        final signatureContent = Uint8List.fromList(
+          archive.findFile('signature')!.content as List<int>,
+        );
+
+        verifySignature(
+          signatureBytes: signatureContent,
+          manifestBytes: manifestContent,
+          teamIdentifier: passData.teamIdentifier,
+          identifier: passData.passTypeIdentifier,
+        );
+      }
     }
 
     return PkPass(
       // data
-      pass: archive.readPass(),
+      pass: passData,
       manifest: manifest,
       personalization: archive.readPersonalization(),
       languageData: archive.getTranslations(),
@@ -107,7 +131,8 @@ class PkPass {
   // TODO(ueman): Provide an async method for this.
   static List<PkPass> passesFromBytes(
     final List<int> bytes, {
-    bool skipVerification = false,
+    bool skipChecksumVerification = false,
+    bool skipSignatureVerification = false,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -120,7 +145,8 @@ class PkPass {
         .map(
           (file) => fromBytes(
             file.content as List<int>,
-            skipVerification: skipVerification,
+            skipChecksumVerification: skipChecksumVerification,
+            skipSignatureVerification: skipSignatureVerification,
           ),
         )
         .toList();
@@ -203,6 +229,65 @@ class PkPass {
 
   /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => pass.webServiceURL != null;
+
+  /// Creates a PkPass file. If this instance was created via [PkPass.fromBytes]
+  /// it overwrites the signature if possible.
+  ///
+  /// When written to disk, the file should have an ending of `.pkpass`.
+  ///
+  /// Remarks:
+  /// - There's no support for signature, which means pass created by this
+  ///   can't be added to the Apple wallet
+  ///   - There's no support for verifying that the signature matches the PkPass
+  /// - There's no support for localization
+  /// - There's no support for personalization
+  /// - Image sizes aren't checked, which means it's possible to create passes
+  ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
+  @experimental
+  Uint8List? write() {
+    final archive = Archive();
+    final encoder = JsonEncoder.withIndent('  ');
+
+    final passFile = ArchiveFile.string(
+      'pass.json',
+      encoder.convert(pass.toJson()),
+    );
+    archive.addFile(passFile);
+    /*
+    if (personalization != null) {
+      encoder.addFile(
+        ArchiveFile.string(
+          'personalization.json',
+          jsonEncode(personalization!.toJson()),
+        ),
+      );
+    }
+    */
+
+    logo?.writeToArchive(archive, 'logo');
+    background?.writeToArchive(archive, 'background');
+    icon?.writeToArchive(archive, 'icon');
+    footer?.writeToArchive(archive, 'footer');
+    strip?.writeToArchive(archive, 'strip');
+    thumbnail?.writeToArchive(archive, 'thumbnail');
+
+    final manifest = <String, String>{};
+    for (final file in archive.files) {
+      manifest[file.name] = sha1.convert(file.content as List<int>).toString();
+    }
+
+    final manifestFile = ArchiveFile.string(
+      'manifest.json',
+      encoder.convert(manifest),
+    );
+    archive.addFile(manifestFile);
+
+    final pkpass = ZipEncoder().encode(archive);
+    if (pkpass == null) {
+      return null;
+    }
+    return Uint8List.fromList(pkpass);
+  }
 }
 
 // This is intentionally not exposed to keep this an implementation detail.
@@ -348,6 +433,22 @@ extension on Archive {
       if (checksumInManifest != digest.toString()) {
         throw ChecksumMismatchException(file.name);
       }
+    }
+  }
+}
+
+extension on PkImage {
+  void writeToArchive(Archive archive, String name) {
+    if (image1 != null) {
+      archive.addFile(ArchiveFile('$name.png', image1!.lengthInBytes, image1));
+    }
+    if (image2 != null) {
+      archive
+          .addFile(ArchiveFile('$name@2x.png', image2!.lengthInBytes, image2));
+    }
+    if (image3 != null) {
+      archive
+          .addFile(ArchiveFile('$name@3x.png', image3!.lengthInBytes, image3));
     }
   }
 }

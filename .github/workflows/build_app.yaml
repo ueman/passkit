@@ -31,28 +31,22 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
-        flutter-version-file: app/pubspec.yaml # path to pubspec.yaml
-    # write key.properties
-    #- run: echo "$KEY_PROPERTIES" > android/key.properties
-    #  env:
-    #    KEY_PROPERTIES: ${{ secrets.key_properties }}
-    # write key.keystore
-    #- run: mkdir android/key
-    #- run: echo "$KEY_KEYSTORE" | base64 --decode > android/key/key.keystore
-    #  env:
-    #    KEY_KEYSTORE: ${{ secrets.key_keystore }}
+        flutter-version-file: app/pubspec.yaml
     - run: flutter pub get
     - run: flutter analyze .
-    #- run: flutter build apk --build-number $GITHUB_RUN_NUMBER
-    - run: flutter build apk --build-number ${{ inputs.buildNumber }} --build-name ${{ inputs.versionName }}
-    - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v2
+    - name: Decode Keystore
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ENCODED_KEYSTORE: ${{ secrets.KEYSTORE_BASE64 }}
+        DECODED_KEYSTORE_PATH: android/app/keystore.jks
+      run: |
+        echo $ENCODED_KEYSTORE > keystore_base64.txt
+        base64 -d keystore_base64.txt > $DECODED_KEYSTORE_PATH
+    #- run: flutter build apk --build-number $GITHUB_RUN_NUMBER
+    - run: flutter build aab --build-number ${{ inputs.buildNumber }} --build-name ${{ inputs.versionName }}
+    - name: Upload to Google Play
+      uses: r0adkll/upload-google-play@v1
       with:
-        name: App Release ${{ inputs.versionName }}-${{ inputs.buildNumber }}
-        tag_name: app-${{ inputs.buildNumber }}
-        draft: false
-        prerelease: true
-        files: ./app/build/app/outputs/apk/release/app-release.apk
+        serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+        packageName: dev.uekoetter.passkit
+        releaseFiles: app/build/app/outputs/bundle/release/app-release.aab
+        track: production

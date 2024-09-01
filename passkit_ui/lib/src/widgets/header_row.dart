@@ -34,22 +34,27 @@ class HeaderRow extends StatelessWidget {
           ),
         ],
         const Spacer(),
+        // TODO(any): Even though the header fields may have a text align,
+        // it seems that in practice, it's always right aligned
         if (headerFields != null && headerFields!.isNotEmpty)
-          Column(
-            children: [
-              Text(
-                headerFields?.first.label ?? '',
-                style: passTheme.headerLabelStyle,
-                textAlign:
-                    headerFields?.first.textAlignment.toFlutterTextAlign(),
-              ),
-              Text(
-                headerFields?.first.value?.toString() ?? '',
-                style: passTheme.headerTextStyle,
-                textAlign:
-                    headerFields?.first.textAlignment.toFlutterTextAlign(),
-              ),
-            ],
+          IntrinsicWidth(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  headerFields?.first.label ?? '',
+                  style: passTheme.headerLabelStyle,
+                  textAlign:
+                      headerFields?.first.textAlignment.toFlutterTextAlign(),
+                ),
+                Text(
+                  headerFields?.first.value?.toString() ?? '',
+                  style: passTheme.headerTextStyle,
+                  textAlign:
+                      headerFields?.first.textAlignment.toFlutterTextAlign(),
+                ),
+              ],
+            ),
           ),
       ],
     );

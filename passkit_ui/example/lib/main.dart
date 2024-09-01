@@ -73,5 +73,9 @@ Future<PkPass> loadPass(String path) async {
     passData.offsetInBytes,
     passData.lengthInBytes,
   );
-  return PkPass.fromBytes(list);
+  return PkPass.fromBytes(
+    list,
+    skipChecksumVerification: true,
+    skipSignatureVerification: true,
+  );
 }

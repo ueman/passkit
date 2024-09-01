@@ -74,38 +74,49 @@ PassData _$PassDataFromJson(Map<String, dynamic> json) => PassData(
           : Semantics.fromJson(json['semantics'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PassDataToJson(PassData instance) => <String, dynamic>{
-      'description': instance.description,
-      'formatVersion': instance.formatVersion,
-      'organizationName': instance.organizationName,
-      'passTypeIdentifier': instance.passTypeIdentifier,
-      'serialNumber': instance.serialNumber,
-      'teamIdentifier': instance.teamIdentifier,
-      'appLaunchURL': instance.appLaunchURL,
-      'associatedStoreIdentifiers': instance.associatedStoreIdentifiers,
-      'userInfo': instance.userInfo,
-      'expirationDate': instance.expirationDate?.toIso8601String(),
-      'voided': instance.voided,
-      'beacons': instance.beacons,
-      'locations': instance.locations,
-      'maxDistance': instance.maxDistance,
-      'relevantDate': instance.relevantDate?.toIso8601String(),
-      'boardingPass': instance.boardingPass,
-      'coupon': instance.coupon,
-      'eventTicket': instance.eventTicket,
-      'generic': instance.generic,
-      'storeCard': instance.storeCard,
-      'barcode': instance.barcode,
-      'barcodes': instance.barcodes,
-      'backgroundColor': colorToString(instance.backgroundColor),
-      'foregroundColor': colorToString(instance.foregroundColor),
-      'groupingIdentifier': instance.groupingIdentifier,
-      'labelColor': colorToString(instance.labelColor),
-      'logoText': instance.logoText,
-      'suppressStripShine': instance.suppressStripShine,
-      'sharingProhibited': instance.sharingProhibited,
-      'authenticationToken': instance.authenticationToken,
-      'webServiceURL': instance.webServiceURL?.toString(),
-      'nfc': instance.nfc,
-      'semantics': instance.semantics,
-    };
+Map<String, dynamic> _$PassDataToJson(PassData instance) {
+  final val = <String, dynamic>{
+    'description': instance.description,
+    'formatVersion': instance.formatVersion,
+    'organizationName': instance.organizationName,
+    'passTypeIdentifier': instance.passTypeIdentifier,
+    'serialNumber': instance.serialNumber,
+    'teamIdentifier': instance.teamIdentifier,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('appLaunchURL', instance.appLaunchURL);
+  writeNotNull(
+      'associatedStoreIdentifiers', instance.associatedStoreIdentifiers);
+  writeNotNull('userInfo', instance.userInfo);
+  writeNotNull('expirationDate', instance.expirationDate?.toIso8601String());
+  writeNotNull('voided', instance.voided);
+  writeNotNull('beacons', instance.beacons);
+  writeNotNull('locations', instance.locations);
+  writeNotNull('maxDistance', instance.maxDistance);
+  writeNotNull('relevantDate', instance.relevantDate?.toIso8601String());
+  writeNotNull('boardingPass', instance.boardingPass);
+  writeNotNull('coupon', instance.coupon);
+  writeNotNull('eventTicket', instance.eventTicket);
+  writeNotNull('generic', instance.generic);
+  writeNotNull('storeCard', instance.storeCard);
+  writeNotNull('barcode', instance.barcode);
+  writeNotNull('barcodes', instance.barcodes);
+  writeNotNull('backgroundColor', colorToString(instance.backgroundColor));
+  writeNotNull('foregroundColor', colorToString(instance.foregroundColor));
+  writeNotNull('groupingIdentifier', instance.groupingIdentifier);
+  writeNotNull('labelColor', colorToString(instance.labelColor));
+  writeNotNull('logoText', instance.logoText);
+  writeNotNull('suppressStripShine', instance.suppressStripShine);
+  writeNotNull('sharingProhibited', instance.sharingProhibited);
+  writeNotNull('authenticationToken', instance.authenticationToken);
+  writeNotNull('webServiceURL', instance.webServiceURL?.toString());
+  writeNotNull('nfc', instance.nfc);
+  writeNotNull('semantics', instance.semantics);
+  return val;
+}

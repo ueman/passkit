@@ -33,29 +33,29 @@ class OrderPayment {
   @JsonKey(name: 'transactions')
   final List<PaymentTransaction>? transactions;
 
-  /// Deprecated  A list of methods used to pay. For example, MasterCard 1234 or
+  /// Deprecated
+  /// Apple doesn't list a reason or replacement for the deprecation
+  ///
+  /// A list of methods used to pay. For example, MasterCard 1234 or
   /// Visa 5678.
-  // Apple doesn't list a reason or replacement for the deprecation
-  // ignore: provide_deprecation_message
-  @deprecated
   @JsonKey(name: 'paymentMethods')
   final List<String>? paymentMethods;
 
-  /// Deprecated  (Required) The status of the payment.
+  /// Deprecated
+  /// Apple doesn't list a reason or replacement for the deprecation
+  ///
+  /// The status of the payment.
   /// Possible Values: pending, authorized, paid, refunded, declined, voided
-  // Apple doesn't list a reason or replacement for the deprecation
-  // ignore: provide_deprecation_message
-  @deprecated
   @JsonKey(name: 'status')
   final String? status;
 
-  /// Deprecated  An optional list of Apple Pay transaction identifiers relating
+  /// Deprecated
+  /// Apple doesn't list a reason or replacement for the deprecation
+  ///
+  /// An optional list of Apple Pay transaction identifiers relating
   /// to this order. Wallet links the original transaction to your order by
   /// default. If you charge a user multiple times, you can provide the relevant
   /// transaction identifiers here to enable additional linking.
-  // Apple doesn't list a reason or replacement for the deprecation
-  // ignore: provide_deprecation_message
-  @deprecated
   @JsonKey(name: 'applePayTransactionIdentifiers')
   final List<String>? applePayTransactionIdentifiers;
 }

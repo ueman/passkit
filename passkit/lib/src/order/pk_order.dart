@@ -4,7 +4,7 @@ import 'package:archive/archive.dart';
 import 'package:passkit/src/archive_extensions.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pk_pass_image.dart';
-import 'package:passkit/src/pkpass/pkpass.dart';
+import 'package:passkit/src/signature_verification.dart';
 
 import 'order_data.dart';
 
@@ -16,13 +16,14 @@ class PkOrder {
     this.languageData,
   });
 
-  /// Parses bytes to a [PkPass] file.
+  /// Parses bytes to a [PkOrder] instance.
   /// Setting [skipVerification] to true disables any checksum or signature
   /// verification and validation.
   // TODO(ueman): Provide an async method for this.
   static PkOrder fromBytes(
     final List<int> bytes, {
-    bool skipVerification = false,
+    bool skipChecksumVerification = false,
+    bool skipSignatureVerification = false,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -32,13 +33,29 @@ class PkOrder {
     final archive = decoder.decodeBytes(bytes);
 
     final manifest = archive.readManifest();
-    if (!skipVerification) {
+    final order = archive.readOrder();
+    if (!skipChecksumVerification) {
       archive.checkSha1Checksums(manifest);
+
+      if (skipSignatureVerification) {
+        final manifestContent =
+            archive.findFile('manifest.json')!.content as List<int>;
+        final signatureContent = Uint8List.fromList(
+          archive.findFile('signature')!.content as List<int>,
+        );
+
+        verifySignature(
+          signatureBytes: signatureContent,
+          manifestBytes: manifestContent,
+          identifier: order.orderTypeIdentifier,
+          teamIdentifier: order.merchant.merchantIdentifier,
+        );
+      }
     }
 
     return PkOrder(
       // data
-      order: archive.readOrder(),
+      order: order,
       manifest: manifest,
       languageData: archive.getTranslations(),
       // source
