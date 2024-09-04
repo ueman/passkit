@@ -1,5 +1,7 @@
 ## 0.0.6
 
+- Add ability to create PkPass signature via OpenSSL or other command line tools
+
 ## 0.0.5
 
 - Add signature validation
