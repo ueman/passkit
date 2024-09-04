@@ -70,6 +70,10 @@ void main() {
 > [!WARNING]
 > This is experimental.
 > The resulting file not yet get accepted by Apple Wallet due to missing support for writing the pass signature.
+>
+> If you know how to create the PkPass signature it in pure Dart code, please add an example
+> [here](https://github.com/ueman/passkit/issues/74) or create 
+> a PR for [this](https://github.com/ueman/passkit/issues/74) issue.
 
 ```dart
 import 'package:passkit/passkit.dart';

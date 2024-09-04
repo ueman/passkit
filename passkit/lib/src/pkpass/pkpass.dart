@@ -22,6 +22,9 @@ import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 ///
 /// [manifest] is the file you need to pass to OpenSSL as `manifest.json`.
 /// [wwdrCertificate] is the file content you need to pass to OpenSSL as `WWDR.pem`
+///
+/// If you know how to do it in pure Dart code, please add an example or create
+/// a PR: https://github.com/ueman/passkit/issues/74
 typedef SignatureBuilder = Uint8List Function(
   String manifest,
   List<int> wwdrCertificate,
@@ -259,10 +262,11 @@ class PkPass {
   ///
   /// The file that's created by OpenSSL should be returned via [signatureBuilder].
   ///
+  /// If you know how to do it in pure Dart code, please add an example or create
+  /// a PR: https://github.com/ueman/passkit/issues/74
+  ///
   /// Remarks:
-  /// - There's no support for signature, which means pass created by this
-  ///   can't be added to the Apple wallet
-  ///   - There's no support for verifying that the signature matches the PkPass
+  /// - There's no support for verifying that the signature matches the PkPass
   /// - There's no support for localization
   /// - There's no support for personalization
   /// - Image sizes aren't checked, which means it's possible to create passes
