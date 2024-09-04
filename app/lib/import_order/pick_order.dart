@@ -32,6 +32,6 @@ Future<void> pickOrder(BuildContext context) async {
 
   await router.push(
     '/importOrder',
-    extra: PkOrderImportSource(path: firstPath),
+    extra: PkOrderImportSource(contentResolverPath: firstPath),
   );
 }

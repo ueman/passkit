@@ -1,3 +1,4 @@
+import 'package:app/import_order/import_order_page.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/router.dart';
 import 'package:file_picker/file_picker.dart';
@@ -24,11 +25,19 @@ Future<void> pickPass(BuildContext context) async {
     return;
   }
 
-  if (!{'.pkpass', '.pass'}.contains(extension(firstPath))) {
-    // This is probably not a valid PkPass
-    // TOOD show a hint to the user, that the user picked an ivalid file
+  if ({'.pkpass', '.pass'}.contains(extension(firstPath))) {
+    await router.push(
+      '/import',
+      extra: PkPassImportSource(filePath: firstPath),
+    );
     return;
   }
 
-  await router.push('/import', extra: PkPassImportSource(filePath: firstPath));
+  if ('.order' == extension(firstPath)) {
+    await router.push(
+      '/importOrder',
+      extra: PkOrderImportSource(filePath: firstPath),
+    );
+    return;
+  }
 }

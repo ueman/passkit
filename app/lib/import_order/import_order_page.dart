@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:content_resolver/content_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -7,15 +9,19 @@ import 'package:passkit_ui/passkit_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PkOrderImportSource {
-  PkOrderImportSource({this.path, this.bytes})
-      : assert(path != null || bytes != null);
+  PkOrderImportSource({this.contentResolverPath, this.bytes, this.filePath})
+      : assert(
+          contentResolverPath != null || bytes != null || filePath != null,
+        );
 
-  final String? path;
+  final String? contentResolverPath;
   final List<int>? bytes;
+  final String? filePath;
 
   Future<PkOrder> getOrder() async {
-    if (path != null) {
-      final Content content = await ContentResolver.resolveContent(path!);
+    if (contentResolverPath != null) {
+      final Content content =
+          await ContentResolver.resolveContent(contentResolverPath!);
       return PkOrder.fromBytes(
         content.data,
         skipChecksumVerification: true,
@@ -24,6 +30,12 @@ class PkOrderImportSource {
     } else if (bytes != null) {
       return PkOrder.fromBytes(
         bytes!,
+        skipChecksumVerification: true,
+        skipSignatureVerification: true,
+      );
+    } else if (filePath != null) {
+      return PkOrder.fromBytes(
+        await File(filePath!).readAsBytes(),
         skipChecksumVerification: true,
         skipSignatureVerification: true,
       );
