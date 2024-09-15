@@ -1,9 +1,10 @@
 import 'dart:typed_data';
+
+import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:passkit/src/apple_wwdr_certificate.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:pkcs7/pkcs7.dart';
-import 'package:collection/collection.dart';
 
 /// [identifier] corresponds to the `passTypeIdentifier` in PkPasses or the
 /// `orderTypeIdentifier` for PkOrders.
@@ -17,7 +18,7 @@ import 'package:collection/collection.dart';
 // as long as the contents match?
 bool verifySignature({
   required Uint8List signatureBytes,
-  required List<int> manifestBytes,
+  required Uint8List manifestBytes,
   required String identifier,
   required String teamIdentifier,
   DateTime? now,
