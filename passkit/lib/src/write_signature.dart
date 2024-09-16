@@ -5,13 +5,23 @@ import 'package:pem/pem.dart';
 import 'package:pkcs7/pkcs7.dart';
 import 'package:pointycastle/pointycastle.dart';
 
+/// [pkPassCertPem] is the certificate to be used to sign the PkPass file.
+///
+/// [privateKeyPem] is the private key PEM file. Right now,
+/// it's only supported if it's not password protected.
+///
+/// [manifestBytes] are the content of the manifest.json file.
+///
+/// Follow this guide on how to create [pkPassCertPem] and [privateKeyPem],
+/// starting at the `Can I have your signature, please?` section:
+/// https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011
 Uint8List writeSignature(
-  String userCertificate, // this is private key and certificate in one file
-  Uint8List
-      manifestBytes, // has of the manifest file or maybe content, not sure
+  String pkPassCertPem,
+  String privateKeyPem,
+  Uint8List manifestBytes,
 ) {
-  final privateKey = _createPrivateKey(userCertificate);
-  final issuer = X509.fromPem(userCertificate);
+  final privateKey = _createPrivateKey(privateKeyPem);
+  final issuer = X509.fromPem(pkPassCertPem);
 
   final pkcs7Builder = Pkcs7Builder();
 
@@ -31,8 +41,8 @@ Uint8List writeSignature(
   return pkcs7.der;
 }
 
-RSAPrivateKey _createPrivateKey(String certificate) {
-  final pem = decodePemBlocks(PemLabel.privateKey, certificate);
+RSAPrivateKey _createPrivateKey(String privateKeyPem) {
+  final pem = decodePemBlocks(PemLabel.privateKey, privateKeyPem);
 
   final modulus =
       ASN1Object.fromBytes(Uint8List.fromList(pem[1])) as ASN1Integer;
