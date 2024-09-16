@@ -18,6 +18,7 @@ import 'package:pointycastle/pointycastle.dart';
 Uint8List writeSignature(
   String pkPassCertPem,
   String privateKeyPem,
+  // manifestBytes may need to be converted to a sha256 and then passed on as the digest
   Uint8List manifestBytes,
 ) {
   final privateKey = _createPrivateKey(privateKeyPem);

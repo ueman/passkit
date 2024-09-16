@@ -1,9 +1,10 @@
 import 'dart:typed_data';
+
+import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:passkit/src/apple_wwdr_certificate.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:pkcs7/pkcs7.dart';
-import 'package:collection/collection.dart';
 
 /// [identifier] corresponds to the `passTypeIdentifier` in PkPasses or the
 /// `orderTypeIdentifier` for PkOrders.
