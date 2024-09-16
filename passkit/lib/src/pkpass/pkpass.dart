@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:meta/meta.dart';
-import 'package:passkit/src/apple_wwdr_certificate.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
@@ -12,6 +11,7 @@ import 'package:passkit/src/pkpass/personalization.dart';
 import 'package:passkit/src/pkpass/pk_pass_image.dart';
 import 'package:passkit/src/signature_verification.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
+import 'package:passkit/src/write_signature.dart';
 
 /// Follow [this](https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011)
 /// tutorial for instructions on how to create the signature with OpenSSL.
@@ -253,17 +253,17 @@ class PkPass {
   ///
   /// When written to disk, the file should have an ending of `.pkpass`.
   ///
-  /// In order to sign the pkpass file, pass a [signatureBuilder].
-  /// Follow [this](https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011)
-  /// tutorial for instructions on how to create the signature with OpenSSL.
-  /// ```bash
-  /// openssl smime -binary -sign -certfile WWDR.pem -signer passcertificate.pem -inkey passkey.pem -in manifest.json -out signature -outform DER -passin pass:12345
-  /// ```
+  /// [pkPassCertPem] is the certificate to be used to sign the PkPass file.
   ///
-  /// The file that's created by OpenSSL should be returned via [signatureBuilder].
+  /// [privateKeyPem] is the private key PEM file. Right now,
+  /// it's only supported if it's not password protected.
   ///
-  /// If you know how to do it in pure Dart code, please add an example or create
-  /// a PR: https://github.com/ueman/passkit/issues/74
+  /// Follow this guide on how to create [pkPassCertPem] and [privateKeyPem],
+  /// starting at the `Can I have your signature, please?` section:
+  /// https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011
+  ///
+  /// If either [pkPassCertPem] or [privateKeyPem] is null, the resulting PkPass
+  /// will not be properly signed, but still generated.
   ///
   /// Remarks:
   /// - There's no support for verifying that the signature matches the PkPass
@@ -272,7 +272,10 @@ class PkPass {
   /// - Image sizes aren't checked, which means it's possible to create passes
   ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
   @experimental
-  Uint8List? write({SignatureBuilder? signatureBuilder}) {
+  Uint8List? write({
+    String? pkPassCertPem,
+    String? privateKeyPem,
+  }) {
     final archive = Archive();
     final encoder = JsonEncoder.withIndent('  ');
 
@@ -311,9 +314,16 @@ class PkPass {
     );
     archive.addFile(manifestFile);
 
-    if (signatureBuilder != null) {
-      final signature =
-          signatureBuilder(manifestContent, worldwide_Developer_Relations_G4);
+    if (pkPassCertPem != null && privateKeyPem != null) {
+      assert(pkPassCertPem.isNotEmpty);
+      assert(privateKeyPem.isNotEmpty);
+
+      final signature = writeSignature(
+        pkPassCertPem,
+        privateKeyPem,
+        Uint8List.fromList(manifestFile.content as List<int>),
+      );
+
       final signatureFile = ArchiveFile(
         'signature',
         signature.length,
@@ -321,6 +331,7 @@ class PkPass {
       );
       archive.addFile(signatureFile);
     }
+
     final pkpass = ZipEncoder().encode(archive);
     if (pkpass == null) {
       return null;
