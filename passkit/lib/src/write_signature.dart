@@ -15,6 +15,10 @@ import 'package:pointycastle/pointycastle.dart';
 /// Follow this guide on how to create [pkPassCertPem] and [privateKeyPem],
 /// starting at the `Can I have your signature, please?` section:
 /// https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011
+//
+// TODO(any): Add pkPassCertPem checks
+//            similar to the signature_verification.dart file, the identifier
+//            and teamIdentifier should match. But one step at a time.
 Uint8List writeSignature(
   String pkPassCertPem,
   String privateKeyPem,
