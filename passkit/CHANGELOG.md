@@ -1,7 +1,8 @@
 ## 0.0.7
 
-- The library is now able to create fully signed `pkpass` files that actually work with Apple Wallet.
+- The library is now able to create properly signed `pkpass` files that work with Apple Wallet.
   Follow the guide [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md) to learn more.
+- Pretty much every use of `List<int>` has been changed to `Uint8List`. This is potentially breaking.
 
 ## 0.0.6
 
