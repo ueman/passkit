@@ -13,23 +13,6 @@ import 'package:passkit/src/signature_verification.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 import 'package:passkit/src/write_signature.dart';
 
-/// Follow [this](https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011)
-/// tutorial for instructions on how to create the signature with OpenSSL.
-///
-/// ```bash
-/// /// openssl smime -binary -sign -certfile WWDR.pem -signer passcertificate.pem -inkey passkey.pem -in manifest.json -out signature -outform DER -passin pass:12345
-/// ```
-///
-/// [manifest] is the file you need to pass to OpenSSL as `manifest.json`.
-/// [wwdrCertificate] is the file content you need to pass to OpenSSL as `WWDR.pem`
-///
-/// If you know how to do it in pure Dart code, please add an example or create
-/// a PR: https://github.com/ueman/passkit/issues/74
-typedef SignatureBuilder = Uint8List Function(
-  String manifest,
-  List<int> wwdrCertificate,
-);
-
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
 /// This speeds up decoding.
 /// See
