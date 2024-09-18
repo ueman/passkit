@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:csslib/parser.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:passkit/src/pkpass/barcode.dart';
@@ -266,4 +267,77 @@ class PassData {
   /// a pass and suggest related actions.
   @JsonKey(name: 'semantics')
   final Semantics? semantics;
+
+  PassData copyWith({
+    String? description,
+    int? formatVersion,
+    String? organizationName,
+    String? passTypeIdentifier,
+    String? serialNumber,
+    String? teamIdentifier,
+    String? appLaunchURL,
+    List<int>? associatedStoreIdentifiers,
+    Map<String, dynamic>? userInfo,
+    DateTime? expirationDate,
+    bool? voided,
+    List<Beacon>? beacons,
+    List<Location>? locations,
+    num? maxDistance,
+    DateTime? relevantDate,
+    PassStructure? boardingPass,
+    PassStructure? coupon,
+    PassStructure? eventTicket,
+    PassStructure? generic,
+    PassStructure? storeCard,
+    Barcode? barcode,
+    List<Barcode>? barcodes,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    String? groupingIdentifier,
+    Color? labelColor,
+    String? logoText,
+    bool? suppressStripShine,
+    bool? sharingProhibited,
+    String? authenticationToken,
+    Uri? webServiceURL,
+    Nfc? nfc,
+    Semantics? semantics,
+  }) {
+    return PassData(
+      description: description ?? this.description,
+      formatVersion: formatVersion ?? this.formatVersion,
+      organizationName: organizationName ?? this.organizationName,
+      passTypeIdentifier: passTypeIdentifier ?? this.passTypeIdentifier,
+      serialNumber: serialNumber ?? this.serialNumber,
+      teamIdentifier: teamIdentifier ?? this.teamIdentifier,
+      appLaunchURL: appLaunchURL ?? this.appLaunchURL,
+      associatedStoreIdentifiers:
+          associatedStoreIdentifiers ?? this.associatedStoreIdentifiers,
+      userInfo: userInfo ?? this.userInfo,
+      expirationDate: expirationDate ?? this.expirationDate,
+      voided: voided ?? this.voided,
+      beacons: beacons ?? this.beacons,
+      locations: locations ?? this.locations,
+      maxDistance: maxDistance ?? this.maxDistance,
+      relevantDate: relevantDate ?? this.relevantDate,
+      boardingPass: boardingPass ?? this.boardingPass,
+      coupon: coupon ?? this.coupon,
+      eventTicket: eventTicket ?? this.eventTicket,
+      generic: generic ?? this.generic,
+      storeCard: storeCard ?? this.storeCard,
+      barcode: barcode ?? this.barcode,
+      barcodes: barcodes ?? this.barcodes,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      foregroundColor: foregroundColor ?? this.foregroundColor,
+      groupingIdentifier: groupingIdentifier ?? this.groupingIdentifier,
+      labelColor: labelColor ?? this.labelColor,
+      logoText: logoText ?? this.logoText,
+      suppressStripShine: suppressStripShine ?? this.suppressStripShine,
+      sharingProhibited: sharingProhibited ?? this.sharingProhibited,
+      authenticationToken: authenticationToken ?? this.authenticationToken,
+      webServiceURL: webServiceURL ?? this.webServiceURL,
+      nfc: nfc ?? this.nfc,
+      semantics: semantics ?? this.semantics,
+    );
+  }
 }

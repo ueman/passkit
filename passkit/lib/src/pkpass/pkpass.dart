@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:meta/meta.dart';
-import 'package:passkit/src/apple_wwdr_certificate.dart';
+import 'package:passkit/src/archive_file_extension.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
@@ -12,23 +12,7 @@ import 'package:passkit/src/pkpass/personalization.dart';
 import 'package:passkit/src/pkpass/pk_pass_image.dart';
 import 'package:passkit/src/signature_verification.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
-
-/// Follow [this](https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011)
-/// tutorial for instructions on how to create the signature with OpenSSL.
-///
-/// ```bash
-/// /// openssl smime -binary -sign -certfile WWDR.pem -signer passcertificate.pem -inkey passkey.pem -in manifest.json -out signature -outform DER -passin pass:12345
-/// ```
-///
-/// [manifest] is the file you need to pass to OpenSSL as `manifest.json`.
-/// [wwdrCertificate] is the file content you need to pass to OpenSSL as `WWDR.pem`
-///
-/// If you know how to do it in pure Dart code, please add an example or create
-/// a PR: https://github.com/ueman/passkit/issues/74
-typedef SignatureBuilder = Uint8List Function(
-  String manifest,
-  List<int> wwdrCertificate,
-);
+import 'package:passkit/src/write_signature.dart';
 
 /// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
 /// This speeds up decoding.
@@ -82,7 +66,7 @@ class PkPass {
   /// certificate.
   // TODO(any): Provide an async method for this.
   static PkPass fromBytes(
-    final List<int> bytes, {
+    final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
   }) {
@@ -99,17 +83,17 @@ class PkPass {
       archive.checkSha1Checksums(manifest);
       if (!skipSignatureVerification) {
         final manifestContent =
-            archive.findFile('manifest.json')!.content as List<int>;
-        final signatureContent = Uint8List.fromList(
-          archive.findFile('signature')!.content as List<int>,
-        );
+            archive.findFile('manifest.json')!.binaryContent;
+        final signatureContent = archive.findFile('signature')!.binaryContent;
 
-        verifySignature(
+        if (!verifySignature(
           signatureBytes: signatureContent,
           manifestBytes: manifestContent,
           teamIdentifier: passData.teamIdentifier,
           identifier: passData.passTypeIdentifier,
-        );
+        )) {
+          throw Exception('validation failed');
+        }
       }
     }
 
@@ -148,7 +132,7 @@ class PkPass {
   // gracefully fall back to just parsing the PkPass file.
   // TODO(ueman): Provide an async method for this.
   static List<PkPass> passesFromBytes(
-    final List<int> bytes, {
+    final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
   }) {
@@ -162,7 +146,7 @@ class PkPass {
     return pkPasses
         .map(
           (file) => fromBytes(
-            file.content as List<int>,
+            file.binaryContent,
             skipChecksumVerification: skipChecksumVerification,
             skipSignatureVerification: skipSignatureVerification,
           ),
@@ -243,7 +227,7 @@ class PkPass {
   final Map<String, Map<String, dynamic>>? languageData;
 
   /// The bytes of this PkPass
-  final List<int> sourceData;
+  final Uint8List sourceData;
 
   /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => pass.webServiceURL != null;
@@ -253,17 +237,15 @@ class PkPass {
   ///
   /// When written to disk, the file should have an ending of `.pkpass`.
   ///
-  /// In order to sign the pkpass file, pass a [signatureBuilder].
-  /// Follow [this](https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011)
-  /// tutorial for instructions on how to create the signature with OpenSSL.
-  /// ```bash
-  /// openssl smime -binary -sign -certfile WWDR.pem -signer passcertificate.pem -inkey passkey.pem -in manifest.json -out signature -outform DER -passin pass:12345
-  /// ```
+  /// [certificatePem] is the certificate to be used to sign the PkPass file.
   ///
-  /// The file that's created by OpenSSL should be returned via [signatureBuilder].
+  /// [privateKeyPem] is the private key PEM file. Right now,
+  /// it's only supported if it's not password protected.
   ///
-  /// If you know how to do it in pure Dart code, please add an example or create
-  /// a PR: https://github.com/ueman/passkit/issues/74
+  /// Read more about signing [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md).
+  ///
+  /// If either [certificatePem] or [privateKeyPem] is null, the resulting PkPass
+  /// will not be properly signed, but still generated.
   ///
   /// Remarks:
   /// - There's no support for verifying that the signature matches the PkPass
@@ -272,7 +254,10 @@ class PkPass {
   /// - Image sizes aren't checked, which means it's possible to create passes
   ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
   @experimental
-  Uint8List? write({SignatureBuilder? signatureBuilder}) {
+  Uint8List? write({
+    String? certificatePem,
+    String? privateKeyPem,
+  }) {
     final archive = Archive();
     final encoder = JsonEncoder.withIndent('  ');
 
@@ -301,7 +286,7 @@ class PkPass {
 
     final manifest = <String, String>{};
     for (final file in archive.files) {
-      manifest[file.name] = sha1.convert(file.content as List<int>).toString();
+      manifest[file.name] = sha1.convert(file.binaryContent).toString();
     }
 
     final manifestContent = encoder.convert(manifest);
@@ -311,9 +296,13 @@ class PkPass {
     );
     archive.addFile(manifestFile);
 
-    if (signatureBuilder != null) {
-      final signature =
-          signatureBuilder(manifestContent, worldwide_Developer_Relations_G4);
+    if (certificatePem != null && privateKeyPem != null) {
+      final signature = writeSignature(
+        certificatePem,
+        privateKeyPem,
+        Uint8List.fromList(manifestFile.content as List<int>),
+      );
+
       final signatureFile = ArchiveFile(
         'signature',
         signature.length,
@@ -321,6 +310,7 @@ class PkPass {
       );
       archive.addFile(signatureFile);
     }
+
     final pkpass = ZipEncoder().encode(archive);
     if (pkpass == null) {
       return null;
@@ -332,13 +322,8 @@ class PkPass {
 // This is intentionally not exposed to keep this an implementation detail.
 // Tests should be written against the PkPass class directly.
 extension on Archive {
-  List<int>? findBytesForFile(String fileName) =>
-      findFile(fileName)?.content as List<int>?;
-
-  Uint8List? findUint8ListForFile(String fileName) {
-    final data = findBytesForFile(fileName);
-    return data == null ? null : Uint8List.fromList(data);
-  }
+  Uint8List? findBytesForFile(String fileName) =>
+      findFile(fileName)?.binaryContent;
 
   /// Returns a map of locale to a map of resolution to image bytes.
   /// Returns null, if no image is localized
@@ -367,11 +352,11 @@ extension on Archive {
       }
 
       if (fileName.endsWith('@2x.png')) {
-        map[language]![2] = Uint8List.fromList(file.content as List<int>);
+        map[language]![2] = file.binaryContent;
       } else if (fileName.endsWith('@3x.png')) {
-        map[language]![3] = Uint8List.fromList(file.content as List<int>);
+        map[language]![3] = file.binaryContent;
       } else {
-        map[language]![1] = Uint8List.fromList(file.content as List<int>);
+        map[language]![1] = file.binaryContent;
       }
     }
 
@@ -395,9 +380,9 @@ extension on Archive {
 
   PkImage? loadImage(String name) {
     return PkImage.fromImages(
-      image1: findUint8ListForFile('$name.png'),
-      image2: findUint8ListForFile('$name@2x.png'),
-      image3: findUint8ListForFile('$name@3x.png'),
+      image1: findBytesForFile('$name.png'),
+      image2: findBytesForFile('$name@2x.png'),
+      image3: findBytesForFile('$name@3x.png'),
       localizedImages: loadLocalizedImage(name),
     );
   }
@@ -415,8 +400,7 @@ extension on Archive {
     for (final languageFile in translationFiles) {
       final language = languageFile.name.split('.').first;
 
-      languageData[language] =
-          parseStringsFile(languageFile.content as List<int>);
+      languageData[language] = parseStringsFile(languageFile.binaryContent);
     }
     return languageData;
   }
@@ -468,7 +452,7 @@ extension on Archive {
 
     for (final file in filesWithoutSignatureAndManifest) {
       final checksumInManifest = manifest[file.name] as String?;
-      final digest = sha1.convert(file.content as List<int>);
+      final digest = sha1.convert(file.binaryContent);
       if (checksumInManifest != digest.toString()) {
         throw ChecksumMismatchException(file.name);
       }
