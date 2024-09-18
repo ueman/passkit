@@ -9,13 +9,13 @@ This guide assumes you're working on a macOS system.
 ## Step 1: Get a Pass ID and Pass Certificate from the Apple Developer Portal
 
 Follow for example this guide: https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=3#toc-anchor-007
-At the end you should have a certificate and private key in <kbd>Keychain Access<kbd>.
+At the end you should have a certificate and private key in <kbd>Keychain Access</kbd>.
 
 ## Step 2: Create `.pem` files
 
 This is the important step!
 
-Export your certificate and private key from <kbd>Keychain Access<kbd> as `Certificate.p12`. It will ask you to set a password.
+Export your certificate and private key from <kbd>Keychain Access</kbd> as `Certificate.p12`. It will ask you to set a password.
 
 You should replace `<your-password-here>` with your password in the following commands.
 (The `--legacy` part at the end of the following command may or may not be needed depending on your openssl version)
