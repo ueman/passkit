@@ -40,3 +40,21 @@ final binaryData pass.write(
 );
 File('pass.pkpass').writeAsBytesSync(binaryData); // The file ending is important
 ```
+
+Make sure that the pass type identifier and the team identifier matche your certificate.
+
+
+# Debugging Passes
+
+Apple says:
+
+> If the pass isn’t displayed and added to Wallet, check the log for a description of what went wrong.
+> When testing in the iOS Simulator app, errors are logged to the system log, which you can view with the Console app.
+> When testing on a device, errors are logged to the device’s console which you can view from the Xcode organizer window.
+> Common errors include malformed JSON files, misspelled keys or values, pass type identifiers that don’t match
+> your certificate, and signatures that omit the WWDR intermediate certificate.>
+>
+> - [Apple Developer Docs](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW1)
+
+Next to that, you can use the <kbd>Console</kbd> app on macOS. Try opening your `.pkpass` file in a Simulator or on a physical connected iPhone, and you should see logs in the Console app.
+You can try searching for the pass type identifier, and you should see logs for your pass.
