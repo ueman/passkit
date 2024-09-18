@@ -69,19 +69,18 @@ void main() {
 
 > [!WARNING]
 > This is experimental.
-> The resulting file not yet get accepted by Apple Wallet due to missing support for writing the pass signature.
->
-> If you know how to create the PkPass signature it in pure Dart code, please add an example
-> [here](https://github.com/ueman/passkit/issues/74) or create 
-> a PR for [this](https://github.com/ueman/passkit/issues/74) issue.
+> Follow the guide [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md) to learn more.
 
 ```dart
 import 'package:passkit/passkit.dart';
 
 void main() {
-  final pkPass = PkPass(...);
-  final pkPassFile = pass.write();
-  await File('path/to/pass.pkpass').writeAsBytes(pkPassFile);
+final pass = PkPass(...);
+final binaryData pass.write(
+  certificatePem: File('pass_certificate.pem').readAsStringSync(),
+  privateKeyPem: File('private_key.pem').readAsStringSync(),
+);
+File('pass.pkpass').writeAsBytesSync(binaryData);
 }
 ```
 
@@ -136,7 +135,6 @@ Please feel encouraged to create PRs for the following features.
 - PassKit Web Service: This functionality is existing, but might not work. Please file an issue or create a PR with a fix for bugs you encounter.
   - Push Notification update registration is only working on iOS due to this whole specification being an Apple thingy.
 - Localization: Existing, but still inconvenient to use. There might be issues due to localizations being UTF-16 formatted, but the library currently uses UTF-8 to read localizations.
-- [Passkit creation](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW54) is partially supported. See note further above.
 
 ## Bugs and parsing issues
 

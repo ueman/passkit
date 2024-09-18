@@ -1,5 +1,9 @@
 # Signing a PkPass file
 
+> [!WARNING]
+> THIS SHOULD NOT BE USED WITHIN AN APP. 
+> IT SHOULD ONLY BE USED SERVER SIDE, OTHERWISE YOU RISK EXPOSING YOUR CERTIFICATE AND PRIVATE KEY.
+
 This guide assumes you're working on a macOS system.
 
 ## Step 1: Get a Pass ID and Pass Certificate from the Apple Developer Portal
@@ -31,8 +35,8 @@ Then you can the generated file to sign PkPass files:
 ```dart
 final pass = PkPass(...);
 final binaryData pass.write(
-  certificatePem: File('test/pem/pass_certificate.pem').readAsStringSync(),
-  privateKeyPem: File('test/pem/private_key.pem').readAsStringSync(),
+  certificatePem: File('pass_certificate.pem').readAsStringSync(),
+  privateKeyPem: File('private_key.pem').readAsStringSync(),
 );
 File('pass.pkpass').writeAsBytesSync(binaryData); // The file ending is important
 ```

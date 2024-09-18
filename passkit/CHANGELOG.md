@@ -1,3 +1,8 @@
+## 0.0.7
+
+- The library is now able to create fully signed `pkpass` files that actually work with Apple Wallet.
+  Follow the guide [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md) to learn more.
+
 ## 0.0.6
 
 - Add ability to create PkPass signature via OpenSSL or other command line tools
