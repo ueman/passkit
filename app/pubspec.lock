@@ -46,6 +46,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0"
+  asn1lib:
+    dependency: transitive
+    description:
+      name: asn1lib
+      sha256: "2ca377ad4d677bbadca278e0ba4da4e057b80a10b927bfc8f7d8bda8fe2ceb75"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.4"
   async:
     dependency: transitive
     description:
@@ -262,6 +270,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0+11"
+  encrypt:
+    dependency: transitive
+    description:
+      name: encrypt
+      sha256: "62d9aa4670cc2a8798bab89b39fc71b6dfbacf615de6cf5001fb39f7e4a996a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -712,14 +728,14 @@ packages:
       path: "../passkit"
       relative: true
     source: path
-    version: "0.0.5"
+    version: "0.0.6"
   passkit_ui:
     dependency: "direct main"
     description:
       path: "../passkit_ui"
       relative: true
     source: path
-    version: "0.0.4"
+    version: "0.0.5"
   path:
     dependency: "direct main"
     description:
