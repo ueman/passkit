@@ -37,8 +37,9 @@ class PkOrder {
       archive.checkSha1Checksums(manifest);
 
       if (skipSignatureVerification) {
-        final manifestContent =
-            archive.findFile('manifest.json')!.content as List<int>;
+        final manifestContent = Uint8List.fromList(
+          archive.findFile('manifest.json')!.content as List<int>,
+        );
         final signatureContent = Uint8List.fromList(
           archive.findFile('signature')!.content as List<int>,
         );

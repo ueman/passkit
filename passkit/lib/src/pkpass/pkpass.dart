@@ -98,18 +98,21 @@ class PkPass {
     if (!skipChecksumVerification) {
       archive.checkSha1Checksums(manifest);
       if (!skipSignatureVerification) {
-        final manifestContent =
-            archive.findFile('manifest.json')!.content as List<int>;
+        final manifestContent = Uint8List.fromList(
+          archive.findFile('manifest.json')!.content as List<int>,
+        );
         final signatureContent = Uint8List.fromList(
           archive.findFile('signature')!.content as List<int>,
         );
 
-        verifySignature(
+        if (!verifySignature(
           signatureBytes: signatureContent,
           manifestBytes: manifestContent,
           teamIdentifier: passData.teamIdentifier,
           identifier: passData.passTypeIdentifier,
-        );
+        )) {
+          throw Exception('validation failed');
+        }
       }
     }
 
@@ -253,16 +256,14 @@ class PkPass {
   ///
   /// When written to disk, the file should have an ending of `.pkpass`.
   ///
-  /// [pkPassCertPem] is the certificate to be used to sign the PkPass file.
+  /// [certificatePem] is the certificate to be used to sign the PkPass file.
   ///
   /// [privateKeyPem] is the private key PEM file. Right now,
   /// it's only supported if it's not password protected.
   ///
-  /// Follow this guide on how to create [pkPassCertPem] and [privateKeyPem],
-  /// starting at the `Can I have your signature, please?` section:
-  /// https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011
+  /// Read more about signing [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md).
   ///
-  /// If either [pkPassCertPem] or [privateKeyPem] is null, the resulting PkPass
+  /// If either [certificatePem] or [privateKeyPem] is null, the resulting PkPass
   /// will not be properly signed, but still generated.
   ///
   /// Remarks:
@@ -273,8 +274,8 @@ class PkPass {
   ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
   @experimental
   Uint8List? write({
-    String? pkPassCertPem,
-    String? privateKeyPem,
+    required String certificatePem,
+    required String privateKeyPem,
   }) {
     final archive = Archive();
     final encoder = JsonEncoder.withIndent('  ');
@@ -314,23 +315,18 @@ class PkPass {
     );
     archive.addFile(manifestFile);
 
-    if (pkPassCertPem != null && privateKeyPem != null) {
-      assert(pkPassCertPem.isNotEmpty);
-      assert(privateKeyPem.isNotEmpty);
+    final signature = writeSignature(
+      certificatePem,
+      privateKeyPem,
+      Uint8List.fromList(manifestFile.content as List<int>),
+    );
 
-      final signature = writeSignature(
-        pkPassCertPem,
-        privateKeyPem,
-        Uint8List.fromList(manifestFile.content as List<int>),
-      );
-
-      final signatureFile = ArchiveFile(
-        'signature',
-        signature.length,
-        signature,
-      );
-      archive.addFile(signatureFile);
-    }
+    final signatureFile = ArchiveFile(
+      'signature',
+      signature.length,
+      signature,
+    );
+    archive.addFile(signatureFile);
 
     final pkpass = ZipEncoder().encode(archive);
     if (pkpass == null) {
