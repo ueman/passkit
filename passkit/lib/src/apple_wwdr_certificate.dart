@@ -12,8 +12,8 @@ X509 get wwdrG4 =>
 /// More info at:
 /// https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/
 /// https://www.apple.com/certificateauthority/
-// ignore: constant_identifier_names
-const worldwide_Developer_Relations_G4 = [
+// ignore: constant_identifier_names, non_constant_identifier_names
+final worldwide_Developer_Relations_G4 = Uint8List.fromList([
   48,
   130,
   4,
@@ -1127,4 +1127,4 @@ const worldwide_Developer_Relations_G4 = [
   207,
   242,
   159,
-];
+]);

@@ -22,7 +22,7 @@ class PkPassImportSource {
 
   final String? contentResolverPath;
   final String? filePath;
-  final List<int>? bytes;
+  final Uint8List? bytes;
 
   Future<PkPass> getPass() async {
     if (contentResolverPath != null) {

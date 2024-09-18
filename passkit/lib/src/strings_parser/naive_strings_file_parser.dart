@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 /// Parses [content] to a [Map<String, String>] which contains the
 /// key-value-pairs for translations.
-Map<String, String> parseStringsFile(List<int> content) {
+Map<String, String> parseStringsFile(Uint8List content) {
   final string = _stringsFileDecoder.convert(content);
   return naiveStringsFileParser(string);
 }

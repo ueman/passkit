@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:passkit/src/archive_extensions.dart';
+import 'package:passkit/src/archive_file_extension.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/signature_verification.dart';
 
@@ -20,7 +21,7 @@ class PkOrder {
   /// verification and validation.
   // TODO(ueman): Provide an async method for this.
   static PkOrder fromBytes(
-    final List<int> bytes, {
+    final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
   }) {
@@ -37,12 +38,9 @@ class PkOrder {
       archive.checkSha1Checksums(manifest);
 
       if (skipSignatureVerification) {
-        final manifestContent = Uint8List.fromList(
-          archive.findFile('manifest.json')!.content as List<int>,
-        );
-        final signatureContent = Uint8List.fromList(
-          archive.findFile('signature')!.content as List<int>,
-        );
+        final manifestContent =
+            archive.findFile('manifest.json')!.binaryContent;
+        final signatureContent = archive.findFile('signature')!.binaryContent;
 
         verifySignature(
           signatureBytes: signatureContent,
@@ -78,7 +76,7 @@ class PkOrder {
   final Map<String, Map<String, dynamic>>? languageData;
 
   /// The bytes of this PkPass
-  final List<int> sourceData;
+  final Uint8List sourceData;
 
   /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => order.webServiceURL != null;
