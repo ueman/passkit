@@ -274,8 +274,8 @@ class PkPass {
   ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
   @experimental
   Uint8List? write({
-    required String certificatePem,
-    required String privateKeyPem,
+    String? certificatePem,
+    String? privateKeyPem,
   }) {
     final archive = Archive();
     final encoder = JsonEncoder.withIndent('  ');
@@ -315,18 +315,20 @@ class PkPass {
     );
     archive.addFile(manifestFile);
 
-    final signature = writeSignature(
-      certificatePem,
-      privateKeyPem,
-      Uint8List.fromList(manifestFile.content as List<int>),
-    );
+    if (certificatePem != null && privateKeyPem != null) {
+      final signature = writeSignature(
+        certificatePem,
+        privateKeyPem,
+        Uint8List.fromList(manifestFile.content as List<int>),
+      );
 
-    final signatureFile = ArchiveFile(
-      'signature',
-      signature.length,
-      signature,
-    );
-    archive.addFile(signatureFile);
+      final signatureFile = ArchiveFile(
+        'signature',
+        signature.length,
+        signature,
+      );
+      archive.addFile(signatureFile);
+    }
 
     final pkpass = ZipEncoder().encode(archive);
     if (pkpass == null) {
