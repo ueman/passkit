@@ -30,6 +30,9 @@ Create the private key `.pem` file. Unfortunately, it's not yet possible to use 
 openssl pkcs12 -in Certificates.p12 -out private_key.pem -nocerts -nodes -passin pass:<your-password-here> --legacy
 ```
 
+If the generated `.pem` files do not start with `-----BEGIN RSA PRIVATE KEY-----` (or similar) delete all lines that come before that.
+Otherwise, the code can't decode the `.pem` files, and signing may fail.
+
 Then you can the generated file to sign PkPass files:
 
 ```dart
