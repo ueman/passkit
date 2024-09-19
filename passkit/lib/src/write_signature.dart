@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:passkit/src/apple_wwdr_certificate.dart';
+import 'package:passkit/src/certificate_extension.dart';
+import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:pkcs7/pkcs7.dart';
 import 'package:pointycastle/pointycastle.dart';
 
@@ -19,8 +21,17 @@ Uint8List writeSignature(
   String certificatePem,
   String privateKeyPem,
   Uint8List manifestBytes,
+  String identifier,
+  String teamIdentifier,
+  bool isPkPass,
 ) {
   final issuer = X509.fromPem(certificatePem);
+  _ensureCertificateMatchesPass(
+    issuer,
+    identifier,
+    teamIdentifier,
+    isPkPass,
+  );
 
   final pkcs7Builder = Pkcs7Builder();
 
@@ -46,4 +57,35 @@ Uint8List writeSignature(
 
   final pkcs7 = pkcs7Builder.build();
   return pkcs7.der;
+}
+
+void _ensureCertificateMatchesPass(
+  X509 issuer,
+  String identifier,
+  String teamIdentifier,
+  bool isPkPass,
+) {
+  final identifierMatches = issuer.identifier == identifier;
+  final teamIdentifierMatches = issuer.teamIdentifier == teamIdentifier;
+
+  if (identifierMatches) {
+    if (isPkPass) {
+      throw Exception(
+        "PkPass.pass.passTypeIdentifier doesn't match the certificate Pass Type ID",
+      );
+    } else {
+      // TODO(any): Write a proper exception for orders
+      throw SignatureMismatchException();
+    }
+  }
+  if (teamIdentifierMatches) {
+    if (isPkPass) {
+      throw Exception(
+        "PkPass.pass.teamIdentifier doesn't match the certificate team ID",
+      );
+    } else {
+      // TODO(any): Write a proper exception for orders
+      throw SignatureMismatchException();
+    }
+  }
 }

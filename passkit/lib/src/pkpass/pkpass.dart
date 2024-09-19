@@ -300,7 +300,10 @@ class PkPass {
       final signature = writeSignature(
         certificatePem,
         privateKeyPem,
-        Uint8List.fromList(manifestFile.content as List<int>),
+        manifestFile.binaryContent,
+        pass.passTypeIdentifier,
+        pass.teamIdentifier,
+        true,
       );
 
       final signatureFile = ArchiveFile(
