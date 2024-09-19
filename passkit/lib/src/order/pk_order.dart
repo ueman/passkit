@@ -17,8 +17,8 @@ class PkOrder {
   });
 
   /// Parses bytes to a [PkOrder] instance.
-  /// Setting [skipVerification] to true disables any checksum or signature
-  /// verification and validation.
+  /// Setting [skipChecksumVerification] and [skipSignatureVerification] to true
+  /// disables checksum or signature verification and validation.
   // TODO(ueman): Provide an async method for this.
   static PkOrder fromBytes(
     final Uint8List bytes, {
