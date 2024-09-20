@@ -25,7 +25,6 @@ class StripImage extends StatelessWidget {
       PassType.eventTicket => const Size(320, 98),
       PassType.storeCard => const Size(320, 144),
       PassType.generic => const Size(320, 123),
-      PassType.unknown => const Size(320, 123),
     };
     if (image == null) {
       return SizedBox(

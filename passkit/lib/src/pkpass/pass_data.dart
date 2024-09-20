@@ -15,11 +15,11 @@ part 'pass_data.g.dart';
 class PassData {
   PassData({
     required this.description,
-    required this.formatVersion,
     required this.organizationName,
     required this.passTypeIdentifier,
     required this.serialNumber,
     required this.teamIdentifier,
+    this.formatVersion = 1,
     this.appLaunchURL,
     this.associatedStoreIdentifiers,
     this.userInfo,
@@ -181,7 +181,7 @@ class PassData {
 
   /// Optional. Information specific to the pass’s barcode. For this
   /// dictionary’s keys, see Barcode Dictionary Keys.
-  /// Note:Deprecated in iOS 9.0 and later; use barcodes instead.
+  /// Note: Deprecated in iOS 9.0 and later; use barcodes instead.
   @JsonKey(name: 'barcode')
   final Barcode? barcode;
 

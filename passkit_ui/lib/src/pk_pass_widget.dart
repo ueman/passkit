@@ -51,7 +51,6 @@ class PkPassWidget extends StatelessWidget {
           PassType.eventTicket => EventTicket(pass: pass),
           PassType.storeCard => StoreCard(pass: pass),
           PassType.generic => Generic(pass: pass),
-          PassType.unknown => Generic(pass: pass),
         },
       ),
     );

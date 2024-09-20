@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:app/db/db.dart';
 import 'package:app/db/pass_entry.dart';
@@ -17,10 +16,10 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:path/path.dart' as p;
 
 class PassBackSidePageArgs {
   PassBackSidePageArgs(this.pass, this.showDelete);
@@ -49,7 +48,6 @@ class PassBacksidePage extends StatefulWidget {
       PassType.eventTicket => pass.pass.eventTicket?.backFields,
       PassType.generic => pass.pass.generic?.backFields,
       PassType.storeCard => pass.pass.storeCard?.backFields,
-      PassType.unknown => null,
     };
   }
 }
@@ -229,7 +227,7 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
       PassEntry(
         id: updatedPass.pass.serialNumber,
         description: updatedPass.pass.description,
-        pass: Uint8List.fromList(updatedPass.sourceData),
+        pass: updatedPass.sourceData!,
       ),
     );
 
@@ -237,7 +235,7 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
   }
 
   void _sharePass() {
-    final data = Uint8List.fromList(widget.pass.sourceData);
+    final data = widget.pass.sourceData!;
     Share.shareXFiles([XFile.fromData(data)]);
   }
 

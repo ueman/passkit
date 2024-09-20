@@ -1,24 +1,18 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:meta/meta.dart';
 import 'package:passkit/src/archive_file_extension.dart';
+import 'package:passkit/src/pk_image.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
 import 'package:passkit/src/pkpass/personalization.dart';
-import 'package:passkit/src/pkpass/pk_pass_image.dart';
 import 'package:passkit/src/signature_verification.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
+import 'package:passkit/src/utils.dart';
 import 'package:passkit/src/write_signature.dart';
-
-/// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
-/// This speeds up decoding.
-/// See
-/// - https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
-final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
 
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Reference/PassKit_Bundle/Chapters/Introduction.html
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195
@@ -159,7 +153,7 @@ class PkPass {
 
   /// Mapping of files to their respective checksums. Typically not relevant for
   /// users of this package.
-  final Map<String, dynamic> manifest;
+  final Map<String, dynamic>? manifest;
 
   /// The [PassType] of this PkPass.
   PassType get type {
@@ -178,7 +172,7 @@ class PkPass {
     if (pass.storeCard != null) {
       return PassType.storeCard;
     }
-    return PassType.unknown;
+    throw Exception('unknown pass type');
   }
 
   /// The image displayed as the background of the front of the pass.
@@ -227,7 +221,7 @@ class PkPass {
   final Map<String, Map<String, dynamic>>? languageData;
 
   /// The bytes of this PkPass
-  final Uint8List sourceData;
+  final Uint8List? sourceData;
 
   /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => pass.webServiceURL != null;
@@ -259,11 +253,12 @@ class PkPass {
     String? privateKeyPem,
   }) {
     final archive = Archive();
-    final encoder = JsonEncoder.withIndent('  ');
 
-    final passFile = ArchiveFile.string(
+    final passContent = utf8JsonEncoder.convert(pass.toJson());
+    final passFile = ArchiveFile(
       'pass.json',
-      encoder.convert(pass.toJson()),
+      passContent.length,
+      passContent,
     );
     archive.addFile(passFile);
     /*
@@ -289,9 +284,10 @@ class PkPass {
       manifest[file.name] = sha1.convert(file.binaryContent).toString();
     }
 
-    final manifestContent = encoder.convert(manifest);
-    final manifestFile = ArchiveFile.string(
+    final manifestContent = utf8JsonEncoder.convert(manifest);
+    final manifestFile = ArchiveFile(
       'manifest.json',
+      manifestContent.length,
       manifestContent,
     );
     archive.addFile(manifestFile);
@@ -375,7 +371,7 @@ extension on Archive {
     if (bytes == null) {
       return null;
     }
-    return _utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
+    return utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
   }
 
   PkImage? loadImage(String name) {
