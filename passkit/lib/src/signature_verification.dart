@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:passkit/src/apple_wwdr_certificate.dart';
+import 'package:passkit/src/certificate_extension.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:pkcs7/pkcs7.dart';
 
@@ -52,22 +53,13 @@ bool verifySignature({
   // Set the serialNumber key to the unique serial number for that identifier.
 
   final signerInfo = pkcs7.verify([wwdrG4]);
-  // final algo = signerInfo.getDigest(signerInfo.digestAlgorithm); Calculate hash based on the algo?
   return signerInfo.listEquality(manifestHash, signerInfo.messageDigest!);
 }
 
 bool Function(X509) _verifier(String teamIdentifier, String identifier) {
   return (X509 x509) {
-    final identifierMatches =
-        x509.subject.firstWhereOrNull((it) => it.key.name == 'UID')?.value ==
-            identifier;
-
-    final teamIdentifierMatches = x509.subject
-            .firstWhereOrNull(
-              (it) => it.key.name == 'organizationalUnitName',
-            )
-            ?.value ==
-        teamIdentifier;
+    final identifierMatches = x509.identifier == identifier;
+    final teamIdentifierMatches = x509.teamIdentifier == teamIdentifier;
 
     return identifierMatches && teamIdentifierMatches;
   };
