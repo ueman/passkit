@@ -229,8 +229,7 @@ class PassKitWebClient {
 
     return switch (response.statusCode) {
       200 => () {
-          final responseJson = utf8JsonDecoder.convert(response.bodyBytes)
-              as Map<String, dynamic>;
+          final responseJson = utf8JsonDecode(response.bodyBytes)!;
           return SerialNumbers(
             serialNumbers: responseJson['serialNumbers'] as List<String>,
             lastUpdated: responseJson['lastUpdated'] as String,

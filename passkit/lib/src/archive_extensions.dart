@@ -17,7 +17,7 @@ extension ArchiveX on Archive {
     if (bytes == null) {
       return null;
     }
-    return utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
+    return utf8JsonDecode(bytes);
   }
 
   PkImage? loadImage(String name) {
@@ -81,5 +81,21 @@ extension ArchiveX on Archive {
         throw ChecksumMismatchException(file.name);
       }
     }
+  }
+
+  Uint8List createManifest() {
+    final manifest = <String, String>{};
+    for (final file in files) {
+      manifest[file.name] = sha1.convert(file.binaryContent).toString();
+    }
+
+    final manifestContent = utf8JsonEncode(manifest);
+    final manifestFile = ArchiveFile(
+      'manifest.json',
+      manifestContent.length,
+      manifestContent,
+    );
+    addFile(manifestFile);
+    return Uint8List.fromList(manifestContent);
   }
 }
