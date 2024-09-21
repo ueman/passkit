@@ -62,8 +62,7 @@ Function logMessages(PassKitBackend backend) {
     // There's no need to wait for the log message to be written, instead return
     // a 200 status code response right away
     unawaited(
-      DevPassKitBackend()
-          .logMessage(jsonDecode(content) as Map<String, dynamic>),
+      backend.logMessage(jsonDecode(content) as Map<String, dynamic>),
     );
     return Response.ok(null);
   };

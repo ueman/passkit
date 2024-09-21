@@ -66,11 +66,6 @@ class UpdatablePassResponse {
   }
 }
 
-class DevPassKitBackend extends PassKitBackend {
-  @override
-  void noSuchMethod(Invocation invocation) {}
-}
-
 enum NotificationRegistrationReponse {
   created,
   existing,
