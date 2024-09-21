@@ -221,6 +221,7 @@ class PkPass {
   final Map<String, Map<String, dynamic>>? languageData;
 
   /// The bytes of this PkPass
+  /// Returns `null` when this instance wasn't read from a file.
   final Uint8List? sourceData;
 
   /// Indicates whether a webservices is available.
