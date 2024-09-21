@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:pkcs7/pkcs7.dart';
 
 X509 get wwdrG4 =>
-    X509.fromDer(Uint8List.fromList(_Worldwide_Developer_Relations_G4));
+    X509.fromDer(Uint8List.fromList(worldwide_Developer_Relations_G4));
 
 /// This is the content of https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer .
 /// It was basically read like this `File('AppleWWDRCAG4.cer').readAsBytesSync()` and then just pasted
@@ -12,8 +12,8 @@ X509 get wwdrG4 =>
 /// More info at:
 /// https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/
 /// https://www.apple.com/certificateauthority/
-// ignore: constant_identifier_names
-const _Worldwide_Developer_Relations_G4 = [
+// ignore: constant_identifier_names, non_constant_identifier_names
+final worldwide_Developer_Relations_G4 = Uint8List.fromList([
   48,
   130,
   4,
@@ -1127,4 +1127,4 @@ const _Worldwide_Developer_Relations_G4 = [
   207,
   242,
   159,
-];
+]);

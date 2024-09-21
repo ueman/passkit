@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
+import 'package:passkit/src/archive_file_extension.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pk_pass_image.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
@@ -15,13 +16,8 @@ import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
 final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
 
 extension ArchiveX on Archive {
-  List<int>? findBytesForFile(String fileName) =>
-      findFile(fileName)?.content as List<int>?;
-
-  Uint8List? findUint8ListForFile(String fileName) {
-    final data = findBytesForFile(fileName);
-    return data == null ? null : Uint8List.fromList(data);
-  }
+  Uint8List? findBytesForFile(String fileName) =>
+      findFile(fileName)?.binaryContent;
 
   Map<String, dynamic>? findFileAndReadAsJson(String fileName) {
     final bytes = findBytesForFile(fileName);
@@ -33,9 +29,9 @@ extension ArchiveX on Archive {
 
   PkImage? loadImage(String name) {
     return PkImage.fromImages(
-      image1: findUint8ListForFile('$name.png'),
-      image2: findUint8ListForFile('$name@2.png'),
-      image3: findUint8ListForFile('$name@3.png'),
+      image1: findBytesForFile('$name.png'),
+      image2: findBytesForFile('$name@2.png'),
+      image3: findBytesForFile('$name@3.png'),
     );
   }
 
@@ -52,8 +48,7 @@ extension ArchiveX on Archive {
     for (final languageFile in translationFiles) {
       final language = languageFile.name.split('.').first;
 
-      languageData[language] =
-          parseStringsFile(languageFile.content as List<int>);
+      languageData[language] = parseStringsFile(languageFile.binaryContent);
     }
     return languageData;
   }
@@ -88,7 +83,7 @@ extension ArchiveX on Archive {
 
     for (final file in filesWithoutSignatureAndManifest) {
       final checksumInManifest = manifest[file.name] as String?;
-      final digest = sha1.convert(file.content as List<int>);
+      final digest = sha1.convert(file.binaryContent);
       if (checksumInManifest != digest.toString()) {
         throw ChecksumMismatchException(file.name);
       }
