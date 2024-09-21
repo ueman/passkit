@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:csslib/parser.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:passkit/src/certificate_extension.dart';
 import 'package:passkit/src/pkpass/barcode.dart';
 import 'package:passkit/src/pkpass/beacon.dart';
 import 'package:passkit/src/pkpass/location.dart';
@@ -8,6 +9,7 @@ import 'package:passkit/src/pkpass/nfc.dart';
 import 'package:passkit/src/pkpass/parse_utils.dart';
 import 'package:passkit/src/pkpass/pass_structure.dart';
 import 'package:passkit/src/pkpass/semantics.dart';
+import 'package:pkcs7/pkcs7.dart';
 
 part 'pass_data.g.dart';
 
@@ -48,6 +50,47 @@ class PassData {
     this.nfc,
     this.semantics,
   });
+
+  /// Sets the [teamIdentifier] and [passTypeIdentifier] from a certificate pem
+  /// file. Otherwise, it's identical to the default constructor.
+  PassData.fromCertificate({
+    required this.description,
+    required this.organizationName,
+    required this.serialNumber,
+    required String certificatePem,
+    this.formatVersion = 1,
+    this.appLaunchURL,
+    this.associatedStoreIdentifiers,
+    this.userInfo,
+    this.expirationDate,
+    this.voided,
+    this.beacons,
+    this.locations,
+    this.maxDistance,
+    this.relevantDate,
+    this.boardingPass,
+    this.coupon,
+    this.eventTicket,
+    this.generic,
+    this.storeCard,
+    this.barcode,
+    this.barcodes,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.groupingIdentifier,
+    this.labelColor,
+    this.logoText,
+    this.suppressStripShine,
+    this.sharingProhibited,
+    this.authenticationToken,
+    this.webServiceURL,
+    this.nfc,
+    this.semantics,
+  })  :
+        // It's kinda stupid to parse it twice, but it works.
+        // TODO(any): Make this more performant
+        teamIdentifier = X509.fromPem(certificatePem).teamIdentifier!,
+        passTypeIdentifier = X509.fromPem(certificatePem).identifier!;
 
   factory PassData.fromJson(Map<String, dynamic> json) =>
       _$PassDataFromJson(json);
@@ -338,6 +381,16 @@ class PassData {
       webServiceURL: webServiceURL ?? this.webServiceURL,
       nfc: nfc ?? this.nfc,
       semantics: semantics ?? this.semantics,
+    );
+  }
+
+  /// Overrides the current [passTypeIdentifier] and [teamIdentifier] with
+  /// the IDs from the certificate PEM file.
+  PassData copyWithFieldsFromCertificate(String certificatePem) {
+    final issuer = X509.fromPem(certificatePem);
+    return copyWith(
+      passTypeIdentifier: issuer.identifier,
+      teamIdentifier: issuer.teamIdentifier,
     );
   }
 }
