@@ -39,7 +39,7 @@ Function getLatestVersion(PassKitBackend backend) {
       return response;
     }
 
-    final pass = await backend.getUpdatedPass(identifier, serial);
+    final pass = await backend.getLatestPassFor(identifier, serial);
 
     if (pass == null) {
       return Response.unauthorized(null);
@@ -111,7 +111,8 @@ Function setupNotifications(PassKitBackend backend) {
       return Response.badRequest();
     }
 
-    final notificationRegistrationReponse = await backend.setupNotifications(
+    final notificationRegistrationReponse =
+        await backend.startSendingPushNotificationsFor(
       deviceId,
       passTypeId,
       serialNumber,
@@ -148,7 +149,7 @@ Function stopNotifications(PassKitBackend backend) {
     if (response != null) {
       return response;
     }
-    final success = await backend.stopNotifications(
+    final success = await backend.stopSendingPushNotificationsFor(
       deviceId,
       passTypeId,
       serialNumber,

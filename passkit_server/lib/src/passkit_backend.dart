@@ -16,35 +16,31 @@ abstract class PassKitBackend {
     String? lastTag,
   );
 
-  /// URL must end with "v1/passes/{identifier}/{serial}"
-  /// Pass delivery
-  ///
-  /// GET /v1/passes/<typeID>/<serial#>
-  /// Header: Authorization: ApplePass <authenticationToken>
-  ///
-  /// server response:
-  /// --> if auth token is correct: 200, with pass data payload
-  /// --> if auth token is incorrect: 401
-  Future<PkPass?> getUpdatedPass(
+  /// Must return the latest pass for the given [identifier] and [serial]
+  Future<PkPass?> getLatestPassFor(
     String identifier,
     String serial,
   );
 
-  Future<NotificationRegistrationReponse> setupNotifications(
+  /// Start sending push notifications for the given parameters.
+  /// Consider that a user can have added the same pass to multiple devices.
+  Future<NotificationRegistrationReponse> startSendingPushNotificationsFor(
     String deviceId,
     String passTypeId,
     String serialNumber,
     String pushToken,
   );
 
-  Future<bool> stopNotifications(
+  /// Stop sending push notifications for the given parameters.
+  /// Consider that a user can have added the same pass to multiple devices.
+  Future<bool> stopSendingPushNotificationsFor(
     String deviceId,
     String passTypeId,
     String serialNumber,
   );
 
-  /// Should return true if the [serial] and [authToken] match and are valid.
-  /// Otherwise it should return false.
+  /// Should return true if the [serial] and [authToken] match each other
+  /// and are valid on their own. Otherwise it should return false.
   FutureOr<bool> isValidAuthToken(String serial, String authToken);
 
   /// Should return true if the [deviceId] is known, otherwise it should return
