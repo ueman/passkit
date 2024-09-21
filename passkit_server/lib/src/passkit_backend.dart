@@ -6,11 +6,14 @@ abstract class PassKitBackend {
   /// Saves JSON that gets send to `/v1/log`
   Future<void> logMessage(Map<String, dynamic> message);
 
-  /// "/v1/passes/{identifier}/{serial}""
+  /// Return `null` if there are no updatable passes.
+  /// Otherwise return an instance of it.
+  /// [lastTag], if non-null, describes the last point in time where the wallet
+  /// app made a request to get updateable passes.
   Future<UpdatablePassResponse?> returnUpdatablePasses(
-    String identifier,
-    String serial,
-    String updatedSince,
+    String deviceId,
+    String typeId,
+    String? lastTag,
   );
 
   /// URL must end with "v1/passes/{identifier}/{serial}"
@@ -43,24 +46,24 @@ abstract class PassKitBackend {
   /// Should return true if the [serial] and [authToken] match and are valid.
   /// Otherwise it should return false.
   FutureOr<bool> isValidAuthToken(String serial, String authToken);
+
+  /// Should return true if the [deviceId] is known, otherwise it should return
+  /// false.
+  FutureOr<bool> isKnownDeviceId(String deviceId);
 }
 
 class UpdatablePassResponse {
-  UpdatablePassResponse._(this.response, {this.tag, this.ids});
-
-  factory UpdatablePassResponse.matchingPasses(String tag, List<String> ids) {
-    return UpdatablePassResponse._(200, tag: tag, ids: ids);
-  }
-
-  factory UpdatablePassResponse.noMatchingPasses() =>
-      UpdatablePassResponse._(204);
-  factory UpdatablePassResponse.unknownDeviceIdentifier() =>
-      UpdatablePassResponse._(404);
+  UpdatablePassResponse({this.tag, required this.ids}) : assert(ids.isNotEmpty);
 
   final String? tag;
-  final List<String>? ids;
+  final List<String> ids;
 
-  final int response;
+  Map<String, dynamic> toJson() {
+    return {
+      'lastUpdated': tag,
+      'serialNumbers': ids,
+    };
+  }
 }
 
 class DevPassKitBackend extends PassKitBackend {

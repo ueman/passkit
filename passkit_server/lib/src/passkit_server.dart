@@ -145,7 +145,6 @@ Function stopNotifications(PassKitBackend backend) {
     String passTypeId,
     String serialNumber,
   ) async {
-    final backend = DevPassKitBackend();
     final response = await backend.validateAuthToken(request, serialNumber);
     if (response != null) {
       return response;
@@ -166,7 +165,7 @@ Function stopNotifications(PassKitBackend backend) {
 
 /// Updatable passes
 ///
-/// get all serial #s associated with a device for passes that need an update
+/// Get all serial numbers associated with a device for passes that need an update
 /// Optionally with a query limiter to scope the last update since
 ///
 /// GET /v1/devices/<deviceID>/registrations/<typeID>
@@ -179,7 +178,20 @@ Function stopNotifications(PassKitBackend backend) {
 /// --> if unknown device identifier: 404
 Function getListOfUpdatablePasses(PassKitBackend backend) {
   return (Request request, String deviceId, String typeId) async {
-    return Response.notFound(null);
+    final isKnownDeviceIdentifier = await backend.isKnownDeviceId(deviceId);
+    if (!isKnownDeviceIdentifier) {
+      return Response.notFound(null);
+    }
+    final lastTag = request.url.queryParameters['passesUpdatedSince'];
+
+    final updateablePasses =
+        await backend.returnUpdatablePasses(deviceId, typeId, lastTag);
+
+    if (updateablePasses == null) {
+      return Response(204);
+    }
+
+    return Response.ok(jsonEncode(updateablePasses.toJson()));
   };
 }
 
