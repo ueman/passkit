@@ -1,3 +1,7 @@
+## Unreleased
+
+- Make it possible to override the bundled Apple WWDR G4 certificate
+
 ## 0.0.7
 
 - The library is now able to create properly signed `pkpass` files that work with Apple Wallet.

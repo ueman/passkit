@@ -1,19 +1,12 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:passkit/src/archive_file_extension.dart';
+import 'package:passkit/src/pk_image.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
-import 'package:passkit/src/pkpass/pk_pass_image.dart';
 import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
-
-/// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
-/// This speeds up decoding.
-/// See
-/// - https://api.dart.dev/stable/3.4.4/dart-convert/Utf8Decoder-class.html
-/// - https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
-final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
+import 'package:passkit/src/utils.dart';
 
 extension ArchiveX on Archive {
   Uint8List? findBytesForFile(String fileName) =>
@@ -24,7 +17,7 @@ extension ArchiveX on Archive {
     if (bytes == null) {
       return null;
     }
-    return _utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
+    return utf8JsonDecode(bytes);
   }
 
   PkImage? loadImage(String name) {
@@ -88,5 +81,21 @@ extension ArchiveX on Archive {
         throw ChecksumMismatchException(file.name);
       }
     }
+  }
+
+  Uint8List createManifest() {
+    final manifest = <String, String>{};
+    for (final file in files) {
+      manifest[file.name] = sha1.convert(file.binaryContent).toString();
+    }
+
+    final manifestContent = utf8JsonEncode(manifest);
+    final manifestFile = ArchiveFile(
+      'manifest.json',
+      manifestContent.length,
+      manifestContent,
+    );
+    addFile(manifestFile);
+    return Uint8List.fromList(manifestContent);
   }
 }

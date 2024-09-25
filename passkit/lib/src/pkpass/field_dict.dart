@@ -109,8 +109,9 @@ class FieldDict {
   @JsonKey(name: 'timeStyle')
   final DateStyle? timeStyle;
 
-  /// The style of the number to display in the field. Formatter styles have the same meaning as the formats with corresponding names in NumberFormatter.Style.
-  /// Possible Values: PKNumberStyleDecimal, PKNumberStylePercent, PKNumberStyleScientific, PKNumberStyleSpellOut
+  /// The style of the number to display in the field. Formatter styles have the
+  /// same meaning as the formats with corresponding names in
+  /// NumberFormatter.Style.
   @JsonKey(name: 'numberStyle')
   final NumberStyle? numberStyle;
 
