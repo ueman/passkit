@@ -14,3 +14,5 @@ final _utf8JsonEncoder = JsonUtf8Encoder();
 
 Uint8List utf8JsonEncode(Object data) =>
     Uint8List.fromList(_utf8JsonEncoder.convert(data));
+
+const kdebugMode = bool.fromEnvironment('dart.vm.product');
