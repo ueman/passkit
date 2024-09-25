@@ -4,5 +4,4 @@ enum PassType {
   eventTicket,
   storeCard,
   generic,
-  unknown,
 }

@@ -10,7 +10,6 @@ Uint8List loadSample(PassType type) {
     PassType.eventTicket => 'Event',
     PassType.storeCard => 'StoreCard',
     PassType.generic => 'Generic',
-    PassType.unknown => 'Generic',
   };
   return File('test/sample_passes/$fileName.pkpass').readAsBytesSync();
 }

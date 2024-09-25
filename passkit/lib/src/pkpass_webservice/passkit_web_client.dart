@@ -4,11 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:passkit/passkit.dart';
-
-/// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
-/// This speeds up decoding.
-/// See https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
-final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
+import 'package:passkit/src/utils.dart';
 
 /// This class allows you to update a [PkPass] the latest version, if the pass
 /// allows it.
@@ -233,8 +229,7 @@ class PassKitWebClient {
 
     return switch (response.statusCode) {
       200 => () {
-          final responseJson = _utf8JsonDecoder.convert(response.bodyBytes)
-              as Map<String, dynamic>;
+          final responseJson = utf8JsonDecode(response.bodyBytes)!;
           return SerialNumbers(
             serialNumbers: responseJson['serialNumbers'] as List<String>,
             lastUpdated: responseJson['lastUpdated'] as String,
