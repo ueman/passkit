@@ -45,7 +45,13 @@ Function getLatestVersion(PassKitBackend backend) {
       return Response.unauthorized(null);
     }
 
-    return Response.ok(pass.sourceData);
+    return Response.ok(
+      pass.sourceData,
+      headers: {
+        'Content-type': 'application/vnd.apple.pkpass',
+        'Content-disposition': 'attachment; filename=pass.pkpass',
+      },
+    );
   };
 }
 
