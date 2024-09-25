@@ -68,7 +68,7 @@ void _ensureCertificateMatchesPass(
   final identifierMatches = issuer.identifier == identifier;
   final teamIdentifierMatches = issuer.teamIdentifier == teamIdentifier;
 
-  if (identifierMatches) {
+  if (!identifierMatches) {
     if (isPkPass) {
       throw Exception(
         "PkPass.pass.passTypeIdentifier doesn't match the certificate Pass Type ID",
@@ -78,7 +78,7 @@ void _ensureCertificateMatchesPass(
       throw SignatureMismatchException();
     }
   }
-  if (teamIdentifierMatches) {
+  if (!teamIdentifierMatches) {
     if (isPkPass) {
       throw Exception(
         "PkPass.pass.teamIdentifier doesn't match the certificate team ID",
