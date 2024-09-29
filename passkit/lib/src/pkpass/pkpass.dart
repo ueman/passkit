@@ -10,6 +10,7 @@ import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
 import 'package:passkit/src/pkpass/personalization.dart';
 import 'package:passkit/src/signature_verification.dart';
+import 'package:passkit/src/strings/strings_writer.dart';
 import 'package:passkit/src/utils.dart';
 import 'package:passkit/src/write_signature.dart';
 
@@ -217,7 +218,7 @@ class PkPass {
   /// pairs.
   /// The language identifier looks as described in
   /// https://developer.apple.com/documentation/xcode/choosing-localization-regions-and-scripts
-  final Map<String, Map<String, dynamic>>? languageData;
+  final Map<String, Map<String, String>>? languageData;
 
   /// The bytes of this PkPass
   /// Returns `null` when this instance wasn't read from a file.
@@ -279,6 +280,18 @@ class PkPass {
     strip?.writeToArchive(archive, 'strip');
     thumbnail?.writeToArchive(archive, 'thumbnail');
     personalizationLogo?.writeToArchive(archive, 'personalizationLogo');
+
+    final translationEntries = languageData?.entries;
+    if (translationEntries != null && translationEntries.isNotEmpty) {
+      // TODO(any): Ensure every translation file has the same amount of key value pairs.
+
+      for (final entry in translationEntries) {
+        final name = '${entry.key}.lproj/pass.strings';
+        final localizationFile =
+            ArchiveFile.string(name, toStringsFile(entry.value));
+        archive.addFile(localizationFile);
+      }
+    }
 
     final manifestFile = archive.createManifest();
 

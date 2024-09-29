@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Make it possible to override the bundled Apple WWDR G4 certificate
+- Added the ability to create localizable passes (images are still not localizable)
 
 ## 0.0.7
 

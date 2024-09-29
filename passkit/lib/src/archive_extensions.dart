@@ -5,7 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:passkit/src/archive_file_extension.dart';
 import 'package:passkit/src/pk_image.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
-import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
+import 'package:passkit/src/strings/naive_strings_file_parser.dart';
 import 'package:passkit/src/utils.dart';
 
 extension ArchiveX on Archive {

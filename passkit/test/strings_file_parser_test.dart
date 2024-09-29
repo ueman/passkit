@@ -1,4 +1,4 @@
-import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
+import 'package:passkit/src/strings/naive_strings_file_parser.dart';
 import 'package:test/test.dart';
 
 // Taken from https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html
