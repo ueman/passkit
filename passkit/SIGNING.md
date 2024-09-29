@@ -79,18 +79,52 @@ File('pass.pkpass').writeAsBytesSync(binaryData); // The file ending is importan
 
 Make sure that the pass type identifier and the team identifier matche your certificate.
 
+# Orders
 
-# Debugging Passes
+## Step 1: Get an ID and certificate from the Apple Developer Portal
 
-Apple says:
+### Create an order type identifier
+An order type identifier is a unique identifier for your company or brand. Create your order type identifier in the Certificates, Identifiers & Profiles area of the Apple Developer portal:
 
-> If the pass isn’t displayed and added to Wallet, check the log for a description of what went wrong.
-> When testing in the iOS Simulator app, errors are logged to the system log, which you can view with the Console app.
-> When testing on a device, errors are logged to the device’s console which you can view from the Xcode organizer window.
-> Common errors include malformed JSON files, misspelled keys or values, pass type identifiers that don’t match
-> your certificate, and signatures that omit the WWDR intermediate certificate.>
->
-> - [Apple Developer Docs](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW1)
+- Select Identifiers and then click Add <kbd>+</kbd>.
+- On the next screen, choose Order Type ID and click Continue.
+- Enter a description and the reverse DNS string to create the order type identifier.
 
-Next to that, you can use the <kbd>Console</kbd> app on macOS. Try opening your `.pkpass` file in a Simulator or on a physical connected iPhone, and you should see logs in the Console app.
-You can try searching for the pass type identifier, and you should see logs for your pass.
+For more information about signing in to your account and creating identifiers, see [Developer Account Help](https://help.apple.com/developer-account/).
+
+Set the `orderTypeIdentifier` in your `order.json` file to the identifier. Set the `orderIdentifier` key to a unique order identifier. The order identifier, in combination with the order type identifier, uniquely identifies an order within the system. For more information, see the top-level [Order](https://developer.apple.com/documentation/walletorders/order) object.
+
+### Generate a signing certificate
+Signing an order package requires a signing certificate for the order type identifier. Before you can generate a signing certificate, you need a certificate signing request (CSR). To learn how to generate a CSR, see [Create a certificate signing request](https://help.apple.com/developer-account/#/devbfa00fef7).
+
+Generate the signing certificate in the Certificates, Identifiers & Profiles area of the Apple Developer portal.
+
+- Select Certificates and then click Add <kbd>+</kbd>.
+- On the next screen, choose Order Type ID Certificate and click Continue.
+- Select the Order Type ID from the dropdown menu.
+
+Click Continue and upload the certificate signing request (CSR).
+
+Install the generated certificate on the server you use for signing the order package. For more information about signing in to your account and creating signing certificates, see [Developer Account Help](https://help.apple.com/developer-account/).
+
+## Step 2: Create `.pem` files
+
+This is the important step!
+
+Export your certificate and private key from <kbd>Keychain Access</kbd> as `Certificate.p12`. It will ask you to set a password.
+
+You should replace `<your-password-here>` with your password in the following commands.
+(The `--legacy` part at the end of the following command may or may not be needed depending on your openssl version)
+
+Create the certificate `.pem` file.
+```shell
+openssl pkcs12 -in Certificates.p12 -clcerts -nokeys -out pass_certificate.pem -passin pass:<your-password-here> --legacy
+```
+
+Create the private key `.pem` file. Unfortunately, it's not yet possible to use a password protected private key file.
+```shell
+openssl pkcs12 -in Certificates.p12 -out private_key.pem -nocerts -nodes -passin pass:<your-password-here> --legacy
+```
+
+If the generated `.pem` files do not start with `-----BEGIN RSA PRIVATE KEY-----` (or similar) delete all lines that come before that.
+Otherwise, the code can't decode the `.pem` files, and signing may fail.

@@ -65,11 +65,10 @@ void main() {
 }
 ```
 
-## How to write a PassKit file?
+## How to create a PassKit file?
 
-> [!WARNING]
-> This is experimental.
-> Follow the guide [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md) to learn more.
+> [!IMPORTANT]
+> Follow the guide [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md) to learn more about the signing process. This is a requirement before you can create a pass file.
 
 ```dart
 import 'package:passkit/passkit.dart';
@@ -83,6 +82,9 @@ final binaryData pass.write(
 File('pass.pkpass').writeAsBytesSync(binaryData);
 }
 ```
+
+If the resulting file doesn't work, please look into the [troubleshooting guide](https://github.com/ueman/passkit/blob/master/passkit/TROUBLESHOOTING.md).
+
 
 ## Signature & Checksums
 
