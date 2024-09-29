@@ -103,3 +103,18 @@ class CustomPassKitBackend extends PassKitBackend {
   }
 }
 ```
+
+# How to structure persistence for the server
+
+Apple recommend to build the persistence this way:
+
+Updating passes requires storing information for the registered passes and for their associated devices. One way you can store these details is to use a traditional relational database with two entities – devices and passes – and one relationship, registrations. The three tables are:
+
+#### Device table
+Contains the devices that contain updatable passes. Information for a device includes the device library identifier and the push token that your server uses to send update notifications.
+
+#### Pass table
+Contains the updatable passes. Information for a pass includes the pass type identifier, serial number, and a last-update tag. You define the contents of this tag and use it to track when you last updated a pass. The table can also include other data that you require to generate an updated pass.
+
+#### Registration table
+Contains the relationships between passes and devices. Use this table to find the devices registered for a pass, and to find all the registered passes for a device. Both relationships are many-to-many.
