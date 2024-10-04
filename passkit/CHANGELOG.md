@@ -1,7 +1,9 @@
 ## Unreleased
 
 - Make it possible to override the bundled Apple WWDR G4 certificate
-- Added the ability to create localizable passes (images are still not localizable)
+  - Use the `overrideWwdrCert` argument of `PkPass.fromBytes()`
+  - Use the `overrideWwdrCert` argument of `PkOrder.fromBytes()`
+- Added the ability to create localized passes
 
 ## 0.0.7
 

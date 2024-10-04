@@ -24,6 +24,7 @@ bool verifySignature({
   required String teamIdentifier,
   DateTime? now,
   bool checkOutdatedIssuerCerts = true,
+  X509? overrideWwdrCert,
 }) {
   final manifestHash = Uint8List.fromList(sha256.convert(manifestBytes).bytes);
   final pkcs7 = Pkcs7.fromDer(signatureBytes);
@@ -52,7 +53,7 @@ bool verifySignature({
   // Set the passTypeIdentifier of Pass in the pass.json file to the identifier.
   // Set the serialNumber key to the unique serial number for that identifier.
 
-  final signerInfo = pkcs7.verify([wwdrG4]);
+  final signerInfo = pkcs7.verify([overrideWwdrCert ?? wwdrG4]);
   return signerInfo.listEquality(manifestHash, signerInfo.messageDigest!);
 }
 

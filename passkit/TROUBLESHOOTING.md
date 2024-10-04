@@ -42,3 +42,6 @@ If your order package doesn’t build correctly, check whether the following are
 - Each localization folder contains the `order.strings` file for the order with localized strings.
 - The keys for localized strings in the `order.json` file match those in the `order.strings` files.
 - Each `order.strings` file contains the same number of localized strings and uses the same keys.
+
+Next to that, you can use the <kbd>Console</kbd> app on macOS. Try opening your `.order` file in an iOS Simulator or on a connected iPhone, and you should see logs in the Console app.
+You can try searching for the order identifier, and you should see logs for your order file.

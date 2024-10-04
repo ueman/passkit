@@ -11,7 +11,7 @@ import 'package:pkcs7/pkcs7.dart';
 /// You can find other certificates at:
 /// - https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/
 /// - https://www.apple.com/certificateauthority/
-X509 wwdrG4 =
+final X509 wwdrG4 =
     X509.fromDer(Uint8List.fromList(worldwide_Developer_Relations_G4));
 
 /// This is the content of https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer .

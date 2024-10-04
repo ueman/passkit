@@ -15,6 +15,7 @@ Future<void> main() async {
     return Response.ok('hello-world');
   });
 
+  // ignore: unused_local_variable
   var server = await io.serve(app.call, 'localhost', 8888);
 }
 

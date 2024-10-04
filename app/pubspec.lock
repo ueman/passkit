@@ -728,7 +728,7 @@ packages:
       path: "../passkit"
       relative: true
     source: path
-    version: "0.0.6"
+    version: "0.0.7"
   passkit_ui:
     dependency: "direct main"
     description:

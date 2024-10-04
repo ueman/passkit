@@ -5,6 +5,7 @@ import 'package:passkit/src/archive_extensions.dart';
 import 'package:passkit/src/archive_file_extension.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/signature_verification.dart';
+import 'package:pkcs7/pkcs7.dart';
 
 import 'order_data.dart';
 
@@ -24,6 +25,7 @@ class PkOrder {
     final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
+    X509? overrideWwdrCert,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -42,12 +44,15 @@ class PkOrder {
             archive.findFile('manifest.json')!.binaryContent;
         final signatureContent = archive.findFile('signature')!.binaryContent;
 
-        verifySignature(
+        if (!verifySignature(
           signatureBytes: signatureContent,
           manifestBytes: manifestContent,
           identifier: order.orderTypeIdentifier,
           teamIdentifier: order.merchant.merchantIdentifier,
-        );
+          overrideWwdrCert: overrideWwdrCert,
+        )) {
+          throw Exception('validation failed');
+        }
       }
     }
 

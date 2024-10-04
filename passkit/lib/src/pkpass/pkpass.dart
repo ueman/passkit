@@ -13,6 +13,7 @@ import 'package:passkit/src/signature_verification.dart';
 import 'package:passkit/src/strings/strings_writer.dart';
 import 'package:passkit/src/utils.dart';
 import 'package:passkit/src/write_signature.dart';
+import 'package:pkcs7/pkcs7.dart';
 
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Reference/PassKit_Bundle/Chapters/Introduction.html
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195
@@ -63,6 +64,7 @@ class PkPass {
     final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
+    X509? overrideWwdrCert,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -85,6 +87,7 @@ class PkPass {
           manifestBytes: manifestContent,
           teamIdentifier: passData.teamIdentifier,
           identifier: passData.passTypeIdentifier,
+          overrideWwdrCert: overrideWwdrCert,
         )) {
           throw Exception('validation failed');
         }
@@ -413,6 +416,24 @@ extension on PkImage {
     if (image3 != null) {
       archive
           .addFile(ArchiveFile('$name@3x.png', image3!.lengthInBytes, image3));
+    }
+
+    if (localizedImages != null) {
+      for (final entry in localizedImages!.entries) {
+        final lang = entry.key;
+        for (final image in entry.value.entries) {
+          final fileName = switch (image.key) {
+            1 => '$lang.lproj/$name.png',
+            2 => '$lang.lproj/$name@2x.png',
+            3 => '$lang.lproj/$name@3x.png',
+            _ => throw Exception('This case should never happen'),
+          };
+
+          archive.addFile(
+            ArchiveFile(fileName, image.value.lengthInBytes, image.value),
+          );
+        }
+      }
     }
   }
 }
