@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
-import 'package:passkit/src/apple_wwdr_certificate.dart';
-import 'package:passkit/src/certificate_extension.dart';
+import 'package:passkit/src/crypto/apple_wwdr_certificate.dart';
+import 'package:passkit/src/crypto/certificate_extension.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:pkcs7/pkcs7.dart';
 

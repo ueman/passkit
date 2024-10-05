@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:csslib/parser.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:passkit/src/certificate_extension.dart';
+import 'package:passkit/src/crypto/certificate_extension.dart';
 import 'package:passkit/src/pkpass/barcode.dart';
 import 'package:passkit/src/pkpass/beacon.dart';
 import 'package:passkit/src/pkpass/location.dart';

@@ -4,15 +4,15 @@ import 'package:archive/archive.dart';
 import 'package:meta/meta.dart';
 import 'package:passkit/src/archive_extensions.dart';
 import 'package:passkit/src/archive_file_extension.dart';
+import 'package:passkit/src/crypto/signature_verification.dart';
+import 'package:passkit/src/crypto/write_signature.dart';
 import 'package:passkit/src/pk_image.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
 import 'package:passkit/src/pkpass/personalization.dart';
-import 'package:passkit/src/signature_verification.dart';
 import 'package:passkit/src/strings/strings_writer.dart';
 import 'package:passkit/src/utils.dart';
-import 'package:passkit/src/write_signature.dart';
 import 'package:pkcs7/pkcs7.dart';
 
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Reference/PassKit_Bundle/Chapters/Introduction.html

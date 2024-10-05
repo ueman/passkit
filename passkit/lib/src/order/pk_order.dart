@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:passkit/src/archive_extensions.dart';
 import 'package:passkit/src/archive_file_extension.dart';
+import 'package:passkit/src/crypto/signature_verification.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
-import 'package:passkit/src/signature_verification.dart';
 import 'package:pkcs7/pkcs7.dart';
 
 import 'order_data.dart';

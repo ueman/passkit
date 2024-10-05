@@ -1,6 +1,6 @@
 library;
 
-export 'src/apple_wwdr_certificate.dart';
+export 'src/crypto/apple_wwdr_certificate.dart';
 export 'src/order/order_address.dart';
 export 'src/order/order_application.dart';
 export 'src/order/order_barcode.dart';
