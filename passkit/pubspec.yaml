@@ -1,6 +1,6 @@
 name: passkit
 description: Pure Dart library which can read Apple's PKPass files. Works on servers too.
-version: 0.0.7
+version: 0.0.8
 repository: https://github.com/ueman/passkit
 issue_tracker: https://github.com/ueman/passkit/issues
 topics:
