@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:passkit/src/crypto/apple_wwdr_certificate.dart';
 import 'package:passkit/src/crypto/certificate_extension.dart';
+import 'package:passkit/src/crypto/rsa_key_parser.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:pkcs7/pkcs7.dart';
 import 'package:pointycastle/pointycastle.dart';
@@ -38,8 +38,7 @@ Uint8List writeSignature(
   pkcs7Builder.addCertificate(wwdrG4);
   pkcs7Builder.addCertificate(issuer);
 
-  final privateKey =
-      encrypt.RSAKeyParser().parse(privateKeyPem) as RSAPrivateKey;
+  final privateKey = RSAKeyParser().parse(privateKeyPem) as RSAPrivateKey;
 
   final signerInfo = Pkcs7SignerInfoBuilder.rsa(
     issuer: issuer,

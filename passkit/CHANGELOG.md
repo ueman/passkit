@@ -4,6 +4,7 @@
   - Use the `overrideWwdrCert` argument of `PkPass.fromBytes()`
   - Use the `overrideWwdrCert` argument of `PkOrder.fromBytes()`
 - Added the ability to create localized passes
+- Remove dependencies on the `encrypt` and `asn1lib` packages
 
 ## 0.0.7
 
