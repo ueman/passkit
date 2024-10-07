@@ -245,6 +245,9 @@ class PkPass {
   /// If either [certificatePem] or [privateKeyPem] is null, the resulting PkPass
   /// will not be properly signed, but still generated.
   ///
+  /// Apple's documentation [here](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html)
+  /// explains which fields to set for which type of pass.
+  ///
   /// Remarks:
   /// - There's no support for verifying that the signature matches the PkPass
   /// - There's no support for localization
