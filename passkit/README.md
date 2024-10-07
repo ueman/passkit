@@ -69,6 +69,8 @@ void main() {
 
 > [!IMPORTANT]
 > Follow the guide [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md) to learn more about the signing process. This is a requirement before you can create a pass file.
+>
+> Apple's documentation [here](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html) explains which fields to set.
 
 ```dart
 import 'package:passkit/passkit.dart';
