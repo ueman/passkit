@@ -249,9 +249,6 @@ class PkPass {
   /// explains which fields to set for which type of pass.
   ///
   /// Remarks:
-  /// - There's no support for verifying that the signature matches the PkPass
-  /// - There's no support for localization
-  /// - There's no support for personalization
   /// - Image sizes aren't checked, which means it's possible to create passes
   ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
   @experimental
