@@ -76,17 +76,72 @@ void main() {
 import 'package:passkit/passkit.dart';
 
 void main() {
-final pass = PkPass(...);
-final binaryData pass.write(
-  certificatePem: File('pass_certificate.pem').readAsStringSync(),
-  privateKeyPem: File('private_key.pem').readAsStringSync(),
-);
-File('pass.pkpass').writeAsBytesSync(binaryData);
+  final pass = PkPass(...);
+  final binaryData = pass.write(
+    certificatePem: File('pass_certificate.pem').readAsStringSync(),
+    privateKeyPem: File('private_key.pem').readAsStringSync(),
+  );
+  File('pass.pkpass').writeAsBytesSync(binaryData);
 }
 ```
 
 If the resulting file doesn't work, please look into the [troubleshooting guide](https://github.com/ueman/passkit/blob/master/passkit/TROUBLESHOOTING.md).
 
+<details>
+  <summary>shelf example</summary>
+
+A Hello World like example with shelf looks something like this:
+
+```dart
+import 'package:shelf/shelf.dart';
+import 'package:passkit/passkit.dart';
+
+Response onRequest(Request request) {
+  final pkPass = PkPass(...);
+  final bytes = pkPass.write(
+    certificatePem: File('passcertificate.pem').readAsStringSync(),
+    privateKeyPem: File('passwordless_key.pem').readAsStringSync(),
+  );
+
+  return Response.ok(
+    bytes,
+    headers: {
+      'Content-type': 'application/vnd.apple.pkpass',
+      'Content-disposition': 'attachment; filename=pass.pkpass',
+    },
+  );
+}
+```
+
+</details>
+
+<details>
+  <summary>dart_frog example</summary>
+
+A Hello World like example with dart_frog looks something like this:
+
+```dart
+import 'package:dart_frog/dart_frog.dart';
+import 'package:passkit/passkit.dart';
+
+Response onRequest(RequestContext context) {
+  final pkPass = PkPass(...);
+  final bytes = pkPass.write(
+    certificatePem: File('passcertificate.pem').readAsStringSync(),
+    privateKeyPem: File('passwordless_key.pem').readAsStringSync(),
+  );
+
+  return Response.bytes(
+    body: bytes,
+    headers: {
+      'Content-type': 'application/vnd.apple.pkpass',
+      'Content-disposition': 'attachment; filename=pass.pkpass',
+    },
+  );
+}
+```
+
+</details>
 
 ## Signature & Checksums
 
