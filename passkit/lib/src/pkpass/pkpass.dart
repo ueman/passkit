@@ -118,10 +118,15 @@ class PkPass {
 
   /// Parses a `.pkpasses` to a list of [PkPass]es.
   /// The mimetype of that file is `application/vnd.apple.pkpasses`.
-  /// A `.pkpasses` file cna contain up to ten [PkPass]es.
+  /// A `.pkpasses` file can contain up to ten [PkPass]es.
   ///
-  /// Setting [skipVerification] to true disables any checksum or signature
+  /// Setting [skipChecksumVerification] to true disables any checksum
   /// verification and validation.
+  ///
+  /// Setting [skipSignatureVerification] to true disables any signature
+  /// verification and validation. This may be needed for older passes which are
+  /// signed with an out of date [Apple WWDR](https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/)
+  /// certificate.
   ///
   /// Read more at:
   /// - https://developer.apple.com/documentation/walletpasses/distributing_and_updating_a_pass#3793284
@@ -132,6 +137,7 @@ class PkPass {
     final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
+    X509? overrideWwdrCert,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -146,6 +152,7 @@ class PkPass {
             file.binaryContent,
             skipChecksumVerification: skipChecksumVerification,
             skipSignatureVerification: skipSignatureVerification,
+            overrideWwdrCert: overrideWwdrCert,
           ),
         )
         .toList();
@@ -245,6 +252,9 @@ class PkPass {
   /// If either [certificatePem] or [privateKeyPem] is null, the resulting PkPass
   /// will not be properly signed, but still generated.
   ///
+  /// Setting [overrideWwdrCert] overrides the Apple WWDR certificate, that's
+  /// shipped with this library.
+  ///
   /// Apple's documentation [here](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html)
   /// explains which fields to set for which type of pass.
   ///
@@ -253,8 +263,9 @@ class PkPass {
   ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
   @experimental
   Uint8List? write({
-    String? certificatePem,
-    String? privateKeyPem,
+    required String? certificatePem,
+    required String? privateKeyPem,
+    X509? overrideWwdrCert,
   }) {
     final archive = Archive();
 
@@ -306,6 +317,7 @@ class PkPass {
         pass.passTypeIdentifier,
         pass.teamIdentifier,
         true,
+        overrideWwdrCert,
       );
 
       final signatureFile = ArchiveFile(

@@ -14,9 +14,6 @@ import 'package:pointycastle/pointycastle.dart';
 /// it's only supported if it's not password protected.
 ///
 /// Read more about signing [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md).
-// TODO(any): Add pkPassCertPem checks
-//            similar to the signature_verification.dart file, the identifier
-//            and teamIdentifier should match. But one step at a time.
 Uint8List writeSignature(
   String certificatePem,
   String privateKeyPem,
@@ -24,6 +21,7 @@ Uint8List writeSignature(
   String identifier,
   String teamIdentifier,
   bool isPkPass,
+  X509? overrideWwdrCert,
 ) {
   final issuer = X509.fromPem(certificatePem);
   _ensureCertificateMatchesPass(
@@ -35,7 +33,7 @@ Uint8List writeSignature(
 
   final pkcs7Builder = Pkcs7Builder();
 
-  pkcs7Builder.addCertificate(wwdrG4);
+  pkcs7Builder.addCertificate(overrideWwdrCert ?? wwdrG4);
   pkcs7Builder.addCertificate(issuer);
 
   final privateKey = RSAKeyParser().parse(privateKeyPem) as RSAPrivateKey;

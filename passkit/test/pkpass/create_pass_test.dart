@@ -14,7 +14,10 @@ void main() {
       skipSignatureVerification: true,
     );
 
-    final createdPass = og.write()!;
+    final createdPass = og.write(
+      certificatePem: null,
+      privateKeyPem: null,
+    )!;
 
     final copy = PkPass.fromBytes(
       Uint8List.fromList(createdPass),
