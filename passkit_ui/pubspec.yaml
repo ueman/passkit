@@ -15,7 +15,7 @@ environment:
   flutter: ">=3.22.2"
 
 dependencies:
-  barcode: ^2.2.0
+  barcode: ^2.0.0
   barcode_widget: ^2.0.0
   collection: ^1.18.0
   csslib: ^1.0.0
