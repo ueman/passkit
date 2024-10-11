@@ -1,3 +1,15 @@
+## 0.0.9
+
+- Increase [`intl`](https://pub.dev/packages/intl) version range, which makes it compatible with older Flutter versions
+- Allow older versions of `archive`, `image`, `json_annotation`, `pointycastle` which should make version conflicts less likely
+- Allow the library to be used on Dart 3.3 and newer
+- Add convenience methods to create PkImage objects
+  - `createIcon()` creates, scales and converts a given image to an icon according to the spec
+  - `createLogo()` creates, scales and converts a given image to a logo according to the spec
+  - `createFooter()` creates, scales and converts a given image to a footer according to the spec
+- Add a couple more `copyWith` methods to various classes
+- Add a `createEventWithThumbnail()` method, which creates an opinioted event PkPass object.
+
 ## 0.0.8
 
 - Make it possible to override the bundled Apple WWDR G4 certificate
