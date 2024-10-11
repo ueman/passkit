@@ -85,6 +85,7 @@ class PkOrder {
 
   // TODO(any): Do proper image loading for orders
   //            Do a sanity check for paths that already contains @2x/@3x modifier
+  //            What about localized images?
   PkImage loadImage(String path, {String? locale}) {
     assert(path.isNotEmpty);
 
