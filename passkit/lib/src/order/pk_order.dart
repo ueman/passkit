@@ -86,6 +86,11 @@ class PkOrder {
   // TODO(any): Do proper image loading for orders
   //            Do a sanity check for paths that already contains @2x/@3x modifier
   //            What about localized images?
+  //
+  // The Apple docs state that
+  // > Adding an image of the same name to the top-level folder of the order
+  // > file overrides any localized versions.
+  // So non-localized images are actually the fallback.
   PkImage loadImage(String path, {String? locale}) {
     assert(path.isNotEmpty);
 

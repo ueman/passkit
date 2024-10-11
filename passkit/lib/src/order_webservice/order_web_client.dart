@@ -7,11 +7,11 @@ import 'package:passkit/src/order_webservice/order_identifiers.dart';
 import 'package:passkit/src/order_webservice/order_web_client_exceptions.dart';
 import 'package:passkit/src/utils.dart';
 
-/// This class allows you to update a [Order] the latest version, if the pass
+/// This class allows you to update a [PkOrder] the latest version, if the order
 /// allows it.
 ///
 /// Docs:
-/// [https://developer.apple.com/documentation/walletpasses/send_an_updated_pass]
+/// [https://developer.apple.com/documentation/walletorders]
 class OrderWebClient {
   /// If a [client] is passed to the constructor it will be used, otherwise a
   /// default instance will be created. This is useful for testing, or for using
@@ -21,8 +21,8 @@ class OrderWebClient {
 
   final Client _client;
 
-  /// Loads the latest version for the given pass. Throws, if the pass doesn't
-  /// support being updated. To check whether a pass supports being updated,
+  /// Loads the latest version for the given order. Throws, if the order doesn't
+  /// support being updated. To check whether an order supports being updated,
   /// check whether [PkOrder.isWebServiceAvailable] returns true.
   ///
   /// Returns null if no new order is available.
@@ -50,7 +50,7 @@ class OrderWebClient {
       headers: {
         if (modifiedSince != null)
           'If-Modified-Since': formatHttpDate(modifiedSince),
-        'Authorization': 'ApplePass $authenticationToken',
+        'Authorization': 'AppleOrder $authenticationToken',
       },
     );
 
@@ -70,7 +70,7 @@ class OrderWebClient {
   /// Record a message on the server.
   ///
   /// Docs:
-  /// [https://developer.apple.com/documentation/walletpasses/log_a_message]
+  /// [https://developer.apple.com/documentation/walletorders/receive-log-messages]
   Future<void> logMessages(PkOrder order, List<String> messages) async {
     final webServiceUrl = order.order.webServiceURL;
     if (webServiceUrl == null) {
@@ -82,22 +82,22 @@ class OrderWebClient {
     await _client.post(endpoint, body: jsonEncode(messages));
   }
 
-  /// Set up change notifications for a pass on a device.
+  /// Set up change notifications for an order on a device.
   ///
-  /// [deviceLibraryIdentifier] : A unique identifier you use to identify and
+  /// [deviceIdentifier] : A unique identifier you use to identify and
   /// authenticate the device.
   ///
   /// [pushToken] : A push token the server uses to send update notifications
   /// for a registered pass to a device.
   ///
   /// Docs:
-  /// https://developer.apple.com/documentation/walletpasses/register_a_pass_for_update_notifications
+  /// https://developer.apple.com/documentation/walletorders/register-a-device-for-update-notifications
   Future<void> setupNotifications(
     PkOrder order, {
-    required String deviceLibraryIdentifier,
+    required String deviceIdentifier,
     required String pushToken,
   }) async {
-    // https://yourpasshost.example.com/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}
+    // https://your-web-service.com/v1/devices/{deviceIdentifier}/registrations/{orderTypeIdentifier}/{orderIdentifier}
 
     final webServiceUrl = order.order.webServiceURL;
     if (webServiceUrl == null) {
@@ -109,7 +109,7 @@ class OrderWebClient {
       [
         'v1',
         'devices',
-        deviceLibraryIdentifier,
+        deviceIdentifier,
         'registrations',
         order.order.orderTypeIdentifier,
         order.order.orderIdentifier,
@@ -119,7 +119,7 @@ class OrderWebClient {
     final response = await _client.post(
       endpoint,
       headers: {
-        'Authorization': 'ApplePass $authenticationToken',
+        'Authorization': 'AppleOrder $authenticationToken',
       },
       body: jsonEncode({
         'pushToken': pushToken,
@@ -141,19 +141,19 @@ class OrderWebClient {
     }
   }
 
-  /// Unregister a Pass for Update Notifications
-  /// Stop sending update notifications for a pass on a device.
+  /// Unregister an order for update notifications
+  /// Stop sending update notifications for an order on a device.
   ///
-  /// [deviceLibraryIdentifier] : A unique identifier you use to identify and
+  /// [deviceIdentifier] : A unique identifier you use to identify and
   /// authenticate the device.
   ///
   /// Docs:
-  /// https://developer.apple.com/documentation/walletpasses/unregister_a_pass_for_update_notifications
+  /// https://developer.apple.com/documentation/walletorders/unregister-a-device-from-update-notifications
   Future<void> stopNotifications(
     PkOrder order, {
-    required String deviceLibraryIdentifier,
+    required String deviceIdentifier,
   }) async {
-    // https://yourpasshost.example.com/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}
+    // https://your-web-service.com/v1/devices/{deviceIdentifier}/registrations/{orderTypeIdentifier}/{orderIdentifier}
 
     final webServiceUrl = order.order.webServiceURL;
     if (webServiceUrl == null) {
@@ -165,7 +165,7 @@ class OrderWebClient {
       [
         'v1',
         'devices',
-        deviceLibraryIdentifier,
+        deviceIdentifier,
         'registrations',
         order.order.orderTypeIdentifier,
         order.order.orderIdentifier,
@@ -175,7 +175,7 @@ class OrderWebClient {
     final response = await _client.delete(
       endpoint,
       headers: {
-        'Authorization': 'ApplePass $authenticationToken',
+        'Authorization': 'AppleOrder $authenticationToken',
       },
     );
 
@@ -193,21 +193,22 @@ class OrderWebClient {
 
   /// Send the serial numbers for updated passes to a device.
   ///
-  /// [deviceLibraryIdentifier] : A unique identifier you use to identify and
+  /// [deviceIdentifier] : A unique identifier you use to identify and
   /// authenticate the device.
   ///
-  /// [previousLastUpdated] : The value of the lastUpdated key from the
+  /// [lastModified] : The value of the lastUpdated key from the
   /// SerialNumbers object returned in a previous request. This value limits the
   /// results of the current request to the passes updated since that previous
   /// request.
   ///
-  /// Docs: https://developer.apple.com/documentation/walletpasses/get_the_list_of_updatable_passes
-  Future<OrderIdentifiers?> getListOfUpdatablePasses(
+  /// Docs:
+  /// https://developer.apple.com/documentation/walletorders/retrieve-the-registrations-for-a-device
+  Future<OrderIdentifiers?> getListOfRegisteredOrders(
     PkOrder order, {
-    required String deviceLibraryIdentifier,
-    required String? previousLastUpdated,
+    required String deviceIdentifier,
+    required String? lastModified,
   }) async {
-    // https://yourpasshost.example.com/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}?passesUpdatedSince={previousLastUpdated}
+    // https://your-web-service.com/v1/devices/{deviceIdentifier}/registrations/{orderTypeIdentifier}?ordersModifiedSince={lastModified}
     final webServiceUrl = order.order.webServiceURL;
     if (webServiceUrl == null) {
       throw OrderWebServiceUnsupported();
@@ -216,13 +217,12 @@ class OrderWebClient {
     final endpoint = webServiceUrl.appendPathSegments([
       'v1',
       'devices',
-      deviceLibraryIdentifier,
+      deviceIdentifier,
       'registrations',
       order.order.orderTypeIdentifier,
     ]).replace(
       queryParameters: {
-        if (previousLastUpdated != null)
-          'passesUpdatedSince': previousLastUpdated,
+        if (lastModified != null) 'ordersModifiedSince': lastModified,
       },
     );
 

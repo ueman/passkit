@@ -1,6 +1,8 @@
 ## Unreleased
 
 - No longer mark `PkPass.write()` as experimental
+- Add webservice support for orders
+- Add image support for orders
 
 ## 0.0.10
 
