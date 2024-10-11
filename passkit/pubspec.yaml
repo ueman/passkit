@@ -1,6 +1,6 @@
 name: passkit
 description: Pure Dart library which can create and read Apple's PkPass files. Works on servers and in apps.
-version: 0.0.9
+version: 0.0.10
 repository: https://github.com/ueman/passkit
 issue_tracker: https://github.com/ueman/passkit/issues
 topics:
@@ -20,7 +20,7 @@ dependencies:
   csslib: ^1.0.0
   http: ^1.2.0
   http_parser: ^4.0.0
-  image: ^4.0.0
+  image: ^4.1.1
   intl: ">=0.18.0 <0.20.0" # This makes it possible to use this library on older Flutter versions
   json_annotation: ^4.8.0
   meta: ^1.0.0

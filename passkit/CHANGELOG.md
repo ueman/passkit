@@ -1,3 +1,7 @@
+## 0.0.10
+
+- Only support `image: ^4.1.1`
+
 ## 0.0.9
 
 - Increase [`intl`](https://pub.dev/packages/intl) version range, which makes it compatible with older Flutter versions
@@ -8,7 +12,7 @@
   - `createLogo()` creates, scales and converts a given image to a logo according to the spec
   - `createFooter()` creates, scales and converts a given image to a footer according to the spec
 - Add a couple more `copyWith` methods to various classes
-- Add a `createEventWithThumbnail()` method, which creates an opinioted event PkPass object.
+- Add a `createEventWithThumbnail()` method, which creates an opinionated event PkPass object.
 
 ## 0.0.8
 
