@@ -1,41 +1,30 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
+import 'package:passkit/src/archive_file_extension.dart';
+import 'package:passkit/src/pk_image.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
-import 'package:passkit/src/pkpass/pk_pass_image.dart';
-import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
-
-/// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
-/// This speeds up decoding.
-/// See
-/// - https://api.dart.dev/stable/3.4.4/dart-convert/Utf8Decoder-class.html
-/// - https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
-final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
+import 'package:passkit/src/strings/naive_strings_file_parser.dart';
+import 'package:passkit/src/utils.dart';
 
 extension ArchiveX on Archive {
-  List<int>? findBytesForFile(String fileName) =>
-      findFile(fileName)?.content as List<int>?;
-
-  Uint8List? findUint8ListForFile(String fileName) {
-    final data = findBytesForFile(fileName);
-    return data == null ? null : Uint8List.fromList(data);
-  }
+  Uint8List? findBytesForFile(String fileName) =>
+      findFile(fileName)?.binaryContent;
 
   Map<String, dynamic>? findFileAndReadAsJson(String fileName) {
     final bytes = findBytesForFile(fileName);
     if (bytes == null) {
       return null;
     }
-    return _utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
+    return utf8JsonDecode(bytes);
   }
 
   PkImage? loadImage(String name) {
     return PkImage.fromImages(
-      image1: findUint8ListForFile('$name.png'),
-      image2: findUint8ListForFile('$name@2.png'),
-      image3: findUint8ListForFile('$name@3.png'),
+      image1: findBytesForFile('$name.png'),
+      image2: findBytesForFile('$name@2.png'),
+      image3: findBytesForFile('$name@3.png'),
     );
   }
 
@@ -52,8 +41,7 @@ extension ArchiveX on Archive {
     for (final languageFile in translationFiles) {
       final language = languageFile.name.split('.').first;
 
-      languageData[language] =
-          parseStringsFile(languageFile.content as List<int>);
+      languageData[language] = parseStringsFile(languageFile.binaryContent);
     }
     return languageData;
   }
@@ -88,10 +76,26 @@ extension ArchiveX on Archive {
 
     for (final file in filesWithoutSignatureAndManifest) {
       final checksumInManifest = manifest[file.name] as String?;
-      final digest = sha1.convert(file.content as List<int>);
+      final digest = sha1.convert(file.binaryContent);
       if (checksumInManifest != digest.toString()) {
         throw ChecksumMismatchException(file.name);
       }
     }
+  }
+
+  Uint8List createManifest() {
+    final manifest = <String, String>{};
+    for (final file in files) {
+      manifest[file.name] = sha1.convert(file.binaryContent).toString();
+    }
+
+    final manifestContent = utf8JsonEncode(manifest);
+    final manifestFile = ArchiveFile(
+      'manifest.json',
+      manifestContent.length,
+      manifestContent,
+    );
+    addFile(manifestFile);
+    return Uint8List.fromList(manifestContent);
   }
 }

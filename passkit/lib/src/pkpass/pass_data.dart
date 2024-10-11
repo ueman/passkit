@@ -1,5 +1,6 @@
 import 'package:csslib/parser.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:passkit/src/crypto/certificate_extension.dart';
 import 'package:passkit/src/pkpass/barcode.dart';
 import 'package:passkit/src/pkpass/beacon.dart';
 import 'package:passkit/src/pkpass/location.dart';
@@ -7,6 +8,7 @@ import 'package:passkit/src/pkpass/nfc.dart';
 import 'package:passkit/src/pkpass/parse_utils.dart';
 import 'package:passkit/src/pkpass/pass_structure.dart';
 import 'package:passkit/src/pkpass/semantics.dart';
+import 'package:pkcs7/pkcs7.dart';
 
 part 'pass_data.g.dart';
 
@@ -14,11 +16,11 @@ part 'pass_data.g.dart';
 class PassData {
   PassData({
     required this.description,
-    required this.formatVersion,
     required this.organizationName,
     required this.passTypeIdentifier,
     required this.serialNumber,
     required this.teamIdentifier,
+    this.formatVersion = 1,
     this.appLaunchURL,
     this.associatedStoreIdentifiers,
     this.userInfo,
@@ -47,6 +49,47 @@ class PassData {
     this.nfc,
     this.semantics,
   });
+
+  /// Sets the [teamIdentifier] and [passTypeIdentifier] from a certificate pem
+  /// file. Otherwise, it's identical to the default constructor.
+  PassData.fromCertificate({
+    required this.description,
+    required this.organizationName,
+    required this.serialNumber,
+    required String certificatePem,
+    this.formatVersion = 1,
+    this.appLaunchURL,
+    this.associatedStoreIdentifiers,
+    this.userInfo,
+    this.expirationDate,
+    this.voided,
+    this.beacons,
+    this.locations,
+    this.maxDistance,
+    this.relevantDate,
+    this.boardingPass,
+    this.coupon,
+    this.eventTicket,
+    this.generic,
+    this.storeCard,
+    this.barcode,
+    this.barcodes,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.groupingIdentifier,
+    this.labelColor,
+    this.logoText,
+    this.suppressStripShine,
+    this.sharingProhibited,
+    this.authenticationToken,
+    this.webServiceURL,
+    this.nfc,
+    this.semantics,
+  })  :
+        // It's kinda stupid to parse it twice, but it works.
+        // TODO(any): Make this more performant
+        teamIdentifier = X509.fromPem(certificatePem).teamIdentifier!,
+        passTypeIdentifier = X509.fromPem(certificatePem).identifier!;
 
   factory PassData.fromJson(Map<String, dynamic> json) =>
       _$PassDataFromJson(json);
@@ -180,7 +223,7 @@ class PassData {
 
   /// Optional. Information specific to the pass’s barcode. For this
   /// dictionary’s keys, see Barcode Dictionary Keys.
-  /// Note:Deprecated in iOS 9.0 and later; use barcodes instead.
+  /// Note: Deprecated in iOS 9.0 and later; use barcodes instead.
   @JsonKey(name: 'barcode')
   final Barcode? barcode;
 
@@ -266,4 +309,87 @@ class PassData {
   /// a pass and suggest related actions.
   @JsonKey(name: 'semantics')
   final Semantics? semantics;
+
+  PassData copyWith({
+    String? description,
+    int? formatVersion,
+    String? organizationName,
+    String? passTypeIdentifier,
+    String? serialNumber,
+    String? teamIdentifier,
+    String? appLaunchURL,
+    List<int>? associatedStoreIdentifiers,
+    Map<String, dynamic>? userInfo,
+    DateTime? expirationDate,
+    bool? voided,
+    List<Beacon>? beacons,
+    List<Location>? locations,
+    num? maxDistance,
+    DateTime? relevantDate,
+    PassStructure? boardingPass,
+    PassStructure? coupon,
+    PassStructure? eventTicket,
+    PassStructure? generic,
+    PassStructure? storeCard,
+    Barcode? barcode,
+    List<Barcode>? barcodes,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    String? groupingIdentifier,
+    Color? labelColor,
+    String? logoText,
+    bool? suppressStripShine,
+    bool? sharingProhibited,
+    String? authenticationToken,
+    Uri? webServiceURL,
+    Nfc? nfc,
+    Semantics? semantics,
+  }) {
+    return PassData(
+      description: description ?? this.description,
+      formatVersion: formatVersion ?? this.formatVersion,
+      organizationName: organizationName ?? this.organizationName,
+      passTypeIdentifier: passTypeIdentifier ?? this.passTypeIdentifier,
+      serialNumber: serialNumber ?? this.serialNumber,
+      teamIdentifier: teamIdentifier ?? this.teamIdentifier,
+      appLaunchURL: appLaunchURL ?? this.appLaunchURL,
+      associatedStoreIdentifiers:
+          associatedStoreIdentifiers ?? this.associatedStoreIdentifiers,
+      userInfo: userInfo ?? this.userInfo,
+      expirationDate: expirationDate ?? this.expirationDate,
+      voided: voided ?? this.voided,
+      beacons: beacons ?? this.beacons,
+      locations: locations ?? this.locations,
+      maxDistance: maxDistance ?? this.maxDistance,
+      relevantDate: relevantDate ?? this.relevantDate,
+      boardingPass: boardingPass ?? this.boardingPass,
+      coupon: coupon ?? this.coupon,
+      eventTicket: eventTicket ?? this.eventTicket,
+      generic: generic ?? this.generic,
+      storeCard: storeCard ?? this.storeCard,
+      barcode: barcode ?? this.barcode,
+      barcodes: barcodes ?? this.barcodes,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      foregroundColor: foregroundColor ?? this.foregroundColor,
+      groupingIdentifier: groupingIdentifier ?? this.groupingIdentifier,
+      labelColor: labelColor ?? this.labelColor,
+      logoText: logoText ?? this.logoText,
+      suppressStripShine: suppressStripShine ?? this.suppressStripShine,
+      sharingProhibited: sharingProhibited ?? this.sharingProhibited,
+      authenticationToken: authenticationToken ?? this.authenticationToken,
+      webServiceURL: webServiceURL ?? this.webServiceURL,
+      nfc: nfc ?? this.nfc,
+      semantics: semantics ?? this.semantics,
+    );
+  }
+
+  /// Overrides the current [passTypeIdentifier] and [teamIdentifier] with
+  /// the IDs from the certificate PEM file.
+  PassData copyWithFieldsFromCertificate(String certificatePem) {
+    final issuer = X509.fromPem(certificatePem);
+    return copyWith(
+      passTypeIdentifier: issuer.identifier,
+      teamIdentifier: issuer.teamIdentifier,
+    );
+  }
 }

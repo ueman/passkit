@@ -1,40 +1,18 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:crypto/crypto.dart';
-import 'package:meta/meta.dart';
-import 'package:passkit/src/apple_wwdr_certificate.dart';
+import 'package:passkit/src/archive_extensions.dart';
+import 'package:passkit/src/archive_file_extension.dart';
+import 'package:passkit/src/crypto/signature_verification.dart';
+import 'package:passkit/src/crypto/write_signature.dart';
+import 'package:passkit/src/pk_image.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
 import 'package:passkit/src/pkpass/personalization.dart';
-import 'package:passkit/src/pkpass/pk_pass_image.dart';
-import 'package:passkit/src/signature_verification.dart';
-import 'package:passkit/src/strings_parser/naive_strings_file_parser.dart';
-
-/// Follow [this](https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011)
-/// tutorial for instructions on how to create the signature with OpenSSL.
-///
-/// ```bash
-/// /// openssl smime -binary -sign -certfile WWDR.pem -signer passcertificate.pem -inkey passkey.pem -in manifest.json -out signature -outform DER -passin pass:12345
-/// ```
-///
-/// [manifest] is the file you need to pass to OpenSSL as `manifest.json`.
-/// [wwdrCertificate] is the file content you need to pass to OpenSSL as `WWDR.pem`
-///
-/// If you know how to do it in pure Dart code, please add an example or create
-/// a PR: https://github.com/ueman/passkit/issues/74
-typedef SignatureBuilder = Uint8List Function(
-  String manifest,
-  List<int> wwdrCertificate,
-);
-
-/// Dart uses a special fast decoder when using a fused [Utf8Decoder] and [JsonDecoder].
-/// This speeds up decoding.
-/// See
-/// - https://github.com/dart-lang/sdk/blob/5b2ea0c7a227d91c691d2ff8cbbeb5f7f86afdb9/sdk/lib/_internal/vm/lib/convert_patch.dart#L40
-final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
+import 'package:passkit/src/strings/strings_writer.dart';
+import 'package:passkit/src/utils.dart';
+import 'package:pkcs7/pkcs7.dart';
 
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Reference/PassKit_Bundle/Chapters/Introduction.html
 /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/index.html#//apple_ref/doc/uid/TP40012195
@@ -58,8 +36,8 @@ final _utf8JsonDecoder = const Utf8Decoder().fuse(const JsonDecoder());
 class PkPass {
   PkPass({
     required this.pass,
-    required this.manifest,
-    required this.sourceData,
+    this.manifest,
+    this.sourceData,
     this.background,
     this.footer,
     this.icon,
@@ -82,9 +60,10 @@ class PkPass {
   /// certificate.
   // TODO(any): Provide an async method for this.
   static PkPass fromBytes(
-    final List<int> bytes, {
+    final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
+    X509? overrideWwdrCert,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -99,17 +78,18 @@ class PkPass {
       archive.checkSha1Checksums(manifest);
       if (!skipSignatureVerification) {
         final manifestContent =
-            archive.findFile('manifest.json')!.content as List<int>;
-        final signatureContent = Uint8List.fromList(
-          archive.findFile('signature')!.content as List<int>,
-        );
+            archive.findFile('manifest.json')!.binaryContent;
+        final signatureContent = archive.findFile('signature')!.binaryContent;
 
-        verifySignature(
+        if (!verifySignature(
           signatureBytes: signatureContent,
           manifestBytes: manifestContent,
           teamIdentifier: passData.teamIdentifier,
           identifier: passData.passTypeIdentifier,
-        );
+          overrideWwdrCert: overrideWwdrCert,
+        )) {
+          throw Exception('validation failed');
+        }
       }
     }
 
@@ -123,13 +103,13 @@ class PkPass {
       // TODO(ueman): Images can be localized, too
       //              Maybe it's better to have an on-demand API, something like
       //              PkPass().getLogo(resolution: 3, languageCode: 'en_EN').
-      logo: archive.loadImage('logo'),
-      icon: archive.loadImage('icon'),
-      footer: archive.loadImage('footer'),
-      thumbnail: archive.loadImage('thumbnail'),
-      strip: archive.loadImage('strip'),
-      background: archive.loadImage('background'),
-      personalizationLogo: archive.loadImage('personalizationLogo'),
+      logo: archive.loadPkPassImage('logo'),
+      icon: archive.loadPkPassImage('icon'),
+      footer: archive.loadPkPassImage('footer'),
+      thumbnail: archive.loadPkPassImage('thumbnail'),
+      strip: archive.loadPkPassImage('strip'),
+      background: archive.loadPkPassImage('background'),
+      personalizationLogo: archive.loadPkPassImage('personalizationLogo'),
       // source
       sourceData: bytes,
     );
@@ -137,10 +117,15 @@ class PkPass {
 
   /// Parses a `.pkpasses` to a list of [PkPass]es.
   /// The mimetype of that file is `application/vnd.apple.pkpasses`.
-  /// A `.pkpasses` file cna contain up to ten [PkPass]es.
+  /// A `.pkpasses` file can contain up to ten [PkPass]es.
   ///
-  /// Setting [skipVerification] to true disables any checksum or signature
+  /// Setting [skipChecksumVerification] to true disables any checksum
   /// verification and validation.
+  ///
+  /// Setting [skipSignatureVerification] to true disables any signature
+  /// verification and validation. This may be needed for older passes which are
+  /// signed with an out of date [Apple WWDR](https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/)
+  /// certificate.
   ///
   /// Read more at:
   /// - https://developer.apple.com/documentation/walletpasses/distributing_and_updating_a_pass#3793284
@@ -148,9 +133,10 @@ class PkPass {
   // gracefully fall back to just parsing the PkPass file.
   // TODO(ueman): Provide an async method for this.
   static List<PkPass> passesFromBytes(
-    final List<int> bytes, {
+    final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
+    X509? overrideWwdrCert,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -162,9 +148,10 @@ class PkPass {
     return pkPasses
         .map(
           (file) => fromBytes(
-            file.content as List<int>,
+            file.binaryContent,
             skipChecksumVerification: skipChecksumVerification,
             skipSignatureVerification: skipSignatureVerification,
+            overrideWwdrCert: overrideWwdrCert,
           ),
         )
         .toList();
@@ -175,7 +162,7 @@ class PkPass {
 
   /// Mapping of files to their respective checksums. Typically not relevant for
   /// users of this package.
-  final Map<String, dynamic> manifest;
+  final Map<String, dynamic>? manifest;
 
   /// The [PassType] of this PkPass.
   PassType get type {
@@ -194,7 +181,7 @@ class PkPass {
     if (pass.storeCard != null) {
       return PassType.storeCard;
     }
-    return PassType.unknown;
+    throw Exception('unknown pass type');
   }
 
   /// The image displayed as the background of the front of the pass.
@@ -240,10 +227,11 @@ class PkPass {
   /// pairs.
   /// The language identifier looks as described in
   /// https://developer.apple.com/documentation/xcode/choosing-localization-regions-and-scripts
-  final Map<String, Map<String, dynamic>>? languageData;
+  final Map<String, Map<String, String>>? languageData;
 
   /// The bytes of this PkPass
-  final List<int> sourceData;
+  /// Returns `null` when this instance wasn't read from a file.
+  final Uint8List? sourceData;
 
   /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => pass.webServiceURL != null;
@@ -253,44 +241,49 @@ class PkPass {
   ///
   /// When written to disk, the file should have an ending of `.pkpass`.
   ///
-  /// In order to sign the pkpass file, pass a [signatureBuilder].
-  /// Follow [this](https://www.kodeco.com/2855-beginning-passbook-in-ios-6-part-1-2?page=4#toc-anchor-011)
-  /// tutorial for instructions on how to create the signature with OpenSSL.
-  /// ```bash
-  /// openssl smime -binary -sign -certfile WWDR.pem -signer passcertificate.pem -inkey passkey.pem -in manifest.json -out signature -outform DER -passin pass:12345
-  /// ```
+  /// [certificatePem] is the certificate to be used to sign the PkPass file.
   ///
-  /// The file that's created by OpenSSL should be returned via [signatureBuilder].
+  /// [privateKeyPem] is the private key PEM file. Right now,
+  /// it's only supported if it's not password protected.
   ///
-  /// If you know how to do it in pure Dart code, please add an example or create
-  /// a PR: https://github.com/ueman/passkit/issues/74
+  /// Read more about signing [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md).
+  ///
+  /// If either [certificatePem] or [privateKeyPem] is null, the resulting PkPass
+  /// will not be properly signed, but still generated.
+  ///
+  /// Setting [overrideWwdrCert] overrides the Apple WWDR certificate, that's
+  /// shipped with this library.
+  ///
+  /// Apple's documentation [here](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html)
+  /// explains which fields to set for which type of pass.
   ///
   /// Remarks:
-  /// - There's no support for verifying that the signature matches the PkPass
-  /// - There's no support for localization
-  /// - There's no support for personalization
   /// - Image sizes aren't checked, which means it's possible to create passes
   ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
-  @experimental
-  Uint8List? write({SignatureBuilder? signatureBuilder}) {
+  Uint8List? write({
+    required String? certificatePem,
+    required String? privateKeyPem,
+    X509? overrideWwdrCert,
+  }) {
     final archive = Archive();
-    final encoder = JsonEncoder.withIndent('  ');
 
-    final passFile = ArchiveFile.string(
+    final passContent = utf8JsonEncode(pass.toJson());
+    final passFile = ArchiveFile(
       'pass.json',
-      encoder.convert(pass.toJson()),
+      passContent.length,
+      passContent,
     );
     archive.addFile(passFile);
-    /*
+
     if (personalization != null) {
-      encoder.addFile(
-        ArchiveFile.string(
-          'personalization.json',
-          jsonEncode(personalization!.toJson()),
-        ),
+      final personalizationContent = utf8JsonEncode(personalization!.toJson());
+      final personalizationFile = ArchiveFile(
+        'personalization.json',
+        personalizationContent.length,
+        personalizationContent,
       );
+      archive.addFile(personalizationFile);
     }
-    */
 
     logo?.writeToArchive(archive, 'logo');
     background?.writeToArchive(archive, 'background');
@@ -298,22 +291,33 @@ class PkPass {
     footer?.writeToArchive(archive, 'footer');
     strip?.writeToArchive(archive, 'strip');
     thumbnail?.writeToArchive(archive, 'thumbnail');
+    personalizationLogo?.writeToArchive(archive, 'personalizationLogo');
 
-    final manifest = <String, String>{};
-    for (final file in archive.files) {
-      manifest[file.name] = sha1.convert(file.content as List<int>).toString();
+    final translationEntries = languageData?.entries;
+    if (translationEntries != null && translationEntries.isNotEmpty) {
+      // TODO(any): Ensure every translation file has the same amount of key value pairs.
+
+      for (final entry in translationEntries) {
+        final name = '${entry.key}.lproj/pass.strings';
+        final localizationFile =
+            ArchiveFile.string(name, toStringsFile(entry.value));
+        archive.addFile(localizationFile);
+      }
     }
 
-    final manifestContent = encoder.convert(manifest);
-    final manifestFile = ArchiveFile.string(
-      'manifest.json',
-      manifestContent,
-    );
-    archive.addFile(manifestFile);
+    final manifestFile = archive.createManifest();
 
-    if (signatureBuilder != null) {
-      final signature =
-          signatureBuilder(manifestContent, worldwide_Developer_Relations_G4);
+    if (certificatePem != null && privateKeyPem != null) {
+      final signature = writeSignature(
+        certificatePem,
+        privateKeyPem,
+        manifestFile,
+        pass.passTypeIdentifier,
+        pass.teamIdentifier,
+        true,
+        overrideWwdrCert,
+      );
+
       final signatureFile = ArchiveFile(
         'signature',
         signature.length,
@@ -321,25 +325,45 @@ class PkPass {
       );
       archive.addFile(signatureFile);
     }
+
     final pkpass = ZipEncoder().encode(archive);
-    if (pkpass == null) {
-      return null;
-    }
-    return Uint8List.fromList(pkpass);
+    return pkpass == null ? null : Uint8List.fromList(pkpass);
+  }
+
+  PkPass copyWith({
+    PassData? pass,
+    Map<String, dynamic>? manifest,
+    PkImage? background,
+    PkImage? footer,
+    PkImage? icon,
+    PkImage? logo,
+    PkImage? strip,
+    PkImage? thumbnail,
+    PkImage? personalizationLogo,
+    Personalization? personalization,
+    Map<String, Map<String, String>>? languageData,
+    Uint8List? sourceData,
+  }) {
+    return PkPass(
+      pass: pass ?? this.pass,
+      manifest: manifest ?? this.manifest,
+      background: background ?? this.background,
+      footer: footer ?? this.footer,
+      icon: icon ?? this.icon,
+      logo: logo ?? this.logo,
+      strip: strip ?? this.strip,
+      thumbnail: thumbnail ?? this.thumbnail,
+      personalizationLogo: personalizationLogo ?? this.personalizationLogo,
+      personalization: personalization ?? this.personalization,
+      languageData: languageData ?? this.languageData,
+      sourceData: sourceData ?? this.sourceData,
+    );
   }
 }
 
 // This is intentionally not exposed to keep this an implementation detail.
 // Tests should be written against the PkPass class directly.
 extension on Archive {
-  List<int>? findBytesForFile(String fileName) =>
-      findFile(fileName)?.content as List<int>?;
-
-  Uint8List? findUint8ListForFile(String fileName) {
-    final data = findBytesForFile(fileName);
-    return data == null ? null : Uint8List.fromList(data);
-  }
-
   /// Returns a map of locale to a map of resolution to image bytes.
   /// Returns null, if no image is localized
   Map<String, Map<int, Uint8List>>? loadLocalizedImage(String imageName) {
@@ -367,11 +391,11 @@ extension on Archive {
       }
 
       if (fileName.endsWith('@2x.png')) {
-        map[language]![2] = Uint8List.fromList(file.content as List<int>);
+        map[language]![2] = file.binaryContent;
       } else if (fileName.endsWith('@3x.png')) {
-        map[language]![3] = Uint8List.fromList(file.content as List<int>);
+        map[language]![3] = file.binaryContent;
       } else {
-        map[language]![1] = Uint8List.fromList(file.content as List<int>);
+        map[language]![1] = file.binaryContent;
       }
     }
 
@@ -390,35 +414,16 @@ extension on Archive {
     if (bytes == null) {
       return null;
     }
-    return _utf8JsonDecoder.convert(bytes) as Map<String, dynamic>?;
+    return utf8JsonDecode(bytes);
   }
 
-  PkImage? loadImage(String name) {
+  PkImage? loadPkPassImage(String name) {
     return PkImage.fromImages(
-      image1: findUint8ListForFile('$name.png'),
-      image2: findUint8ListForFile('$name@2x.png'),
-      image3: findUint8ListForFile('$name@3x.png'),
+      image1: findBytesForFile('$name.png'),
+      image2: findBytesForFile('$name@2x.png'),
+      image3: findBytesForFile('$name@3x.png'),
       localizedImages: loadLocalizedImage(name),
     );
-  }
-
-  Map<String, Map<String, String>> getTranslations() {
-    final languageData = <String, Map<String, String>>{};
-
-    // The Archive object doesn't have APIs to work with folders.
-    // Instead the file name contains a `/` indicating the file is within a folder.
-    // Example: `file.name == en.lproj/pass.strings`
-    final translationFiles = files
-        .where((element) => element.isFile)
-        .where((file) => file.name.endsWith('.lproj/pass.strings'));
-
-    for (final languageFile in translationFiles) {
-      final language = languageFile.name.split('.').first;
-
-      languageData[language] =
-          parseStringsFile(languageFile.content as List<int>);
-    }
-    return languageData;
   }
 
   PassData readPass() {
@@ -430,49 +435,12 @@ extension on Archive {
     }
   }
 
-  Map<String, dynamic> readManifest() {
-    final manifestJson = findFileAndReadAsJson('manifest.json');
-    if (manifestJson != null) {
-      return manifestJson;
-    } else {
-      throw MissingManifestJsonException();
-    }
-  }
-
   Personalization? readPersonalization() {
     final personalizationFile = findFileAndReadAsJson('personalization.json');
     if (personalizationFile != null) {
       return Personalization.fromJson(personalizationFile);
     }
     return null;
-  }
-
-  /// To create the manifest file, recursively list the files in the package
-  /// (except the manifest file and signature), calculate the SHA-1 hash of the
-  /// contents of those files, and store the data in a dictionary. The keys are
-  /// relative paths to the file from the pass package. The values are the SHA-1
-  /// hash (hex encoded) of the data at that path. Write this dictionary to the
-  /// file manifest.json at the top level of the pass package.
-  ///
-  /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW1
-  void checkSha1Checksums(Map<String, dynamic> manifest) {
-    final filesWithoutSignatureAndManifest = files.where((file) {
-      return file.name != 'signature' && file.name != 'manifest.json';
-    }).toList();
-
-    final fileInArchiveCount = filesWithoutSignatureAndManifest.length;
-    final manifestCount = manifest.length;
-    if (fileInArchiveCount != manifestCount) {
-      throw MissingChecksumException();
-    }
-
-    for (final file in filesWithoutSignatureAndManifest) {
-      final checksumInManifest = manifest[file.name] as String?;
-      final digest = sha1.convert(file.content as List<int>);
-      if (checksumInManifest != digest.toString()) {
-        throw ChecksumMismatchException(file.name);
-      }
-    }
   }
 }
 
@@ -488,6 +456,24 @@ extension on PkImage {
     if (image3 != null) {
       archive
           .addFile(ArchiveFile('$name@3x.png', image3!.lengthInBytes, image3));
+    }
+
+    if (localizedImages != null) {
+      for (final entry in localizedImages!.entries) {
+        final lang = entry.key;
+        for (final image in entry.value.entries) {
+          final fileName = switch (image.key) {
+            1 => '$lang.lproj/$name.png',
+            2 => '$lang.lproj/$name@2x.png',
+            3 => '$lang.lproj/$name@3x.png',
+            _ => throw Exception('This case should never happen'),
+          };
+
+          archive.addFile(
+            ArchiveFile(fileName, image.value.lengthInBytes, image.value),
+          );
+        }
+      }
     }
   }
 }

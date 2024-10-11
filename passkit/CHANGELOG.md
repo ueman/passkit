@@ -1,3 +1,37 @@
+## Unreleased
+
+- No longer mark `PkPass.write()` as experimental
+
+## 0.0.10
+
+- Only support `image: ^4.1.1`
+
+## 0.0.9
+
+- Increase [`intl`](https://pub.dev/packages/intl) version range, which makes it compatible with older Flutter versions
+- Allow older versions of `archive`, `image`, `json_annotation`, `pointycastle` which should make version conflicts less likely
+- Allow the library to be used on Dart 3.3 and newer
+- Add convenience methods to create PkImage objects
+  - `createIcon()` creates, scales and converts a given image to an icon according to the spec
+  - `createLogo()` creates, scales and converts a given image to a logo according to the spec
+  - `createFooter()` creates, scales and converts a given image to a footer according to the spec
+- Add a couple more `copyWith` methods to various classes
+- Add a `createEventWithThumbnail()` method, which creates an opinionated event PkPass object.
+
+## 0.0.8
+
+- Make it possible to override the bundled Apple WWDR G4 certificate
+  - Use the `overrideWwdrCert` argument of `PkPass.fromBytes()`
+  - Use the `overrideWwdrCert` argument of `PkOrder.fromBytes()`
+- Added the ability to create localized passes
+- Remove dependencies on the `encrypt` and `asn1lib` packages.
+
+## 0.0.7
+
+- The library is now able to create properly signed `pkpass` files that work with Apple Wallet.
+  Follow the guide [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md) to learn more.
+- Pretty much every use of `List<int>` has been changed to `Uint8List`. This is potentially breaking.
+
 ## 0.0.6
 
 - Add ability to create PkPass signature via OpenSSL or other command line tools

@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:passkit/src/archive_extensions.dart';
+import 'package:passkit/src/archive_file_extension.dart';
+import 'package:passkit/src/crypto/signature_verification.dart';
+import 'package:passkit/src/pk_image.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
-import 'package:passkit/src/pkpass/pk_pass_image.dart';
-import 'package:passkit/src/signature_verification.dart';
+import 'package:pkcs7/pkcs7.dart';
 
 import 'order_data.dart';
 
@@ -17,13 +19,14 @@ class PkOrder {
   });
 
   /// Parses bytes to a [PkOrder] instance.
-  /// Setting [skipVerification] to true disables any checksum or signature
-  /// verification and validation.
+  /// Setting [skipChecksumVerification] and [skipSignatureVerification] to true
+  /// disables checksum or signature verification and validation.
   // TODO(ueman): Provide an async method for this.
   static PkOrder fromBytes(
-    final List<int> bytes, {
+    final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
+    X509? overrideWwdrCert,
   }) {
     if (bytes.isEmpty) {
       throw EmptyBytesException();
@@ -39,17 +42,18 @@ class PkOrder {
 
       if (skipSignatureVerification) {
         final manifestContent =
-            archive.findFile('manifest.json')!.content as List<int>;
-        final signatureContent = Uint8List.fromList(
-          archive.findFile('signature')!.content as List<int>,
-        );
+            archive.findFile('manifest.json')!.binaryContent;
+        final signatureContent = archive.findFile('signature')!.binaryContent;
 
-        verifySignature(
+        if (!verifySignature(
           signatureBytes: signatureContent,
           manifestBytes: manifestContent,
           identifier: order.orderTypeIdentifier,
           teamIdentifier: order.merchant.merchantIdentifier,
-        );
+          overrideWwdrCert: overrideWwdrCert,
+        )) {
+          throw Exception('validation failed');
+        }
       }
     }
 
@@ -98,7 +102,7 @@ class PkOrder {
   }
 
   /// The bytes of this PkPass
-  final List<int> sourceData;
+  final Uint8List sourceData;
 
   /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => order.webServiceURL != null;

@@ -1,8 +1,17 @@
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart';
 import 'package:pkcs7/pkcs7.dart';
 
-X509 get wwdrG4 =>
+/// This is the content of https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer
+///
+/// You can override this property to use a different certificate. Make sure to
+/// override it before reading or creating any PkPass or Order files.
+///
+/// You can find other certificates at:
+/// - https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/
+/// - https://www.apple.com/certificateauthority/
+final X509 wwdrG4 =
     X509.fromDer(Uint8List.fromList(worldwide_Developer_Relations_G4));
 
 /// This is the content of https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer .
@@ -12,8 +21,9 @@ X509 get wwdrG4 =>
 /// More info at:
 /// https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/
 /// https://www.apple.com/certificateauthority/
-// ignore: constant_identifier_names
-const worldwide_Developer_Relations_G4 = [
+@internal
+// ignore: constant_identifier_names, non_constant_identifier_names
+final worldwide_Developer_Relations_G4 = Uint8List.fromList([
   48,
   130,
   4,
@@ -1127,4 +1137,4 @@ const worldwide_Developer_Relations_G4 = [
   207,
   242,
   159,
-];
+]);

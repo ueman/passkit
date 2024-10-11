@@ -1,6 +1,6 @@
 library;
 
-// Order
+export 'src/crypto/apple_wwdr_certificate.dart';
 export 'src/order/order_address.dart';
 export 'src/order/order_application.dart';
 export 'src/order/order_barcode.dart';
@@ -16,18 +16,19 @@ export 'src/order/order_return.dart';
 export 'src/order/order_return_info.dart';
 export 'src/order/order_shipping_fulfillment.dart';
 export 'src/order/pk_order.dart';
-// PkPass
+export 'src/pk_image.dart';
 export 'src/pkpass/barcode.dart';
 export 'src/pkpass/beacon.dart';
 export 'src/pkpass/field_dict.dart';
+export 'src/pkpass/image_utilities.dart';
 export 'src/pkpass/location.dart';
 export 'src/pkpass/nfc.dart';
+export 'src/pkpass/opinionated_template.dart';
 export 'src/pkpass/parse_utils.dart';
 export 'src/pkpass/pass_data.dart';
 export 'src/pkpass/pass_structure.dart';
 export 'src/pkpass/pass_type.dart';
 export 'src/pkpass/personalization.dart';
-export 'src/pkpass/pk_pass_image.dart';
 export 'src/pkpass/pkpass.dart';
 export 'src/pkpass/semantic_tag_type.dart';
 export 'src/pkpass/semantics.dart';

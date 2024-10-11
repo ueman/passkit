@@ -14,7 +14,10 @@ void main() {
       skipSignatureVerification: true,
     );
 
-    final createdPass = og.write()!;
+    final createdPass = og.write(
+      certificatePem: null,
+      privateKeyPem: null,
+    )!;
 
     final copy = PkPass.fromBytes(
       Uint8List.fromList(createdPass),
@@ -29,8 +32,8 @@ void main() {
     );
 
     // pass.json file is not identical due to whitespace differences
-    final copyManifest = copy.manifest..remove('pass.json');
-    final ogManifest = og.manifest..remove('pass.json');
+    final copyManifest = copy.manifest?..remove('pass.json');
+    final ogManifest = og.manifest?..remove('pass.json');
 
     expect(copyManifest, ogManifest);
   });

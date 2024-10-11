@@ -1,6 +1,7 @@
 ## 0.0.5
 
 - Add ability to create an image from a PkPass
+- Require `passkit` v0.0.8
 
 ## 0.0.4
 

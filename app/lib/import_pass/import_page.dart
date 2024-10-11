@@ -22,7 +22,7 @@ class PkPassImportSource {
 
   final String? contentResolverPath;
   final String? filePath;
-  final List<int>? bytes;
+  final Uint8List? bytes;
 
   Future<PkPass> getPass() async {
     if (contentResolverPath != null) {
@@ -101,7 +101,7 @@ class _ImportPassPageState extends State<ImportPassPage> {
               await db.passEntryDao.insertPassEntry(
                 PassEntry(
                   id: pass!.pass.serialNumber,
-                  pass: Uint8List.fromList(pass!.sourceData),
+                  pass: pass!.sourceData!,
                   description: pass!.pass.description,
                 ),
               );

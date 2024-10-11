@@ -38,4 +38,18 @@ class Beacon {
 
   /// Converts this instance to a JSON object
   Map<String, dynamic> toJson() => _$BeaconToJson(this);
+
+  Beacon copyWith({
+    int? major,
+    int? minor,
+    String? proximityUUID,
+    String? relevantText,
+  }) {
+    return Beacon(
+      major: major ?? this.major,
+      minor: minor ?? this.minor,
+      proximityUUID: proximityUUID ?? this.proximityUUID,
+      relevantText: relevantText ?? this.relevantText,
+    );
+  }
 }

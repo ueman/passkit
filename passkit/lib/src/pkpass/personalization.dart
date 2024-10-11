@@ -34,6 +34,19 @@ class Personalization {
   /// user. The signup form’s fields are generated based on these keys.
   @JsonKey(name: 'requiredPersonalizationFields')
   final List<RequiredPersonalizationFields> requiredPersonalizationFields;
+
+  Personalization copyWith({
+    String? description,
+    String? termsAndConditions,
+    List<RequiredPersonalizationFields>? requiredPersonalizationFields,
+  }) {
+    return Personalization(
+      description: description ?? this.description,
+      termsAndConditions: termsAndConditions ?? this.termsAndConditions,
+      requiredPersonalizationFields:
+          requiredPersonalizationFields ?? this.requiredPersonalizationFields,
+    );
+  }
 }
 
 enum RequiredPersonalizationFields {

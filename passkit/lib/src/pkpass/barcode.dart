@@ -42,6 +42,20 @@ class Barcode {
 
   /// Converts this instance to a JSON object
   Map<String, dynamic> toJson() => _$BarcodeToJson(this);
+
+  Barcode copyWith({
+    String? altText,
+    PkPassBarcodeType? format,
+    String? message,
+    String? messageEncoding,
+  }) {
+    return Barcode(
+      altText: altText ?? this.altText,
+      format: format ?? this.format,
+      message: message ?? this.message,
+      messageEncoding: messageEncoding ?? this.messageEncoding,
+    );
+  }
 }
 
 enum PkPassBarcodeType {
