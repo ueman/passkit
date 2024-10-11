@@ -191,8 +191,7 @@ void main() {
 
 Please feel encouraged to create PRs for the following features.
 
-- PassKit Web Service: This functionality is existing, but might not work. Please file an issue or create a PR with a fix for bugs you encounter.
-  - Push Notification update registration is only working on iOS due to this whole specification being an Apple thingy.
+- Push Notification update registration is only working on iOS due to it being an exclusive Apple thingy.
 - Localization: Existing, but still inconvenient to use. There might be issues due to localizations being UTF-16 formatted, but the library currently uses UTF-8 to read localizations.
 
 ## Bugs and parsing issues

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:meta/meta.dart';
 import 'package:passkit/src/archive_extensions.dart';
 import 'package:passkit/src/archive_file_extension.dart';
 import 'package:passkit/src/crypto/signature_verification.dart';
@@ -261,7 +260,6 @@ class PkPass {
   /// Remarks:
   /// - Image sizes aren't checked, which means it's possible to create passes
   ///   that look odd and wrong in Apple wallet or [passkit_ui](https://pub.dev/packages/passkit_ui)
-  @experimental
   Uint8List? write({
     required String? certificatePem,
     required String? privateKeyPem,
