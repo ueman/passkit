@@ -1,11 +1,13 @@
 name: apple_passkit
-description: Plugin to deal with PKPass files on iOS. You can check for availabililty and add them.
+description: Plugin to deal with Apple Wallet & PKPass files on iOS. You can check for availabililty and add them.
 version: 1.0.0+1
 repository: https://github.com/ueman/passkit/
 issue_tracker: https://github.com/ueman/passkit/issues
 topics:
   - passkit
   - pkpass
+  - apple-wallet
+
 screenshots:
   - description: "Screenshot of a PkPass of the boarding pass type"
     path: assets/boarding_pass.webp

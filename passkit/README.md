@@ -11,7 +11,7 @@
 
 > 🚧 API is subject to change! 🚧
 
-PassKit allows you to work with Apple's PkPass and Order files. This is a pure Dart library and works in Flutter, on the web and on servers. No Flutter needed.
+PassKit allows you to work with Apple's PkPass and Order files. Those are the files that are usually managed via Apple Wallet. This is a pure Dart library and works with Flutter, on the web and on servers.
 
 In order to show PassKit and Order files in Flutter, use the [`passkit_ui`](https://pub.dev/packages/passkit_ui) package, which includes ready made widgets.
 

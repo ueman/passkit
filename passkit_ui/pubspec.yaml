@@ -1,11 +1,13 @@
 name: passkit_ui
-description: A UI kit for PassKit files. Uses the `passkit` package under the hood.
+description: A UI kit for PassKit files (usually shown in Apple Wallet). It uses the `passkit` package under the hood.
 version: 0.0.5
 repository: https://github.com/ueman/passkit
 issue_tracker: https://github.com/ueman/passkit/issues
 topics:
   - passkit
   - pkpass
+  - apple-wallet
+
 screenshots:
   - description: "Screenshot of a PkPass of the boarding pass type"
     path: assets/boarding_pass.webp

@@ -1,11 +1,13 @@
 name: passkit
-description: Pure Dart library which can create and read Apple's PkPass files. Works on servers and in apps.
+description: Pure Dart library which can create and read Apple's PkPass files (which are usually shown in Apple Wallet). Works on servers and in apps.
 version: 0.0.10
 repository: https://github.com/ueman/passkit
 issue_tracker: https://github.com/ueman/passkit/issues
 topics:
   - passkit
   - pkpass
+  - apple-wallet
+
 screenshots:
   - description: "Screenshot of a PkPass of the boarding pass type"
     path: assets/boarding_pass.webp
