@@ -36,4 +36,17 @@ class Nfc {
   /// the authentication requirement.
   @JsonKey(name: 'requiresAuthentication')
   final bool? requiresAuthentication;
+
+  Nfc copyWith({
+    String? message,
+    String? encryptionPublicKey,
+    bool? requiresAuthentication,
+  }) {
+    return Nfc(
+      message: message ?? this.message,
+      encryptionPublicKey: encryptionPublicKey ?? this.encryptionPublicKey,
+      requiresAuthentication:
+          requiresAuthentication ?? this.requiresAuthentication,
+    );
+  }
 }

@@ -17,6 +17,16 @@ class SemanticTagTypeWifiNetwork {
   /// The name for the WiFi network.
   @JsonKey(name: 'ssid')
   final String ssid;
+
+  SemanticTagTypeWifiNetwork copyWith({
+    String? password,
+    String? ssid,
+  }) {
+    return SemanticTagTypeWifiNetwork(
+      password: password ?? this.password,
+      ssid: ssid ?? this.ssid,
+    );
+  }
 }
 
 /// An object that represents an amount of money and type of currency.
@@ -40,6 +50,16 @@ class SemanticTagTypeCurrencyAmount {
   // ISO 4217 currency code as a string
   @JsonKey(name: 'currencyCode')
   final String? currencyCode;
+
+  SemanticTagTypeCurrencyAmount copyWith({
+    String? amount,
+    String? currencyCode,
+  }) {
+    return SemanticTagTypeCurrencyAmount(
+      amount: amount ?? this.amount,
+      currencyCode: currencyCode ?? this.currencyCode,
+    );
+  }
 }
 
 /// An object that represents the coordinates of a location.
@@ -59,6 +79,16 @@ class SemanticTagTypeLocation {
   /// The longitude, in degrees.
   @JsonKey(name: 'longitude')
   final double longitude;
+
+  SemanticTagTypeLocation copyWith({
+    double? latitude,
+    double? longitude,
+  }) {
+    return SemanticTagTypeLocation(
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+    );
+  }
 }
 
 /// An object that represents the identification of a seat for a transit journey
@@ -108,6 +138,24 @@ class SemanticTagTypeSeat {
   // localizable string
   @JsonKey(name: 'seatType')
   final String? seatType;
+
+  SemanticTagTypeSeat copyWith({
+    String? seatDescription,
+    String? seatIdentifier,
+    String? seatNumber,
+    String? seatRow,
+    String? seatSection,
+    String? seatType,
+  }) {
+    return SemanticTagTypeSeat(
+      seatDescription: seatDescription ?? this.seatDescription,
+      seatIdentifier: seatIdentifier ?? this.seatIdentifier,
+      seatNumber: seatNumber ?? this.seatNumber,
+      seatRow: seatRow ?? this.seatRow,
+      seatSection: seatSection ?? this.seatSection,
+      seatType: seatType ?? this.seatType,
+    );
+  }
 }
 
 /// An object that represents the coordinates of a location.
@@ -158,4 +206,25 @@ class SemanticTagTypePersonNameComponents {
   /// The phonetic representation of the person’s name.
   @JsonKey(name: 'phoneticRepresentation')
   final String? phoneticRepresentation;
+
+  SemanticTagTypePersonNameComponents copyWith({
+    String? familyName,
+    String? givenName,
+    String? middleName,
+    String? namePrefix,
+    String? nameSuffix,
+    String? nickname,
+    String? phoneticRepresentation,
+  }) {
+    return SemanticTagTypePersonNameComponents(
+      familyName: familyName ?? this.familyName,
+      givenName: givenName ?? this.givenName,
+      middleName: middleName ?? this.middleName,
+      namePrefix: namePrefix ?? this.namePrefix,
+      nameSuffix: nameSuffix ?? this.nameSuffix,
+      nickname: nickname ?? this.nickname,
+      phoneticRepresentation:
+          phoneticRepresentation ?? this.phoneticRepresentation,
+    );
+  }
 }

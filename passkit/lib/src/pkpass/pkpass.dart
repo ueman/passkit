@@ -37,8 +37,8 @@ import 'package:pkcs7/pkcs7.dart';
 class PkPass {
   PkPass({
     required this.pass,
-    required this.manifest,
-    required this.sourceData,
+    this.manifest,
+    this.sourceData,
     this.background,
     this.footer,
     this.icon,
@@ -330,6 +330,36 @@ class PkPass {
 
     final pkpass = ZipEncoder().encode(archive);
     return pkpass == null ? null : Uint8List.fromList(pkpass);
+  }
+
+  PkPass copyWith({
+    PassData? pass,
+    Map<String, dynamic>? manifest,
+    PkImage? background,
+    PkImage? footer,
+    PkImage? icon,
+    PkImage? logo,
+    PkImage? strip,
+    PkImage? thumbnail,
+    PkImage? personalizationLogo,
+    Personalization? personalization,
+    Map<String, Map<String, String>>? languageData,
+    Uint8List? sourceData,
+  }) {
+    return PkPass(
+      pass: pass ?? this.pass,
+      manifest: manifest ?? this.manifest,
+      background: background ?? this.background,
+      footer: footer ?? this.footer,
+      icon: icon ?? this.icon,
+      logo: logo ?? this.logo,
+      strip: strip ?? this.strip,
+      thumbnail: thumbnail ?? this.thumbnail,
+      personalizationLogo: personalizationLogo ?? this.personalizationLogo,
+      personalization: personalization ?? this.personalization,
+      languageData: languageData ?? this.languageData,
+      sourceData: sourceData ?? this.sourceData,
+    );
   }
 }
 

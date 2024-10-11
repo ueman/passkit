@@ -199,6 +199,42 @@ class FieldDict {
     // TODO(any): Could be localizable
     return value?.toString();
   }
+
+  FieldDict copyWith({
+    String? attributedValue,
+    String? changeMessage,
+    List<DataDetectorTypes>? dataDetectorTypes,
+    String? key,
+    String? label,
+    PkTextAlignment? textAlignment,
+    Object? value,
+    String? currencyCode,
+    DateStyle? dateStyle,
+    DateStyle? timeStyle,
+    NumberStyle? numberStyle,
+    bool? ignoresTimeZone,
+    bool? isRelative,
+    Semantics? semantics,
+    int? row,
+  }) {
+    return FieldDict(
+      attributedValue: attributedValue ?? this.attributedValue,
+      changeMessage: changeMessage ?? this.changeMessage,
+      dataDetectorTypes: dataDetectorTypes ?? this.dataDetectorTypes,
+      key: key ?? this.key,
+      label: label ?? this.label,
+      textAlignment: textAlignment ?? this.textAlignment,
+      value: value ?? this.value,
+      currencyCode: currencyCode ?? this.currencyCode,
+      dateStyle: dateStyle ?? this.dateStyle,
+      timeStyle: timeStyle ?? this.timeStyle,
+      numberStyle: numberStyle ?? this.numberStyle,
+      ignoresTimeZone: ignoresTimeZone ?? this.ignoresTimeZone,
+      isRelative: isRelative ?? this.isRelative,
+      semantics: semantics ?? this.semantics,
+      row: row ?? this.row,
+    );
+  }
 }
 
 enum PkTextAlignment {

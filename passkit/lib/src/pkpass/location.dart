@@ -34,4 +34,18 @@ class Location {
   /// “Store nearby on 1st and Main.”
   @JsonKey(name: 'relevantText')
   final String? relevantText;
+
+  Location copyWith({
+    double? altitude,
+    double? latitude,
+    double? longitude,
+    String? relevantText,
+  }) {
+    return Location(
+      altitude: altitude ?? this.altitude,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      relevantText: relevantText ?? this.relevantText,
+    );
+  }
 }
