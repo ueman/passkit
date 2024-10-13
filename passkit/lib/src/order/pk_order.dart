@@ -140,6 +140,14 @@ class PkOrder {
   /// Apple's documentation [here](https://developer.apple.com/documentation/walletorders)
   /// explains which fields to set.
   ///
+  /// ## Images
+  ///
+  /// Images in order files work quite differently from passes, since they have
+  /// no predefined name.
+  /// You have to add the name, for example `something.png`, to the various properties,
+  /// and then pass the the image with the name for the [images] argument here.
+  /// Make sure the names always match, otherwise the order file might not work!
+  ///
   /// Remarks:
   /// - Image sizes aren't checked, which means it's possible to create orders
   ///   that look odd and wrong in the Apple Wallet app or in
@@ -148,7 +156,7 @@ class PkOrder {
     required String? certificatePem,
     required String? privateKeyPem,
     X509? overrideWwdrCert,
-    required List<(String name, PkImage)> images,
+    required List<(String name, PkImage image)> images,
   }) {
     final archive = Archive();
 
