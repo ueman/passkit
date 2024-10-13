@@ -554,6 +554,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: "2237616a36c0d69aef7549ab439b833fb7f9fb9fc861af2cc9ac3eedddd69ca8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
   intl:
     dependency: "direct main"
     description:
@@ -712,7 +720,7 @@ packages:
       path: "../passkit"
       relative: true
     source: path
-    version: "0.0.7"
+    version: "0.0.10"
   passkit_ui:
     dependency: "direct main"
     description:
