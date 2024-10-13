@@ -88,7 +88,10 @@ class OrderShippingFulfillment {
   /// Default: shipping
   ///
   /// Possible Values: shipping, delivery
-  @JsonKey(name: 'shippingType')
+  @JsonKey(
+    name: 'shippingType',
+    defaultValue: OrderShippingFulfillmentType.shipping,
+  )
   final OrderShippingFulfillmentType shippingType;
 
   /// A localized message describing the fulfillment status.
@@ -135,7 +138,20 @@ enum OrderShippingFulfillmentStatus {
   issue,
 
   @JsonValue('cancelled')
-  cancelled
+  cancelled;
+
+  double toProgress() {
+    return switch (this) {
+      OrderShippingFulfillmentStatus.open => 0,
+      OrderShippingFulfillmentStatus.processing => 0.25,
+      OrderShippingFulfillmentStatus.shipped => 0.375,
+      OrderShippingFulfillmentStatus.onTheWay => 0.5,
+      OrderShippingFulfillmentStatus.outForDelivery => 0.75,
+      OrderShippingFulfillmentStatus.delivered => 1,
+      OrderShippingFulfillmentStatus.issue => 0,
+      OrderShippingFulfillmentStatus.cancelled => 0,
+    };
+  }
 }
 
 @JsonSerializable()

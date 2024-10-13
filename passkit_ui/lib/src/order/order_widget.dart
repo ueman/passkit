@@ -77,17 +77,20 @@ class OrderWidget extends StatelessWidget {
       child: ListView(
         children: [
           if (order.order.merchant.logo != null)
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Squircle(
-                radius: 20,
-                child: Image.memory(
-                  order
-                      .loadImage(order.order.merchant.logo!)
-                      .forCorrectPixelRatio(devicePixelRatio),
-                  fit: BoxFit.contain,
-                  width: 150,
-                  height: 150,
+            SizedBox(
+              width: 150,
+              height: 150,
+              child: Center(
+                child: Squircle(
+                  radius: 20,
+                  child: Image.memory(
+                    order
+                        .loadImage(order.order.merchant.logo!)
+                        .forCorrectPixelRatio(devicePixelRatio),
+                    fit: BoxFit.cover,
+                    width: 120,
+                    height: 120,
+                  ),
                 ),
               ),
             ),
@@ -110,11 +113,13 @@ class OrderWidget extends StatelessWidget {
               subtitle: Text(order.order.orderProvider!.displayName),
             ),
           if (order.order.fulfillments != null)
-            for (final fulfillment in order.order.fulfillments!)
+            for (final fulfillment in order.order.fulfillments!.indexed)
               _FulfillmentSection(
-                fulfillment: fulfillment,
+                fulfillment: fulfillment.$2,
                 order: order,
                 onTrackingLinkClicked: onTrackingLinkClicked,
+                index: fulfillment.$1,
+                totalOrders: order.order.fulfillments!.length,
               ),
           DetailsSection(order: order),
           InfoSection(
@@ -239,11 +244,15 @@ class _FulfillmentSection extends StatelessWidget {
     required this.fulfillment,
     required this.order,
     required this.onTrackingLinkClicked,
+    required this.index,
+    required this.totalOrders,
   });
 
   final Object fulfillment;
   final PkOrder order;
   final ValueChanged<Uri> onTrackingLinkClicked;
+  final int index;
+  final int totalOrders;
 
   @override
   Widget build(BuildContext context) {
@@ -252,9 +261,14 @@ class _FulfillmentSection extends StatelessWidget {
           fulfillment: shipping,
           order: order,
           onTrackingLinkClicked: onTrackingLinkClicked,
+          index: index,
+          totalOrders: totalOrders,
         ),
-      OrderPickupFulfillment orderPickup =>
-        _OrderPickupFulfillmentWidget(fulfillment: orderPickup),
+      OrderPickupFulfillment orderPickup => _OrderPickupFulfillmentWidget(
+          fulfillment: orderPickup,
+          index: index,
+          totalOrders: totalOrders,
+        ),
       _ => const SizedBox.shrink()
     };
   }
@@ -265,11 +279,15 @@ class _OrderShippingFulfillmentWidget extends StatelessWidget {
     required this.fulfillment,
     required this.order,
     required this.onTrackingLinkClicked,
+    required this.index,
+    required this.totalOrders,
   });
 
   final OrderShippingFulfillment fulfillment;
   final PkOrder order;
   final ValueChanged<Uri> onTrackingLinkClicked;
+  final int index;
+  final int totalOrders;
 
   @override
   Widget build(BuildContext context) {
@@ -278,18 +296,51 @@ class _OrderShippingFulfillmentWidget extends StatelessWidget {
 
     return CupertinoListSection.insetGrouped(
       children: [
-        CupertinoListTile(
-          title: Text(fulfillment.status.name),
-          subtitle: Text(fulfillment.deliveredAt?.toString() ?? ''),
-          trailing: const Icon(
-            CupertinoIcons.check_mark_circled_solid,
-            color: CupertinoColors.systemGreen,
+        Text(
+          l10n.shipmentXFromY(index + 1, totalOrders),
+          textAlign: TextAlign.center,
+          style: CupertinoTheme.of(context)
+              .textTheme
+              .textStyle
+              .copyWith(color: CupertinoColors.systemGrey),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: LinearProgressIndicator(
+            valueColor: const AlwaysStoppedAnimation<Color>(
+              CupertinoColors.systemGreen,
+            ),
+            minHeight: 20,
+            borderRadius: BorderRadius.circular(10),
+            value: fulfillment.status.toProgress(),
           ),
         ),
-        if (fulfillment.notes != null)
+        CupertinoListTile(
+          title: Text(l10n.shippingStatus(fulfillment.status)),
+          subtitle: Text(
+            fulfillment.deliveredAt != null
+                ? l10n.deliveredAt(fulfillment.deliveredAt!)
+                : '',
+          ),
+          trailing: IconButton(
+            onPressed: () {
+              showBottomSheet(
+                context: context,
+                builder: (_) {
+                  return Text(fulfillment.notes!);
+                },
+              );
+            },
+            icon: const Icon(
+              CupertinoIcons.info_circle,
+              color: CupertinoColors.systemBlue,
+            ),
+          ),
+        ),
+        if (fulfillment.statusDescription != null)
           CupertinoListTile(
             title: Text(l10n.from(order.order.merchant.displayName)),
-            subtitle: Text(fulfillment.notes!),
+            subtitle: Text(fulfillment.statusDescription!),
           ),
         if (fulfillment.carrier != null)
           CupertinoListTile.notched(
@@ -332,9 +383,15 @@ class _OrderShippingFulfillmentWidget extends StatelessWidget {
 }
 
 class _OrderPickupFulfillmentWidget extends StatelessWidget {
-  const _OrderPickupFulfillmentWidget({required this.fulfillment});
+  const _OrderPickupFulfillmentWidget({
+    required this.fulfillment,
+    required this.index,
+    required this.totalOrders,
+  });
 
   final OrderPickupFulfillment fulfillment;
+  final int index;
+  final int totalOrders;
 
   @override
   Widget build(BuildContext context) {

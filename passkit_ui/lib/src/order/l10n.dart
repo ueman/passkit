@@ -1,11 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:passkit/passkit.dart';
 
 abstract class OrderLocalizations {
   /// Creates a [OrderLocalizations].
   const OrderLocalizations();
 
   String orderedAt(DateTime date);
+  String deliveredAt(DateTime dateTime);
+  String estimatedDeliveryAt(DateTime dateTime);
   String get courier;
   String get trackingId;
   String get trackShipment;
@@ -41,8 +44,14 @@ abstract class OrderLocalizations {
   String get track;
   String get cancel;
 
+  /// Reads something like "Order {[index]} from {[total]}".
+  /// [index] is 1-indexed
+  String shipmentXFromY(int index, int total);
+
   /// Merchant is responsible for the order, order details and receipt details.
   String get merchantIsResponsibleNote;
+
+  String shippingStatus(OrderShippingFulfillmentStatus status);
 
   /// This method is used to obtain a localized instance of
   /// [OrderLocalizations].
@@ -176,4 +185,33 @@ class EnOrderLocalizations extends OrderLocalizations {
 
   @override
   final String cancel = 'Cancel';
+
+  @override
+  String shipmentXFromY(int index, int total) => 'Shipment $index from $total';
+
+  @override
+  String shippingStatus(OrderShippingFulfillmentStatus status) {
+    return switch (status) {
+      OrderShippingFulfillmentStatus.open => 'Open',
+      OrderShippingFulfillmentStatus.processing => 'Processing',
+      OrderShippingFulfillmentStatus.onTheWay => 'On the way',
+      OrderShippingFulfillmentStatus.outForDelivery => 'Out for delivery',
+      OrderShippingFulfillmentStatus.delivered => 'Delivered',
+      OrderShippingFulfillmentStatus.shipped => 'Shipped',
+      OrderShippingFulfillmentStatus.issue => 'Issue',
+      OrderShippingFulfillmentStatus.cancelled => 'Cancelled',
+    };
+  }
+
+  @override
+  String deliveredAt(DateTime dateTime) {
+    final dateFormat = DateFormat.yMd('en_EN');
+    return 'Delivered at ${dateFormat.format(dateTime)}';
+  }
+
+  @override
+  String estimatedDeliveryAt(DateTime dateTime) {
+    final dateFormat = DateFormat.yMd('en_EN');
+    return 'Estimated: ${dateFormat.format(dateTime)}';
+  }
 }

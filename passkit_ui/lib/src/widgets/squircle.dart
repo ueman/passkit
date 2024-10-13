@@ -8,11 +8,11 @@ class Squircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final r = BorderRadius.all(Radius.circular(radius));
+
     return ClipPath(
       clipper: ShapeBorderClipper(
-        shape: ContinuousRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(radius)),
-        ),
+        shape: ContinuousRectangleBorder(borderRadius: r),
       ),
       child: child,
     );
