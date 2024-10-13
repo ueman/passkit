@@ -15,7 +15,7 @@ OrderData _$OrderDataFromJson(Map<String, dynamic> json) => OrderData(
       orderType: json['orderType'] as String,
       orderTypeIdentifier: json['orderTypeIdentifier'] as String,
       status: $enumDecode(_$OrderStatusEnumMap, json['status']),
-      schemaVersion: json['schemaVersion'] as num,
+      schemaVersion: json['schemaVersion'] as num? ?? 1,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       associatedApplications: (json['associatedApplications'] as List<dynamic>?)
           ?.map((e) => OrderApplication.fromJson(e as Map<String, dynamic>))
@@ -29,7 +29,8 @@ OrderData _$OrderDataFromJson(Map<String, dynamic> json) => OrderData(
           ? null
           : OrderBarcode.fromJson(json['barcode'] as Map<String, dynamic>),
       changeNotifications: $enumDecodeNullable(
-          _$OrderChangeNotificationEnumMap, json['changeNotifications']),
+              _$OrderChangeNotificationEnumMap, json['changeNotifications']) ??
+          OrderChangeNotification.enabled,
       customer: json['customer'] == null
           ? null
           : OrderCustomer.fromJson(json['customer'] as Map<String, dynamic>),
@@ -74,7 +75,7 @@ Map<String, dynamic> _$OrderDataToJson(OrderData instance) => <String, dynamic>{
       'authenticationToken': instance.authenticationToken,
       'barcode': instance.barcode,
       'changeNotifications':
-          _$OrderChangeNotificationEnumMap[instance.changeNotifications],
+          _$OrderChangeNotificationEnumMap[instance.changeNotifications]!,
       'customer': instance.customer,
       'fulfillments': instance.fulfillments,
       'lineItems': instance.lineItems,

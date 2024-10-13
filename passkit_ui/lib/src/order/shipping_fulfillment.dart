@@ -161,25 +161,26 @@ class _StatusHeader extends StatelessWidget {
                     .navLargeTitleTextStyle
                     .copyWith(fontSize: 20),
               ),
-              CupertinoButton(
-                onPressed: () {
-                  showBottomSheet(
-                    context: context,
-                    builder: (_) {
-                      return Text(fulfillment.notes!);
-                    },
-                  );
-                },
-                child: const Icon(
-                  CupertinoIcons.info_circle,
-                  color: CupertinoColors.systemBlue,
+              if (fulfillment.notes != null)
+                CupertinoButton(
+                  onPressed: () {
+                    showBottomSheet(
+                      context: context,
+                      builder: (_) {
+                        return Text(fulfillment.notes!);
+                      },
+                    );
+                  },
+                  child: const Icon(
+                    CupertinoIcons.info_circle,
+                    color: CupertinoColors.systemBlue,
+                  ),
                 ),
-              ),
             ],
           ),
           Text(
-            fulfillment.deliveredAt != null
-                ? l10n.deliveredAt(fulfillment.deliveredAt!)
+            fulfillment.estimatedDeliveryAt != null
+                ? l10n.estimatedDeliveryAt(fulfillment.estimatedDeliveryAt!)
                 : '',
             style: CupertinoTheme.of(context).textTheme.textStyle,
           ),

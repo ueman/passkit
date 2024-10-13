@@ -37,22 +37,30 @@ OrderPickupFulfillment _$OrderPickupFulfillmentFromJson(
     );
 
 Map<String, dynamic> _$OrderPickupFulfillmentToJson(
-        OrderPickupFulfillment instance) =>
-    <String, dynamic>{
-      'address': instance.address,
-      'barcode': instance.barcode,
-      'displayName': instance.displayName,
-      'fulfillmentIdentifier': instance.fulfillmentIdentifier,
-      'fulfillmentType': instance.fulfillmentType,
-      'lineItems': instance.lineItems,
-      'location': instance.location,
-      'notes': instance.notes,
-      'pickedUpAt': instance.pickedUpAt?.toIso8601String(),
-      'pickupAt': instance.pickupAt?.toIso8601String(),
-      'pickupWindowDuration': instance.pickupWindowDuration,
-      'status': _$PickupFulfillmentStatusEnumMap[instance.status]!,
-      'statusDescription': instance.statusDescription,
-    };
+    OrderPickupFulfillment instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('address', instance.address);
+  writeNotNull('barcode', instance.barcode);
+  val['displayName'] = instance.displayName;
+  val['fulfillmentIdentifier'] = instance.fulfillmentIdentifier;
+  val['fulfillmentType'] = instance.fulfillmentType;
+  writeNotNull('lineItems', instance.lineItems);
+  writeNotNull('location', instance.location);
+  writeNotNull('notes', instance.notes);
+  writeNotNull('pickedUpAt', instance.pickedUpAt?.toIso8601String());
+  writeNotNull('pickupAt', instance.pickupAt?.toIso8601String());
+  writeNotNull('pickupWindowDuration', instance.pickupWindowDuration);
+  val['status'] = _$PickupFulfillmentStatusEnumMap[instance.status]!;
+  writeNotNull('statusDescription', instance.statusDescription);
+  return val;
+}
 
 const _$PickupFulfillmentStatusEnumMap = {
   PickupFulfillmentStatus.open: 'open',

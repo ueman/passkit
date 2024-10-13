@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'order_location.g.dart';
 
 /// The details of a pickup order.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderLocation {
   OrderLocation({
     this.altitude,
@@ -30,4 +30,16 @@ class OrderLocation {
   /// Minimum Value: -180
   /// Maximum Value: 180
   final num longitude;
+
+  OrderLocation copyWith({
+    num? altitude,
+    num? latitude,
+    num? longitude,
+  }) {
+    return OrderLocation(
+      altitude: altitude ?? this.altitude,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+    );
+  }
 }

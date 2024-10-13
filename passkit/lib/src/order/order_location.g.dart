@@ -13,9 +13,17 @@ OrderLocation _$OrderLocationFromJson(Map<String, dynamic> json) =>
       longitude: json['longitude'] as num,
     );
 
-Map<String, dynamic> _$OrderLocationToJson(OrderLocation instance) =>
-    <String, dynamic>{
-      'altitude': instance.altitude,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-    };
+Map<String, dynamic> _$OrderLocationToJson(OrderLocation instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('altitude', instance.altitude);
+  val['latitude'] = instance.latitude;
+  val['longitude'] = instance.longitude;
+  return val;
+}

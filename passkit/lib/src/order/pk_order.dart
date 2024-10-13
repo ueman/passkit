@@ -4,8 +4,12 @@ import 'package:archive/archive.dart';
 import 'package:passkit/src/archive_extensions.dart';
 import 'package:passkit/src/archive_file_extension.dart';
 import 'package:passkit/src/crypto/signature_verification.dart';
+import 'package:passkit/src/crypto/write_signature.dart';
 import 'package:passkit/src/pk_image.dart';
+import 'package:passkit/src/pk_image_extension.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
+import 'package:passkit/src/strings/strings_writer.dart';
+import 'package:passkit/src/utils.dart';
 import 'package:pkcs7/pkcs7.dart';
 
 import 'order_data.dart';
@@ -13,8 +17,8 @@ import 'order_data.dart';
 class PkOrder {
   PkOrder({
     required this.order,
-    required this.manifest,
-    required this.sourceData,
+    this.manifest,
+    this.sourceData,
     this.languageData,
   });
 
@@ -71,7 +75,7 @@ class PkOrder {
 
   /// Mapping of files to their respective checksums. Typically not relevant for
   /// users of this package.
-  final Map<String, dynamic> manifest;
+  final Map<String, dynamic>? manifest;
 
   /// List of available languages. Each value is a language identifier
   Iterable<String> get availableLanguages => languageData?.keys ?? [];
@@ -79,7 +83,7 @@ class PkOrder {
   /// Translations for this PkPass.
   /// Consists of a mapping of language identifier to translation key-value
   /// pairs.
-  final Map<String, Map<String, dynamic>>? languageData;
+  final Map<String, Map<String, String>>? languageData;
 
   late Archive _archive;
 
@@ -108,10 +112,109 @@ class PkOrder {
   }
 
   /// The bytes of this PkPass
-  final Uint8List sourceData;
+  ///
+  /// `null` if this object was created with the default constructor.
+  final Uint8List? sourceData;
 
   /// Indicates whether a webservices is available.
   bool get isWebServiceAvailable => order.webServiceURL != null;
+
+  /// Creates a PkOrder file. If this instance was created via [PkOrder.fromBytes]
+  /// it overwrites the signature if possible.
+  ///
+  /// When written to disk, the file should have an ending of `.order`.
+  ///
+  /// [certificatePem] is the certificate to be used to sign the PkPass file.
+  ///
+  /// [privateKeyPem] is the private key PEM file. Right now,
+  /// it's only supported if it's not password protected.
+  ///
+  /// Read more about signing [here](https://github.com/ueman/passkit/blob/master/passkit/SIGNING.md).
+  ///
+  /// If either [certificatePem] or [privateKeyPem] is null, the resulting PkPass
+  /// will not be properly signed, but still generated.
+  ///
+  /// Setting [overrideWwdrCert] overrides the Apple WWDR certificate, that's
+  /// shipped with this library.
+  ///
+  /// Apple's documentation [here](https://developer.apple.com/documentation/walletorders)
+  /// explains which fields to set.
+  ///
+  /// Remarks:
+  /// - Image sizes aren't checked, which means it's possible to create orders
+  ///   that look odd and wrong in the Apple Wallet app or in
+  ///   [passkit_ui](https://pub.dev/packages/passkit_ui)
+  Uint8List? write({
+    required String? certificatePem,
+    required String? privateKeyPem,
+    X509? overrideWwdrCert,
+    required List<(String name, PkImage)> images,
+  }) {
+    final archive = Archive();
+
+    final orderContent = utf8JsonEncode(order.toJson());
+    final orderFile = ArchiveFile(
+      'order.json',
+      orderContent.length,
+      orderContent,
+    );
+    archive.addFile(orderFile);
+
+    // TODO(any): Write validation
+    for (final image in images) {
+      image.$2.writeToArchive(archive, image.$1.split('.').first);
+    }
+
+    final translationEntries = languageData?.entries;
+    if (translationEntries != null && translationEntries.isNotEmpty) {
+      // TODO(any): Ensure every translation file has the same amount of key value pairs.
+
+      for (final entry in translationEntries) {
+        final name = '${entry.key}.lproj/pass.strings';
+        final localizationFile =
+            ArchiveFile.string(name, toStringsFile(entry.value));
+        archive.addFile(localizationFile);
+      }
+    }
+
+    final manifestFile = archive.createManifest();
+
+    if (certificatePem != null && privateKeyPem != null) {
+      final signature = writeSignature(
+        certificatePem,
+        privateKeyPem,
+        manifestFile,
+        order.orderTypeIdentifier,
+        order.merchant.merchantIdentifier,
+        true,
+        overrideWwdrCert,
+      );
+
+      final signatureFile = ArchiveFile(
+        'signature',
+        signature.length,
+        signature,
+      );
+      archive.addFile(signatureFile);
+    }
+
+    final pkOrder = ZipEncoder().encode(archive);
+    return pkOrder == null ? null : Uint8List.fromList(pkOrder);
+  }
+
+  PkOrder copyWith({
+    OrderData? order,
+    Map<String, dynamic>? manifest,
+    Map<String, Map<String, String>>? languageData,
+    Uint8List? sourceData,
+  }) {
+    return PkOrder(
+      order: order ?? this.order,
+      manifest: manifest ?? this.manifest,
+      languageData: languageData ?? this.languageData,
+      sourceData: sourceData ?? this.sourceData,
+    );
+  }
 }
 
 extension on Archive {

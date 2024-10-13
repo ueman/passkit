@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'order_application.g.dart';
 
 /// The details of an app in the App Store.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderApplication {
   OrderApplication({
     required this.customProductPageIdentifier,
@@ -29,4 +29,17 @@ class OrderApplication {
   /// (Required) The ADAM ID (store identifier) of the application.
   @JsonKey(name: 'storeIdentifier')
   final num storeIdentifier;
+
+  OrderApplication copyWith({
+    String? customProductPageIdentifier,
+    String? launchURL,
+    num? storeIdentifier,
+  }) {
+    return OrderApplication(
+      customProductPageIdentifier:
+          customProductPageIdentifier ?? this.customProductPageIdentifier,
+      launchURL: launchURL ?? this.launchURL,
+      storeIdentifier: storeIdentifier ?? this.storeIdentifier,
+    );
+  }
 }

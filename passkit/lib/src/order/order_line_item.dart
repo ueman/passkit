@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'order_line_item.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderLineItem {
   OrderLineItem({
     required this.image,
@@ -49,9 +49,29 @@ class OrderLineItem {
   /// A merchant-specific unique product identifier.
   @JsonKey(name: 'sku')
   final String? sku;
+
+  OrderLineItem copyWith({
+    String? image,
+    OrderCurrencyAmount? price,
+    num? quantity,
+    String? subtitle,
+    String? title,
+    String? gtin,
+    String? sku,
+  }) {
+    return OrderLineItem(
+      image: image ?? this.image,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+      subtitle: subtitle ?? this.subtitle,
+      title: title ?? this.title,
+      gtin: gtin ?? this.gtin,
+      sku: sku ?? this.sku,
+    );
+  }
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderCurrencyAmount {
   OrderCurrencyAmount({required this.amount, required this.currency});
 
@@ -71,4 +91,14 @@ class OrderCurrencyAmount {
   /// Maximum Length: 3
   @JsonKey(name: 'currency')
   final String currency;
+
+  OrderCurrencyAmount copyWith({
+    double? amount,
+    String? currency,
+  }) {
+    return OrderCurrencyAmount(
+      amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
+    );
+  }
 }

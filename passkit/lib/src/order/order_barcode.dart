@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'order_barcode.g.dart';
 
 /// Information about a pass’s barcode.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderBarcode {
   OrderBarcode({
     this.altText,
@@ -37,6 +37,20 @@ class OrderBarcode {
   /// iso-8859-1, but you may specify an alternative encoding if required.
   @JsonKey(name: 'messageEncoding')
   final String messageEncoding;
+
+  OrderBarcode copyWith({
+    String? altText,
+    OrderBarcodeType? format,
+    String? message,
+    String? messageEncoding,
+  }) {
+    return OrderBarcode(
+      altText: altText ?? this.altText,
+      format: format ?? this.format,
+      message: message ?? this.message,
+      messageEncoding: messageEncoding ?? this.messageEncoding,
+    );
+  }
 }
 
 enum OrderBarcodeType {
