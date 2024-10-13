@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/src/extensions/pk_pass_image_extension.dart';
+import 'package:passkit_ui/src/order/fulfillment.dart';
 import 'package:passkit_ui/src/order/l10n.dart';
 import 'package:passkit_ui/src/order/order_details_model_sheet.dart';
 import 'package:passkit_ui/src/widgets/squircle.dart';
@@ -114,7 +115,7 @@ class OrderWidget extends StatelessWidget {
             ),
           if (order.order.fulfillments != null)
             for (final fulfillment in order.order.fulfillments!.indexed)
-              _FulfillmentSection(
+              FulfillmentSection(
                 fulfillment: fulfillment.$2,
                 order: order,
                 onTrackingLinkClicked: onTrackingLinkClicked,
@@ -236,165 +237,5 @@ class InfoSection extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class _FulfillmentSection extends StatelessWidget {
-  const _FulfillmentSection({
-    required this.fulfillment,
-    required this.order,
-    required this.onTrackingLinkClicked,
-    required this.index,
-    required this.totalOrders,
-  });
-
-  final Object fulfillment;
-  final PkOrder order;
-  final ValueChanged<Uri> onTrackingLinkClicked;
-  final int index;
-  final int totalOrders;
-
-  @override
-  Widget build(BuildContext context) {
-    return switch (fulfillment) {
-      OrderShippingFulfillment shipping => _OrderShippingFulfillmentWidget(
-          fulfillment: shipping,
-          order: order,
-          onTrackingLinkClicked: onTrackingLinkClicked,
-          index: index,
-          totalOrders: totalOrders,
-        ),
-      OrderPickupFulfillment orderPickup => _OrderPickupFulfillmentWidget(
-          fulfillment: orderPickup,
-          index: index,
-          totalOrders: totalOrders,
-        ),
-      _ => const SizedBox.shrink()
-    };
-  }
-}
-
-class _OrderShippingFulfillmentWidget extends StatelessWidget {
-  const _OrderShippingFulfillmentWidget({
-    required this.fulfillment,
-    required this.order,
-    required this.onTrackingLinkClicked,
-    required this.index,
-    required this.totalOrders,
-  });
-
-  final OrderShippingFulfillment fulfillment;
-  final PkOrder order;
-  final ValueChanged<Uri> onTrackingLinkClicked;
-  final int index;
-  final int totalOrders;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = EnOrderLocalizations();
-    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
-
-    return CupertinoListSection.insetGrouped(
-      children: [
-        Text(
-          l10n.shipmentXFromY(index + 1, totalOrders),
-          textAlign: TextAlign.center,
-          style: CupertinoTheme.of(context)
-              .textTheme
-              .textStyle
-              .copyWith(color: CupertinoColors.systemGrey),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: LinearProgressIndicator(
-            valueColor: const AlwaysStoppedAnimation<Color>(
-              CupertinoColors.systemGreen,
-            ),
-            minHeight: 20,
-            borderRadius: BorderRadius.circular(10),
-            value: fulfillment.status.toProgress(),
-          ),
-        ),
-        CupertinoListTile(
-          title: Text(l10n.shippingStatus(fulfillment.status)),
-          subtitle: Text(
-            fulfillment.deliveredAt != null
-                ? l10n.deliveredAt(fulfillment.deliveredAt!)
-                : '',
-          ),
-          trailing: IconButton(
-            onPressed: () {
-              showBottomSheet(
-                context: context,
-                builder: (_) {
-                  return Text(fulfillment.notes!);
-                },
-              );
-            },
-            icon: const Icon(
-              CupertinoIcons.info_circle,
-              color: CupertinoColors.systemBlue,
-            ),
-          ),
-        ),
-        if (fulfillment.statusDescription != null)
-          CupertinoListTile(
-            title: Text(l10n.from(order.order.merchant.displayName)),
-            subtitle: Text(fulfillment.statusDescription!),
-          ),
-        if (fulfillment.carrier != null)
-          CupertinoListTile.notched(
-            title: Text(l10n.courier),
-            subtitle: Text(fulfillment.carrier!),
-          ),
-        if (fulfillment.trackingNumber != null)
-          CupertinoListTile.notched(
-            title: Text(l10n.trackingId),
-            subtitle: Text(fulfillment.trackingNumber!),
-          ),
-        if (fulfillment.trackingURL != null)
-          CupertinoListTile.notched(
-            title: Text(
-              l10n.trackShipment,
-              style: const TextStyle(color: CupertinoColors.link),
-            ),
-            onTap: () => onTrackingLinkClicked(fulfillment.trackingURL!),
-          ),
-        if (fulfillment.lineItems != null)
-          for (final lineItem in fulfillment.lineItems!)
-            CupertinoListTile.notched(
-              leading: lineItem.image != null
-                  ? Image.memory(
-                      order
-                          .loadImage(lineItem.image!)
-                          .forCorrectPixelRatio(devicePixelRatio),
-                      fit: BoxFit.contain,
-                      width: 150,
-                      height: 150,
-                    )
-                  : null,
-              title: Text(lineItem.title),
-              subtitle:
-                  lineItem.subtitle != null ? Text(lineItem.subtitle!) : null,
-            ),
-      ],
-    );
-  }
-}
-
-class _OrderPickupFulfillmentWidget extends StatelessWidget {
-  const _OrderPickupFulfillmentWidget({
-    required this.fulfillment,
-    required this.index,
-    required this.totalOrders,
-  });
-
-  final OrderPickupFulfillment fulfillment;
-  final int index;
-  final int totalOrders;
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox.shrink();
   }
 }
