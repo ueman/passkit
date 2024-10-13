@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:content_resolver/content_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,7 +15,7 @@ class PkOrderImportSource {
         );
 
   final String? contentResolverPath;
-  final List<int>? bytes;
+  final Uint8List? bytes;
   final String? filePath;
 
   Future<PkOrder> getOrder() async {
@@ -78,7 +78,7 @@ class _ImportOrderPageState extends State<ImportOrderPage> {
           actions: [
             IconButton(
               // TODO(ueman): Maybe show confirmation dialog here
-              onPressed: () => context.pop(),
+              onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.delete),
             ),
           ],

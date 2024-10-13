@@ -4,41 +4,56 @@ import 'package:app/import_order/import_order_page.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/settings/settings_page.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/material.dart';
 
-final router = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const HomePage(),
-    ),
-    GoRoute(
-      path: '/import',
-      builder: (context, state) =>
-          ImportPassPage(source: state.extra as PkPassImportSource),
-    ),
-    GoRoute(
-      path: '/importOrder',
-      builder: (context, state) =>
-          ImportOrderPage(source: state.extra as PkOrderImportSource),
-    ),
-    GoRoute(
-      path: '/examples',
-      builder: (context, state) => const ExamplePasses(),
-    ),
-    GoRoute(
-      path: '/settings',
-      builder: (context, state) => const SettingsPage(),
-    ),
-    GoRoute(
-      path: '/backside',
-      builder: (context, state) {
-        final args = state.extra as PassBackSidePageArgs;
-        return PassBacksidePage(
-          pass: args.pass,
-          showDelete: args.showDelete,
-        );
-      },
-    ),
-  ],
-);
+final navigatorKey = GlobalKey<NavigatorState>();
+
+NavigatorState get navigator => navigatorKey.currentState!;
+
+Route<dynamic>? routeGenerator(RouteSettings settings) {
+  return switch (settings.name) {
+    '/' => MaterialPageRoute(
+        builder: (context) {
+          return const HomePage();
+        },
+      ),
+    '/import' => MaterialPageRoute(
+        builder: (context) {
+          return ImportPassPage(
+            source: settings.arguments as PkPassImportSource,
+          );
+        },
+      ),
+    '/importOrder' => MaterialPageRoute(
+        builder: (context) {
+          return ImportOrderPage(
+            source: settings.arguments as PkOrderImportSource,
+          );
+        },
+      ),
+    '/examples' => MaterialPageRoute(
+        builder: (context) {
+          return const ExamplePasses();
+        },
+      ),
+    '/settings' => MaterialPageRoute(
+        builder: (context) {
+          return const SettingsPage();
+        },
+      ),
+    '/backside' => MaterialPageRoute(
+        builder: (context) {
+          final args = settings.arguments as PassBackSidePageArgs;
+          return PassBacksidePage(
+            pass: args.pass,
+            showDelete: args.showDelete,
+          );
+        },
+      ),
+    _ => MaterialPageRoute(
+        builder: (context) {
+          return const HomePage();
+        },
+      ),
+  };
+}

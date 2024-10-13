@@ -48,9 +48,9 @@ Future<void> _onIntent(Intent? receivedIntent) async {
     return;
   }
   unawaited(
-    router.push(
+    navigator.pushNamed(
       '/import',
-      extra: PkPassImportSource(contentResolverPath: path),
+      arguments: PkPassImportSource(contentResolverPath: path),
     ),
   );
 }

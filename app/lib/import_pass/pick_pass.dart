@@ -26,17 +26,17 @@ Future<void> pickPass(BuildContext context) async {
   }
 
   if ({'.pkpass', '.pass'}.contains(extension(firstPath))) {
-    await router.push(
+    await navigator.pushNamed(
       '/import',
-      extra: PkPassImportSource(filePath: firstPath),
+      arguments: PkPassImportSource(filePath: firstPath),
     );
     return;
   }
 
   if ('.order' == extension(firstPath)) {
-    await router.push(
+    await navigator.pushNamed(
       '/importOrder',
-      extra: PkOrderImportSource(filePath: firstPath),
+      arguments: PkOrderImportSource(filePath: firstPath),
     );
     return;
   }

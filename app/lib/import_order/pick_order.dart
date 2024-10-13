@@ -30,8 +30,8 @@ Future<void> pickOrder(BuildContext context) async {
     return;
   }
 
-  await router.push(
+  await navigator.pushNamed(
     '/importOrder',
-    extra: PkOrderImportSource(contentResolverPath: firstPath),
+    arguments: PkOrderImportSource(contentResolverPath: firstPath),
   );
 }

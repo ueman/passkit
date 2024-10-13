@@ -40,17 +40,17 @@ class _HomePageState extends State<HomePage> {
         // TODO(ueman): Add more validation
 
         if (firstFile.name.endsWith('pkpass')) {
-          await router.push(
+          await navigator.pushNamed(
             '/import',
-            extra: PkPassImportSource(
+            arguments: PkPassImportSource(
               bytes: await detail.files.first.readAsBytes(),
             ),
           );
         }
         if (firstFile.name.endsWith('order')) {
-          await router.push(
+          await navigator.pushNamed(
             '/importOrder',
-            extra: PkOrderImportSource(
+            arguments: PkOrderImportSource(
               bytes: await detail.files.first.readAsBytes(),
             ),
           );
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
           leading: kDebugMode
               ? IconButton(
-                  onPressed: () => router.push('/examples'),
+                  onPressed: () => navigator.pushNamed('/examples'),
                   icon: const Icon(Icons.card_giftcard),
                 )
               : null,
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(Icons.file_open),
             ),
             IconButton(
-              onPressed: () => router.push('/settings'),
+              onPressed: () => navigator.pushNamed('/settings'),
               icon: const Icon(Icons.settings),
               tooltip: AppLocalizations.of(context).settings,
             ),
@@ -107,9 +107,10 @@ class _HomePageState extends State<HomePage> {
                                 return PassListTile(
                                   pass: pass,
                                   onTap: () {
-                                    router.push(
+                                    navigator.pushNamed(
                                       '/backside',
-                                      extra: PassBackSidePageArgs(pass, true),
+                                      arguments:
+                                          PassBackSidePageArgs(pass, true),
                                     );
                                   },
                                 );
@@ -119,9 +120,10 @@ class _HomePageState extends State<HomePage> {
                                   child: InkWell(
                                     child: PkPassWidget(pass: pass),
                                     onTap: () {
-                                      router.push(
+                                      navigator.pushNamed(
                                         '/backside',
-                                        extra: PassBackSidePageArgs(pass, true),
+                                        arguments:
+                                            PassBackSidePageArgs(pass, true),
                                       );
                                     },
                                   ),
