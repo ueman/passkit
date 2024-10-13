@@ -23,13 +23,13 @@ class OrderData {
     required this.orderType,
     required this.orderTypeIdentifier,
     required this.status,
-    required this.schemaVersion,
+    this.schemaVersion = 1,
     required this.updatedAt,
     required this.associatedApplications,
     required this.associatedApplicationIdentifiers,
     required this.authenticationToken,
     required this.barcode,
-    required this.changeNotifications,
+    this.changeNotifications = OrderChangeNotification.enabled,
     required this.customer,
     required this.fulfillments,
     required this.lineItems,
@@ -109,7 +109,7 @@ class OrderData {
   /// A property that describes whether the device notifies the user about
   /// relevant changes to the order. The default is enabled.
   @JsonKey(name: 'changeNotifications')
-  final OrderChangeNotification? changeNotifications;
+  final OrderChangeNotification changeNotifications;
 
   /// The customer for this order.
   @JsonKey(name: 'customer')
@@ -154,6 +154,62 @@ class OrderData {
   /// The URL of your web service. This must begin with `HTTPS://`.
   @JsonKey(name: 'webServiceURL')
   final Uri? webServiceURL;
+
+  OrderData copyWith({
+    DateTime? createdAt,
+    OrderMerchant? merchant,
+    String? orderIdentifier,
+    Uri? orderManagementURL,
+    String? orderType,
+    String? orderTypeIdentifier,
+    OrderStatus? status,
+    num? schemaVersion,
+    DateTime? updatedAt,
+    List<OrderApplication>? associatedApplications,
+    List<String>? associatedApplicationIdentifiers,
+    String? authenticationToken,
+    OrderBarcode? barcode,
+    OrderChangeNotification? changeNotifications,
+    OrderCustomer? customer,
+    List<Object>? fulfillments,
+    List<OrderLineItem>? lineItems,
+    String? orderNumber,
+    OrderProvider? orderProvider,
+    OrderPayment? payment,
+    OrderReturnInfo? returnInfo,
+    List<OrderReturn>? returns,
+    String? statusDescription,
+    Uri? webServiceURL,
+  }) {
+    return OrderData(
+      createdAt: createdAt ?? this.createdAt,
+      merchant: merchant ?? this.merchant,
+      orderIdentifier: orderIdentifier ?? this.orderIdentifier,
+      orderManagementURL: orderManagementURL ?? this.orderManagementURL,
+      orderType: orderType ?? this.orderType,
+      orderTypeIdentifier: orderTypeIdentifier ?? this.orderTypeIdentifier,
+      status: status ?? this.status,
+      schemaVersion: schemaVersion ?? this.schemaVersion,
+      updatedAt: updatedAt ?? this.updatedAt,
+      associatedApplications:
+          associatedApplications ?? this.associatedApplications,
+      associatedApplicationIdentifiers: associatedApplicationIdentifiers ??
+          this.associatedApplicationIdentifiers,
+      authenticationToken: authenticationToken ?? this.authenticationToken,
+      barcode: barcode ?? this.barcode,
+      changeNotifications: changeNotifications ?? this.changeNotifications,
+      customer: customer ?? this.customer,
+      fulfillments: fulfillments ?? this.fulfillments,
+      lineItems: lineItems ?? this.lineItems,
+      orderNumber: orderNumber ?? this.orderNumber,
+      orderProvider: orderProvider ?? this.orderProvider,
+      payment: payment ?? this.payment,
+      returnInfo: returnInfo ?? this.returnInfo,
+      returns: returns ?? this.returns,
+      statusDescription: statusDescription ?? this.statusDescription,
+      webServiceURL: webServiceURL ?? this.webServiceURL,
+    );
+  }
 }
 
 List<Object>? _fulfillmentsFromJson(List<dynamic>? fulfillments) {

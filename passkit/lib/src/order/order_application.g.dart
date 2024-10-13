@@ -14,9 +14,18 @@ OrderApplication _$OrderApplicationFromJson(Map<String, dynamic> json) =>
       storeIdentifier: json['storeIdentifier'] as num,
     );
 
-Map<String, dynamic> _$OrderApplicationToJson(OrderApplication instance) =>
-    <String, dynamic>{
-      'customProductPageIdentifier': instance.customProductPageIdentifier,
-      'launchURL': instance.launchURL,
-      'storeIdentifier': instance.storeIdentifier,
-    };
+Map<String, dynamic> _$OrderApplicationToJson(OrderApplication instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'customProductPageIdentifier', instance.customProductPageIdentifier);
+  writeNotNull('launchURL', instance.launchURL);
+  val['storeIdentifier'] = instance.storeIdentifier;
+  return val;
+}

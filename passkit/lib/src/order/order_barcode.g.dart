@@ -13,13 +13,21 @@ OrderBarcode _$OrderBarcodeFromJson(Map<String, dynamic> json) => OrderBarcode(
       messageEncoding: json['messageEncoding'] as String,
     );
 
-Map<String, dynamic> _$OrderBarcodeToJson(OrderBarcode instance) =>
-    <String, dynamic>{
-      'altText': instance.altText,
-      'format': _$OrderBarcodeTypeEnumMap[instance.format]!,
-      'message': instance.message,
-      'messageEncoding': instance.messageEncoding,
-    };
+Map<String, dynamic> _$OrderBarcodeToJson(OrderBarcode instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('altText', instance.altText);
+  val['format'] = _$OrderBarcodeTypeEnumMap[instance.format]!;
+  val['message'] = instance.message;
+  val['messageEncoding'] = instance.messageEncoding;
+  return val;
+}
 
 const _$OrderBarcodeTypeEnumMap = {
   OrderBarcodeType.qr: 'qr',

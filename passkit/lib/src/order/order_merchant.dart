@@ -62,4 +62,28 @@ class OrderMerchant {
   /// The URL for the merchant’s website or landing page.
   @JsonKey(name: 'url')
   final Uri url;
+
+  OrderMerchant copyWith({
+    OrderAddress? address,
+    Uri? businessChatURL,
+    Uri? contactURL,
+    String? displayName,
+    String? emailAddress,
+    String? logo,
+    String? merchantIdentifier,
+    String? phoneNumber,
+    Uri? url,
+  }) {
+    return OrderMerchant(
+      address: address ?? this.address,
+      businessChatURL: businessChatURL ?? this.businessChatURL,
+      contactURL: contactURL ?? this.contactURL,
+      displayName: displayName ?? this.displayName,
+      emailAddress: emailAddress ?? this.emailAddress,
+      logo: logo ?? this.logo,
+      merchantIdentifier: merchantIdentifier ?? this.merchantIdentifier,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      url: url ?? this.url,
+    );
+  }
 }

@@ -3,7 +3,7 @@ import 'package:passkit/src/order/order_line_item.dart';
 
 part 'order_payment.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderPayment {
   OrderPayment({
     required this.total,
@@ -58,10 +58,29 @@ class OrderPayment {
   /// transaction identifiers here to enable additional linking.
   @JsonKey(name: 'applePayTransactionIdentifiers')
   final List<String>? applePayTransactionIdentifiers;
+
+  OrderPayment copyWith({
+    OrderCurrencyAmount? total,
+    List<PaymentSummaryItems>? summaryItems,
+    List<PaymentTransaction>? transactions,
+    List<String>? paymentMethods,
+    String? status,
+    List<String>? applePayTransactionIdentifiers,
+  }) {
+    return OrderPayment(
+      total: total ?? this.total,
+      summaryItems: summaryItems ?? this.summaryItems,
+      transactions: transactions ?? this.transactions,
+      paymentMethods: paymentMethods ?? this.paymentMethods,
+      status: status ?? this.status,
+      applePayTransactionIdentifiers:
+          applePayTransactionIdentifiers ?? this.applePayTransactionIdentifiers,
+    );
+  }
 }
 
 /// The details about a payment transaction.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PaymentTransaction {
   PaymentTransaction({
     required this.amount,
@@ -111,6 +130,27 @@ class PaymentTransaction {
   /// The filename of a receipt within the bundle that’s associated with the transaction.
   @JsonKey(name: 'receipt')
   final String? receipt;
+
+  PaymentTransaction copyWith({
+    OrderCurrencyAmount? amount,
+    DateTime? createdAt,
+    OrderPaymentMethod? paymentMethod,
+    PaymentTransactionStatus? status,
+    String? applePayTransactionIdentifier,
+    PaymentTransactionType? transactionType,
+    String? receipt,
+  }) {
+    return PaymentTransaction(
+      amount: amount ?? this.amount,
+      createdAt: createdAt ?? this.createdAt,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      status: status ?? this.status,
+      applePayTransactionIdentifier:
+          applePayTransactionIdentifier ?? this.applePayTransactionIdentifier,
+      transactionType: transactionType ?? this.transactionType,
+      receipt: receipt ?? this.receipt,
+    );
+  }
 }
 
 enum PaymentTransactionStatus {
@@ -138,7 +178,7 @@ enum PaymentTransactionType {
   refund
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderPaymentMethod {
   OrderPaymentMethod({required this.displayName});
 
@@ -152,10 +192,18 @@ class OrderPaymentMethod {
   /// (Required) The name of the payment method, such as the name of a specific payment pass or card.
   @JsonKey(name: 'displayName')
   final String displayName;
+
+  OrderPaymentMethod copyWith({
+    String? displayName,
+  }) {
+    return OrderPaymentMethod(
+      displayName: displayName ?? this.displayName,
+    );
+  }
 }
 
 /// A breakdown of the total payment.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PaymentSummaryItems {
   PaymentSummaryItems({required this.label, required this.value});
 
@@ -173,4 +221,14 @@ class PaymentSummaryItems {
   /// (Required) The monetary value.
   @JsonKey(name: 'value')
   final OrderCurrencyAmount value;
+
+  PaymentSummaryItems copyWith({
+    String? label,
+    OrderCurrencyAmount? value,
+  }) {
+    return PaymentSummaryItems(
+      label: label ?? this.label,
+      value: value ?? this.value,
+    );
+  }
 }

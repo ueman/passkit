@@ -10,7 +10,6 @@ import 'package:app/router.dart';
 import 'package:content_resolver/content_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 
@@ -88,9 +87,9 @@ class _ImportPassPageState extends State<ImportPassPage> {
             child: InkWell(
               child: Center(child: PkPassWidget(pass: pass!)),
               onTap: () {
-                router.push(
+                navigator.pushNamed(
                   '/backside',
-                  extra: PassBackSidePageArgs(pass!, false),
+                  arguments: PassBackSidePageArgs(pass!, false),
                 );
               },
             ),
@@ -128,7 +127,7 @@ class _ImportPassPageState extends State<ImportPassPage> {
         actions: [
           IconButton(
             // TODO(ueman): Maybe show confirmation dialog here
-            onPressed: () => context.pop(),
+            onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(Icons.delete),
           ),
         ],

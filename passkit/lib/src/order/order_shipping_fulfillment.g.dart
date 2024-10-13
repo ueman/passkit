@@ -48,26 +48,36 @@ OrderShippingFulfillment _$OrderShippingFulfillmentFromJson(
     );
 
 Map<String, dynamic> _$OrderShippingFulfillmentToJson(
-        OrderShippingFulfillment instance) =>
-    <String, dynamic>{
-      'fulfillmentIdentifier': instance.fulfillmentIdentifier,
-      'fulfillmentType': instance.fulfillmentType,
-      'status': _$OrderShippingFulfillmentStatusEnumMap[instance.status]!,
-      'carrier': instance.carrier,
-      'deliveredAt': instance.deliveredAt?.toIso8601String(),
-      'estimatedDeliveryAt': instance.estimatedDeliveryAt?.toIso8601String(),
-      'estimatedDeliveryWindowDuration':
-          instance.estimatedDeliveryWindowDuration?.inMicroseconds,
-      'lineItems': instance.lineItems,
-      'notes': instance.notes,
-      'recipient': instance.recipient,
-      'shippedAt': instance.shippedAt?.toIso8601String(),
-      'shippingType':
-          _$OrderShippingFulfillmentTypeEnumMap[instance.shippingType]!,
-      'statusDescription': instance.statusDescription,
-      'trackingNumber': instance.trackingNumber,
-      'trackingURL': instance.trackingURL?.toString(),
-    };
+    OrderShippingFulfillment instance) {
+  final val = <String, dynamic>{
+    'fulfillmentIdentifier': instance.fulfillmentIdentifier,
+    'fulfillmentType': instance.fulfillmentType,
+    'status': _$OrderShippingFulfillmentStatusEnumMap[instance.status]!,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('carrier', instance.carrier);
+  writeNotNull('deliveredAt', instance.deliveredAt?.toIso8601String());
+  writeNotNull(
+      'estimatedDeliveryAt', instance.estimatedDeliveryAt?.toIso8601String());
+  writeNotNull('estimatedDeliveryWindowDuration',
+      instance.estimatedDeliveryWindowDuration?.inMicroseconds);
+  writeNotNull('lineItems', instance.lineItems);
+  writeNotNull('notes', instance.notes);
+  writeNotNull('recipient', instance.recipient);
+  writeNotNull('shippedAt', instance.shippedAt?.toIso8601String());
+  val['shippingType'] =
+      _$OrderShippingFulfillmentTypeEnumMap[instance.shippingType]!;
+  writeNotNull('statusDescription', instance.statusDescription);
+  writeNotNull('trackingNumber', instance.trackingNumber);
+  writeNotNull('trackingURL', instance.trackingURL?.toString());
+  return val;
+}
 
 const _$OrderShippingFulfillmentStatusEnumMap = {
   OrderShippingFulfillmentStatus.open: 'open',

@@ -4,7 +4,7 @@ import 'package:passkit/src/order/order_line_item.dart';
 part 'order_return.g.dart';
 
 /// The details of a return order.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderReturn {
   OrderReturn({
     required this.returnIdentifier,
@@ -84,4 +84,34 @@ class OrderReturn {
   /// A localized message describing the return status.
   @JsonKey(name: 'statusDescription')
   final String? statusDescription;
+
+  OrderReturn copyWith({
+    String? returnIdentifier,
+    String? status,
+    String? carrier,
+    DateTime? dropOffBy,
+    DateTime? initiatedAt,
+    List<OrderLineItem>? lineItems,
+    String? notes,
+    DateTime? returnedAt,
+    String? returnLabel,
+    Uri? returnManagementURL,
+    String? returnNumber,
+    String? statusDescription,
+  }) {
+    return OrderReturn(
+      returnIdentifier: returnIdentifier ?? this.returnIdentifier,
+      status: status ?? this.status,
+      carrier: carrier ?? this.carrier,
+      dropOffBy: dropOffBy ?? this.dropOffBy,
+      initiatedAt: initiatedAt ?? this.initiatedAt,
+      lineItems: lineItems ?? this.lineItems,
+      notes: notes ?? this.notes,
+      returnedAt: returnedAt ?? this.returnedAt,
+      returnLabel: returnLabel ?? this.returnLabel,
+      returnManagementURL: returnManagementURL ?? this.returnManagementURL,
+      returnNumber: returnNumber ?? this.returnNumber,
+      statusDescription: statusDescription ?? this.statusDescription,
+    );
+  }
 }

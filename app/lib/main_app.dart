@@ -9,9 +9,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routerConfig: router,
+      navigatorKey: navigatorKey,
       scaffoldMessengerKey: scaffoldMessenger,
       theme: _lightTheme(),
       darkTheme: _darkTheme(),
@@ -19,6 +19,7 @@ class MainApp extends StatelessWidget {
       onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
+      onGenerateRoute: routeGenerator,
     );
   }
 }

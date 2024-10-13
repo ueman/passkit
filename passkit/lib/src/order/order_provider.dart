@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'order_provider.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderProvider {
   OrderProvider({
     required this.displayName,
@@ -37,4 +37,20 @@ class OrderProvider {
   /// (Required) The URL of the order provder platform.
   @JsonKey(name: 'url')
   final Uri url;
+
+  OrderProvider copyWith({
+    String? displayName,
+    String? trackingLogoNameDarkColorScheme,
+    String? trackingLogoNameLightColorScheme,
+    Uri? url,
+  }) {
+    return OrderProvider(
+      displayName: displayName ?? this.displayName,
+      trackingLogoNameDarkColorScheme: trackingLogoNameDarkColorScheme ??
+          this.trackingLogoNameDarkColorScheme,
+      trackingLogoNameLightColorScheme: trackingLogoNameLightColorScheme ??
+          this.trackingLogoNameLightColorScheme,
+      url: url ?? this.url,
+    );
+  }
 }

@@ -44,9 +44,9 @@ class _ExamplePassesState extends State<ExamplePasses> {
                       child: InkWell(
                         child: PkPassWidget(pass: pass),
                         onTap: () {
-                          router.push(
+                          navigator.pushNamed(
                             '/backside',
-                            extra: PassBackSidePageArgs(pass, false),
+                            arguments: PassBackSidePageArgs(pass, false),
                           );
                         },
                       ),
