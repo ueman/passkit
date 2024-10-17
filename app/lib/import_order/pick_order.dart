@@ -1,12 +1,11 @@
 import 'package:app/import_order/import_order_page.dart';
-import 'package:app/import_pass/import_page.dart';
 import 'package:app/router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:path/path.dart';
 
-Future<void> pickPass(BuildContext context) async {
+Future<void> pickOrder(BuildContext context) async {
   final localizations = AppLocalizations.of(context);
   final result = await FilePicker.platform.pickFiles(
     dialogTitle: localizations.pickPasses,
@@ -25,19 +24,14 @@ Future<void> pickPass(BuildContext context) async {
     return;
   }
 
-  if ({'.pkpass', '.pass'}.contains(extension(firstPath))) {
-    await navigator.pushNamed(
-      '/import',
-      arguments: PkPassImportSource(filePath: firstPath),
-    );
+  if ({'.order'}.contains(extension(firstPath))) {
+    // This is probably not a valid order
+    // TOOD show a hint to the user, that the user picked an ivalid file
     return;
   }
 
-  if ('.order' == extension(firstPath)) {
-    await navigator.pushNamed(
-      '/importOrder',
-      arguments: PkOrderImportSource(filePath: firstPath),
-    );
-    return;
-  }
+  await navigator.pushNamed(
+    '/importOrder',
+    arguments: PkOrderImportSource(contentResolverPath: firstPath),
+  );
 }

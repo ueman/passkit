@@ -7,6 +7,8 @@ topics:
   - passkit
   - pkpass
   - apple-wallet
+  - wallet
+  - passbook
 
 screenshots:
   - description: "Screenshot of a PkPass of the boarding pass type"
@@ -21,9 +23,11 @@ dependencies:
   barcode_widget: ^2.0.0
   collection: ^1.18.0
   csslib: ^1.0.0
+  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
-  meta: any
+  intl: ">=0.18.0 <0.20.0"
+  meta: ^1.0.0
   passkit: ^0.0.8
 
 dev_dependencies:

@@ -18,13 +18,21 @@ OrderAddress _$OrderAddressFromJson(Map<String, dynamic> json) => OrderAddress(
       subLocality: json['subLocality'] as String?,
     );
 
-Map<String, dynamic> _$OrderAddressToJson(OrderAddress instance) =>
-    <String, dynamic>{
-      'addressLines': instance.addressLines,
-      'administrativeArea': instance.administrativeArea,
-      'countryCode': instance.countryCode,
-      'locality': instance.locality,
-      'postalCode': instance.postalCode,
-      'subAdministrativeArea': instance.subAdministrativeArea,
-      'subLocality': instance.subLocality,
-    };
+Map<String, dynamic> _$OrderAddressToJson(OrderAddress instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('addressLines', instance.addressLines);
+  writeNotNull('administrativeArea', instance.administrativeArea);
+  writeNotNull('countryCode', instance.countryCode);
+  writeNotNull('locality', instance.locality);
+  writeNotNull('postalCode', instance.postalCode);
+  writeNotNull('subAdministrativeArea', instance.subAdministrativeArea);
+  writeNotNull('subLocality', instance.subLocality);
+  return val;
+}

@@ -4,12 +4,13 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
-  flutter: 3.24.1
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: 3.22.3
 
 dependencies:
   android_intent_plus: ^5.0.2
   content_resolver: ^0.3.1
+  cupertino_icons: ^1.0.8
   desktop_drop: ^0.4.4
   file_picker: ^8.1.2
   floor: ^1.5.0
@@ -22,7 +23,6 @@ dependencies:
     sdk: flutter
   geocoding: ^3.0.0
   geolocator: ^13.0.0
-  go_router: ^14.2.0
   google_fonts: ^6.2.1
   http: ^1.2.1
   intl: any

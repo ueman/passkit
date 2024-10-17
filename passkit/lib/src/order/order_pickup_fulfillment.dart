@@ -7,7 +7,7 @@ import 'package:passkit/src/order/order_location.dart';
 part 'order_pickup_fulfillment.g.dart';
 
 /// The details of a pickup order.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderPickupFulfillment {
   OrderPickupFulfillment({
     required this.address,
@@ -76,6 +76,39 @@ class OrderPickupFulfillment {
 
   /// A localized message describing the fulfillment status.
   final String? statusDescription;
+
+  OrderPickupFulfillment copyWith({
+    OrderAddress? address,
+    OrderBarcode? barcode,
+    String? displayName,
+    String? fulfillmentIdentifier,
+    String? fulfillmentType,
+    List<OrderLineItem>? lineItems,
+    OrderLocation? location,
+    String? notes,
+    DateTime? pickedUpAt,
+    DateTime? pickupAt,
+    String? pickupWindowDuration,
+    PickupFulfillmentStatus? status,
+    String? statusDescription,
+  }) {
+    return OrderPickupFulfillment(
+      address: address ?? this.address,
+      barcode: barcode ?? this.barcode,
+      displayName: displayName ?? this.displayName,
+      fulfillmentIdentifier:
+          fulfillmentIdentifier ?? this.fulfillmentIdentifier,
+      fulfillmentType: fulfillmentType ?? this.fulfillmentType,
+      lineItems: lineItems ?? this.lineItems,
+      location: location ?? this.location,
+      notes: notes ?? this.notes,
+      pickedUpAt: pickedUpAt ?? this.pickedUpAt,
+      pickupAt: pickupAt ?? this.pickupAt,
+      pickupWindowDuration: pickupWindowDuration ?? this.pickupWindowDuration,
+      status: status ?? this.status,
+      statusDescription: statusDescription ?? this.statusDescription,
+    );
+  }
 }
 
 enum PickupFulfillmentStatus {

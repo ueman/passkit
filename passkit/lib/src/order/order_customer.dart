@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'order_customer.g.dart';
 
 /// The details of the order’s customer.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderCustomer {
   OrderCustomer({
     required this.emailAddress,
@@ -39,4 +39,20 @@ class OrderCustomer {
   /// The customer’s phone number.
   @JsonKey(name: 'phoneNumber')
   final String phoneNumber;
+
+  OrderCustomer copyWith({
+    String? emailAddress,
+    String? familyName,
+    String? givenName,
+    String? organizationName,
+    String? phoneNumber,
+  }) {
+    return OrderCustomer(
+      emailAddress: emailAddress ?? this.emailAddress,
+      familyName: familyName ?? this.familyName,
+      givenName: givenName ?? this.givenName,
+      organizationName: organizationName ?? this.organizationName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+    );
+  }
 }

@@ -7,6 +7,8 @@ topics:
   - passkit
   - pkpass
   - apple-wallet
+  - wallet
+  - passbook
 
 screenshots:
   - description: "Screenshot of a PkPass of the boarding pass type"

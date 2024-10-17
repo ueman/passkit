@@ -31,18 +31,27 @@ OrderReturn _$OrderReturnFromJson(Map<String, dynamic> json) => OrderReturn(
       statusDescription: json['statusDescription'] as String?,
     );
 
-Map<String, dynamic> _$OrderReturnToJson(OrderReturn instance) =>
-    <String, dynamic>{
-      'returnIdentifier': instance.returnIdentifier,
-      'status': instance.status,
-      'carrier': instance.carrier,
-      'dropOffBy': instance.dropOffBy?.toIso8601String(),
-      'initiatedAt': instance.initiatedAt?.toIso8601String(),
-      'lineItems': instance.lineItems,
-      'notes': instance.notes,
-      'returnedAt': instance.returnedAt?.toIso8601String(),
-      'returnLabel': instance.returnLabel,
-      'returnManagementURL': instance.returnManagementURL?.toString(),
-      'returnNumber': instance.returnNumber,
-      'statusDescription': instance.statusDescription,
-    };
+Map<String, dynamic> _$OrderReturnToJson(OrderReturn instance) {
+  final val = <String, dynamic>{
+    'returnIdentifier': instance.returnIdentifier,
+    'status': instance.status,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('carrier', instance.carrier);
+  writeNotNull('dropOffBy', instance.dropOffBy?.toIso8601String());
+  writeNotNull('initiatedAt', instance.initiatedAt?.toIso8601String());
+  writeNotNull('lineItems', instance.lineItems);
+  writeNotNull('notes', instance.notes);
+  writeNotNull('returnedAt', instance.returnedAt?.toIso8601String());
+  writeNotNull('returnLabel', instance.returnLabel);
+  writeNotNull('returnManagementURL', instance.returnManagementURL?.toString());
+  writeNotNull('returnNumber', instance.returnNumber);
+  writeNotNull('statusDescription', instance.statusDescription);
+  return val;
+}

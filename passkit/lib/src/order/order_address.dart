@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'order_address.g.dart';
 
 /// The physical address for an order.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderAddress {
   OrderAddress({
     required this.addressLines,
@@ -51,4 +51,25 @@ class OrderAddress {
   /// Additional information associated with the location, such as a district or neighborhood.
   @JsonKey(name: 'subLocality')
   final String? subLocality;
+
+  OrderAddress copyWith({
+    List<String>? addressLines,
+    String? administrativeArea,
+    String? countryCode,
+    String? locality,
+    String? postalCode,
+    String? subAdministrativeArea,
+    String? subLocality,
+  }) {
+    return OrderAddress(
+      addressLines: addressLines ?? this.addressLines,
+      administrativeArea: administrativeArea ?? this.administrativeArea,
+      countryCode: countryCode ?? this.countryCode,
+      locality: locality ?? this.locality,
+      postalCode: postalCode ?? this.postalCode,
+      subAdministrativeArea:
+          subAdministrativeArea ?? this.subAdministrativeArea,
+      subLocality: subLocality ?? this.subLocality,
+    );
+  }
 }

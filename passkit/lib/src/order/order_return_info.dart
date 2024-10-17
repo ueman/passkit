@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'order_return_info.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderReturnInfo {
   OrderReturnInfo({
     required this.returnPolicyURL,
@@ -47,4 +47,21 @@ class OrderReturnInfo {
   /// common return window duration here.
   @JsonKey(name: 'returnPolicyDescription')
   final String? returnPolicyDescription;
+
+  OrderReturnInfo copyWith({
+    Uri? returnPolicyURL,
+    bool? displayCountdown,
+    DateTime? returnDeadline,
+    Uri? returnManagementURL,
+    String? returnPolicyDescription,
+  }) {
+    return OrderReturnInfo(
+      returnPolicyURL: returnPolicyURL ?? this.returnPolicyURL,
+      displayCountdown: displayCountdown ?? this.displayCountdown,
+      returnDeadline: returnDeadline ?? this.returnDeadline,
+      returnManagementURL: returnManagementURL ?? this.returnManagementURL,
+      returnPolicyDescription:
+          returnPolicyDescription ?? this.returnPolicyDescription,
+    );
+  }
 }

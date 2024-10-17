@@ -25,15 +25,25 @@ OrderPayment _$OrderPaymentFromJson(Map<String, dynamic> json) => OrderPayment(
               .toList(),
     );
 
-Map<String, dynamic> _$OrderPaymentToJson(OrderPayment instance) =>
-    <String, dynamic>{
-      'total': instance.total,
-      'summaryItems': instance.summaryItems,
-      'transactions': instance.transactions,
-      'paymentMethods': instance.paymentMethods,
-      'status': instance.status,
-      'applePayTransactionIdentifiers': instance.applePayTransactionIdentifiers,
-    };
+Map<String, dynamic> _$OrderPaymentToJson(OrderPayment instance) {
+  final val = <String, dynamic>{
+    'total': instance.total,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('summaryItems', instance.summaryItems);
+  writeNotNull('transactions', instance.transactions);
+  writeNotNull('paymentMethods', instance.paymentMethods);
+  writeNotNull('status', instance.status);
+  writeNotNull('applePayTransactionIdentifiers',
+      instance.applePayTransactionIdentifiers);
+  return val;
+}
 
 PaymentTransaction _$PaymentTransactionFromJson(Map<String, dynamic> json) =>
     PaymentTransaction(
@@ -50,17 +60,27 @@ PaymentTransaction _$PaymentTransactionFromJson(Map<String, dynamic> json) =>
       receipt: json['receipt'] as String?,
     );
 
-Map<String, dynamic> _$PaymentTransactionToJson(PaymentTransaction instance) =>
-    <String, dynamic>{
-      'amount': instance.amount,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'paymentMethod': instance.paymentMethod,
-      'status': _$PaymentTransactionStatusEnumMap[instance.status]!,
-      'applePayTransactionIdentifier': instance.applePayTransactionIdentifier,
-      'transactionType':
-          _$PaymentTransactionTypeEnumMap[instance.transactionType]!,
-      'receipt': instance.receipt,
-    };
+Map<String, dynamic> _$PaymentTransactionToJson(PaymentTransaction instance) {
+  final val = <String, dynamic>{
+    'amount': instance.amount,
+    'createdAt': instance.createdAt.toIso8601String(),
+    'paymentMethod': instance.paymentMethod,
+    'status': _$PaymentTransactionStatusEnumMap[instance.status]!,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'applePayTransactionIdentifier', instance.applePayTransactionIdentifier);
+  val['transactionType'] =
+      _$PaymentTransactionTypeEnumMap[instance.transactionType]!;
+  writeNotNull('receipt', instance.receipt);
+  return val;
+}
 
 const _$PaymentTransactionStatusEnumMap = {
   PaymentTransactionStatus.pending: 'pending',

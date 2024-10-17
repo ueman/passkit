@@ -5,7 +5,7 @@ import 'package:passkit/src/order/order_line_item.dart';
 part 'order_shipping_fulfillment.g.dart';
 
 // The details of a shipped order.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderShippingFulfillment {
   OrderShippingFulfillment({
     required this.fulfillmentIdentifier,
@@ -88,7 +88,10 @@ class OrderShippingFulfillment {
   /// Default: shipping
   ///
   /// Possible Values: shipping, delivery
-  @JsonKey(name: 'shippingType')
+  @JsonKey(
+    name: 'shippingType',
+    defaultValue: OrderShippingFulfillmentType.shipping,
+  )
   final OrderShippingFulfillmentType shippingType;
 
   /// A localized message describing the fulfillment status.
@@ -102,6 +105,44 @@ class OrderShippingFulfillment {
   /// A URL where the customer can track the shipment.
   @JsonKey(name: 'trackingURL')
   final Uri? trackingURL;
+
+  OrderShippingFulfillment copyWith({
+    String? fulfillmentIdentifier,
+    String? fulfillmentType,
+    OrderShippingFulfillmentStatus? status,
+    String? carrier,
+    DateTime? deliveredAt,
+    DateTime? estimatedDeliveryAt,
+    Duration? estimatedDeliveryWindowDuration,
+    List<OrderLineItem>? lineItems,
+    String? notes,
+    ShippingFulfillmentRecipient? recipient,
+    DateTime? shippedAt,
+    OrderShippingFulfillmentType? shippingType,
+    String? statusDescription,
+    String? trackingNumber,
+    Uri? trackingURL,
+  }) {
+    return OrderShippingFulfillment(
+      fulfillmentIdentifier:
+          fulfillmentIdentifier ?? this.fulfillmentIdentifier,
+      fulfillmentType: fulfillmentType ?? this.fulfillmentType,
+      status: status ?? this.status,
+      carrier: carrier ?? this.carrier,
+      deliveredAt: deliveredAt ?? this.deliveredAt,
+      estimatedDeliveryAt: estimatedDeliveryAt ?? this.estimatedDeliveryAt,
+      estimatedDeliveryWindowDuration: estimatedDeliveryWindowDuration ??
+          this.estimatedDeliveryWindowDuration,
+      lineItems: lineItems ?? this.lineItems,
+      notes: notes ?? this.notes,
+      recipient: recipient ?? this.recipient,
+      shippedAt: shippedAt ?? this.shippedAt,
+      shippingType: shippingType ?? this.shippingType,
+      statusDescription: statusDescription ?? this.statusDescription,
+      trackingNumber: trackingNumber ?? this.trackingNumber,
+      trackingURL: trackingURL ?? this.trackingURL,
+    );
+  }
 }
 
 enum OrderShippingFulfillmentType {
@@ -135,7 +176,20 @@ enum OrderShippingFulfillmentStatus {
   issue,
 
   @JsonValue('cancelled')
-  cancelled
+  cancelled;
+
+  double toProgress() {
+    return switch (this) {
+      OrderShippingFulfillmentStatus.open => 0,
+      OrderShippingFulfillmentStatus.processing => 0.25,
+      OrderShippingFulfillmentStatus.shipped => 0.375,
+      OrderShippingFulfillmentStatus.onTheWay => 0.5,
+      OrderShippingFulfillmentStatus.outForDelivery => 0.75,
+      OrderShippingFulfillmentStatus.delivered => 1,
+      OrderShippingFulfillmentStatus.issue => 0,
+      OrderShippingFulfillmentStatus.cancelled => 0,
+    };
+  }
 }
 
 @JsonSerializable()
