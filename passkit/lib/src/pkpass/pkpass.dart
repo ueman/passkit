@@ -7,6 +7,7 @@ import 'package:passkit/src/crypto/signature_verification.dart';
 import 'package:passkit/src/crypto/write_signature.dart';
 import 'package:passkit/src/pk_image.dart';
 import 'package:passkit/src/pk_image_extension.dart';
+import 'package:passkit/src/pkpass/creation_failure_reason.dart';
 import 'package:passkit/src/pkpass/exceptions.dart';
 import 'package:passkit/src/pkpass/pass_data.dart';
 import 'package:passkit/src/pkpass/pass_type.dart';
@@ -258,6 +259,8 @@ class PkPass {
   /// Apple's documentation [here](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html)
   /// explains which fields to set for which type of pass.
   ///
+  /// Throws a [CreationFailureException] if something is off.
+  ///
   /// Remarks:
   /// - Image sizes aren't checked, which means it's possible to create passes
   ///   that look odd and wrong in the Apple Wallet app or in
@@ -267,6 +270,18 @@ class PkPass {
     required String? privateKeyPem,
     X509? overrideWwdrCert,
   }) {
+    if (!(certificatePem == null && privateKeyPem != null)) {
+      throw ArgumentError(
+        'You must either set certificatePem and privateKeyPem or none of them',
+      );
+    }
+
+    final failureReasons = <CreationFailureReason>[];
+    final passTypeIssue = _validatePassType();
+    if (passTypeIssue != null) {
+      failureReasons.add(passTypeIssue);
+    }
+
     final archive = Archive();
 
     final passContent = utf8JsonEncode(pass.toJson());
@@ -287,6 +302,9 @@ class PkPass {
       archive.addFile(personalizationFile);
     }
 
+    failureReasons.addAll(_validateCorrectImages());
+
+    // TODO(any): Validate that each image is correctly localized
     logo?.writeToArchive(archive, 'logo');
     background?.writeToArchive(archive, 'background');
     icon?.writeToArchive(archive, 'icon');
@@ -297,7 +315,15 @@ class PkPass {
 
     final translationEntries = languageData?.entries;
     if (translationEntries != null && translationEntries.isNotEmpty) {
-      // TODO(any): Ensure every translation file has the same amount of key value pairs.
+      int translationCount = translationEntries.first.value.length;
+      for (final entry in translationEntries) {
+        if (entry.value.length != translationCount) {
+          failureReasons.add(CreationFailureReason.incompleteTranslation);
+          // After seeing one incomplete translation, there's no need to check
+          // for more incomplete translations.
+          break;
+        }
+      }
 
       for (final entry in translationEntries) {
         final name = '${entry.key}.lproj/pass.strings';
@@ -309,7 +335,7 @@ class PkPass {
 
     final manifestFile = archive.createManifest();
 
-    if (certificatePem != null && privateKeyPem != null) {
+    if (certificatePem != null) {
       final signature = writeSignature(
         certificatePem,
         privateKeyPem,
@@ -326,6 +352,10 @@ class PkPass {
         signature,
       );
       archive.addFile(signatureFile);
+    }
+
+    if (failureReasons.isNotEmpty) {
+      throw CreationFailureException(failureReasons);
     }
 
     final pkpass = ZipEncoder().encode(archive);
@@ -360,6 +390,65 @@ class PkPass {
       languageData: languageData ?? this.languageData,
       sourceData: sourceData ?? this.sourceData,
     );
+  }
+
+  // See https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html#//apple_ref/doc/uid/TP40012195-CH4-SW1
+  List<CreationFailureReason> _validateCorrectImages() {
+    final missingImageFailures = <CreationFailureReason>[];
+    // Every pass should have an icon and a logo
+    if (icon == null) {
+      missingImageFailures.add(CreationFailureReason.missingIconImage);
+    }
+    if (logo == null) {
+      missingImageFailures.add(CreationFailureReason.missingLogoImage);
+    }
+    switch (type) {
+      case PassType.boardingPass:
+        // Since the footer is optional, there's no need to check for its presence.
+        // While superfluous images are bad, it's nothing that breaks passes AFAIK.
+        // Thus, validation for that can be added later if needed.
+        return missingImageFailures;
+      case PassType.coupon:
+      case PassType.generic:
+        // Since the strip is optional, there's no need to check for its presence.
+        // While superfluous images are bad, it's nothing that breaks passes AFAIK.
+        // Thus, validation for that can be added later if needed.
+        return missingImageFailures;
+      case PassType.storeCard:
+        // Since the thumbnail is optional, there's no need to check for its presence.
+        // While superfluous images are bad, it's nothing that breaks passes AFAIK.
+        // Thus, validation for that can be added later if needed.
+        return missingImageFailures;
+      case PassType.eventTicket:
+        // An event ticket can display logo, strip, background, or thumbnail images.
+        // However, if you supply a strip image, don’t include a background or thumbnail image.
+        // https://developer.apple.com/design/human-interface-guidelines/wallet#Event-tickets
+        if (strip != null) {
+          if (background != null) {
+            missingImageFailures
+                .add(CreationFailureReason.superfluousBackgroundImage);
+          }
+          if (thumbnail != null) {
+            missingImageFailures
+                .add(CreationFailureReason.superfluousThumbnailImage);
+          }
+        }
+
+        return missingImageFailures;
+    }
+  }
+
+  CreationFailureReason? _validatePassType() {
+    final isPassTypeKnown = (pass.coupon ??
+            pass.generic ??
+            pass.boardingPass ??
+            pass.eventTicket ??
+            pass.storeCard) !=
+        null;
+    if (!isPassTypeKnown) {
+      return CreationFailureReason.undefinedPassType;
+    }
+    return null;
   }
 }
 
