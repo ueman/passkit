@@ -85,6 +85,12 @@ void main() {
 }
 ```
 
+There's a couple of convenience functions available to make the `.pkpass` creation easier:
+- [`createEventWithThumbnail()`](https://pub.dev/documentation/passkit/latest/passkit/createEventWithThumbnail.html)
+- [`createFooter()`](https://pub.dev/documentation/passkit/latest/passkit/createFooter.html)
+- [`createIcon()`](https://pub.dev/documentation/passkit/latest/passkit/createIcon.html)
+- [`createLogo()`](https://pub.dev/documentation/passkit/latest/passkit/createLogo.html)
+
 If the resulting file doesn't work, please look into the [troubleshooting guide](https://github.com/ueman/passkit/blob/master/passkit/TROUBLESHOOTING.md).
 
 <details>

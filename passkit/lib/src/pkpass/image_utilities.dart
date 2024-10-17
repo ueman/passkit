@@ -38,6 +38,7 @@ Source https://developer.apple.com/library/archive/documentation/UserExperience/
 */
 
 /// Creates all three image scales for the icon.
+/// The data must be a common image format.
 /// If you have localized images, you'll need to call this for every language.
 ///
 /// The icon is displayed when a pass is shown on the lock screen and
@@ -72,6 +73,7 @@ PkImage createIcon(Uint8List data) {
 }
 
 /// Creates all three logo scales for the icon.
+/// The data must be a common image format.
 /// If you have localized images, you'll need to call this for every language.
 ///
 /// The logo image is displayed in the top left corner of the pass,
@@ -107,6 +109,7 @@ PkImage createLogo(Uint8List data) {
 }
 
 /// Creates all three logo scales for the icon.
+/// The data must be a common image format.
 /// If you have localized images, you'll need to call this for every language.
 ///
 /// The footer image (footer.png) is displayed near the barcode.
