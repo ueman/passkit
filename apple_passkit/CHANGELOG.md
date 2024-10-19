@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Add Swift Package Manager support
+
 ## 1.0.0+1
 
 * Improve readme
