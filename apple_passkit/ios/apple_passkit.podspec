@@ -13,10 +13,11 @@ A new Flutter plugin project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'apple_passkit/Sources/apple_passkit/**/*.swift'
   s.dependency 'Flutter'
-  s.platform = :ios, '11.0'
-  s.resource_bundles = {'apple_passkit_privacy' => ['Resources/PrivacyInfo.xcprivacy']}
+  s.platform = :ios, '12.0'
+  s.resource_bundles = {'apple_passkit_privacy' => ['apple_passkit/Sources/apple_passkit/PrivacyInfo.xcprivacy']}
+
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
