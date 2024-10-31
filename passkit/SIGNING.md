@@ -66,7 +66,7 @@ openssl pkcs12 -in Certificates.p12 -out private_key.pem -nocerts -nodes -passin
 If the generated `.pem` files do not start with `-----BEGIN RSA PRIVATE KEY-----` (or similar) delete all lines that come before that.
 Otherwise, the code can't decode the `.pem` files, and signing may fail.
 
-Then you can the generated file to sign PkPass files:
+Then you can use the generated file to sign PkPass files:
 
 ```dart
 final pass = PkPass(...);
