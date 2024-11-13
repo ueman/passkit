@@ -1,3 +1,7 @@
+## 0.0.7
+
+- Compatibility with intl 0.20.0
+
 ## 0.0.6
 
 - Update readme and pubspec meta data
