@@ -1,3 +1,7 @@
+## 0.0.12
+
+- Update readme and pubspec meta data
+
 ## 0.0.11
 
 - `PkPass.write()` is no longer experimental

@@ -1,3 +1,7 @@
+## 0.0.6
+
+- Update readme and pubspec meta data
+
 ## 0.0.5
 
 - Add ability to create an image from a PkPass

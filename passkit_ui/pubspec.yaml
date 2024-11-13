@@ -1,6 +1,6 @@
 name: passkit_ui
 description: A UI kit for PassKit files (usually shown in Apple Wallet). It uses the `passkit` package under the hood.
-version: 0.0.5
+version: 0.0.6
 repository: https://github.com/ueman/passkit
 issue_tracker: https://github.com/ueman/passkit/issues
 topics:

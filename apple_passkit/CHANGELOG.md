@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Update readme and pubspec meta data
+
 ## 1.1.0
 
 * Add Swift Package Manager support
