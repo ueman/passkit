@@ -1,0 +1,3 @@
+dependency_overrides:
+  passkit:
+    path: ../passkit
