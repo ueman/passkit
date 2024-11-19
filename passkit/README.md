@@ -8,6 +8,8 @@
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/ue_man?style=social)](https://twitter.com/ue_man)
 [![GitHub followers](https://img.shields.io/github/followers/ueman?style=social)](https://github.com/ueman)
+[![Bluesky Follow](https://img.shields.io/badge/Follow%20on%20Bluesky-08f)](https://bsky.app/profile/uekoetter.dev)
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=flat&logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/ueman)
 
 > 🚧 API is subject to change! 🚧
 
