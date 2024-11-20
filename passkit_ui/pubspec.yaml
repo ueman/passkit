@@ -1,6 +1,6 @@
 name: passkit_ui
 description: A UI kit for PassKit files (usually shown in Apple Wallet). It uses the `passkit` package under the hood.
-version: 0.0.7
+version: 1.0.0
 repository: https://github.com/ueman/passkit
 issue_tracker: https://github.com/ueman/passkit/issues
 topics:
@@ -31,7 +31,7 @@ dependencies:
     sdk: flutter
   intl: ">=0.18.0 <0.21.0"
   meta: ^1.0.0
-  passkit: ^0.0.12
+  passkit: ^1.0.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0

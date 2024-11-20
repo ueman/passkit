@@ -1,3 +1,7 @@
+## 1.0.0
+
+- This version is identical to 0.0.12
+
 ## 0.0.12
 
 - Update readme and pubspec meta data

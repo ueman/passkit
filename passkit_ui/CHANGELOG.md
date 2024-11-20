@@ -1,3 +1,7 @@
+## 1.0.0
+
+- This version is identical to 0.0.7
+
 ## 0.0.7
 
 - Compatibility with intl 0.20.0

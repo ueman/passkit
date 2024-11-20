@@ -10,10 +10,6 @@
 [![Bluesky Follow](https://img.shields.io/badge/Follow%20on%20Bluesky-08f)](https://bsky.app/profile/uekoetter.dev)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=flat&logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/ueman)
 
-> 🚧 API is subject to change! 🚧
-> All passkit types can be shown, but might not look perfect.
-> Please create an issue and attach a sample PkPass file for wrongly displayed passes.
-
 ## What is PassKit?
 
 > Passes are a digital representation of information that might otherwise be printed on small pieces of paper or plastic. They let users take an action in the physical world. Passes can contain images and a barcode, and you can update passes using push notifications on iOS.
