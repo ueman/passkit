@@ -72,13 +72,13 @@ class ApplePassKit {
   /// return the same passes, but in a different order.
   Future<List<ApplePkPass>> passes() async {
     final list = await wrapWithException(
-      methodChannel.invokeMethod<List<Object>>(
+      methodChannel.invokeMethod<List<Object?>?>(
         'getPasses',
       ),
     );
 
     return list
-            ?.cast<Map<Object, Object?>>()
+            ?.cast<Map<Object?, Object?>>()
             .map(ApplePkPass.fromMap)
             .toList() ??
         [];

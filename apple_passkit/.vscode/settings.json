@@ -1,15 +1,16 @@
 {
-    "dart.flutterTestAdditionalArgs": [],
-    "explorer.fileNesting.enabled": true,
-    "explorer.fileNesting.expand": true,
-    "explorer.fileNesting.patterns": {
-        "*.dart": "$(capture).*.dart",
-        "pubspec.yaml": "pubspec.lock,l10n.yaml,.packages,.metadata,analysis_options.yaml,.flutter-plugins,.flutter-plugins-dependencies,pubspec_overrides.yaml"
-    },
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "explicit",
-        "source.fixAll": "explicit"
-    },
-    "editor.formatOnSave": true,
-    "files.insertFinalNewline": true
+  "dart.flutterTestAdditionalArgs": [],
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": true,
+  "explorer.fileNesting.patterns": {
+    "*.dart": "$(capture).*.dart",
+    "pubspec.yaml": "pubspec.lock,l10n.yaml,.packages,.metadata,analysis_options.yaml,.flutter-plugins,.flutter-plugins-dependencies,pubspec_overrides.yaml"
+  },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "files.insertFinalNewline": true,
+  "dart.flutterSdkPath": ".fvm/versions/3.24.3"
 }
