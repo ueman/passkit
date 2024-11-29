@@ -15,7 +15,7 @@ class ApplePkPass {
 
   factory ApplePkPass.fromMap(Map<Object?, Object?> map) {
     return ApplePkPass(
-      passType: PKPassType.fromJson(map['passType'] as String),
+      passType: PkPassType.fromJson(map['passType'] as String),
       serialNumber: map['serialNumber'] as String,
       passTypeIdentifier: map['passTypeIdentifier'] as String,
       deviceName: map['deviceName'] as String,
@@ -29,7 +29,7 @@ class ApplePkPass {
   }
 
   /// The pass’s type.
-  final PKPassType passType;
+  final PkPassType passType;
 
   /// A value that uniquely identifies the pass.
   final String serialNumber;
@@ -61,7 +61,7 @@ class ApplePkPass {
 }
 
 /// Status after trying to add multiple passes.
-enum PKPassType {
+enum PkPassType {
   /// A nonspecific pass type.
   any('18446744073709551615'),
 
@@ -75,28 +75,24 @@ enum PKPassType {
   payment('1');
 
   /// Constructor to initialize each enum case with a string representation of the integer value
-  const PKPassType(this.value);
+  const PkPassType(this.value);
 
   /// A field to store the string value associated with each enum case (representing integers as strings)
   final String value;
 
-  // Factory method to create an enum from a JSON value (string)
-  static PKPassType fromJson(String jsonValue) {
-    for (PKPassType type in PKPassType.values) {
+  /// Factory method to create an enum from a JSON value (string)
+  static PkPassType fromJson(String jsonValue) {
+    for (PkPassType type in PkPassType.values) {
       if (type.value == jsonValue) {
         return type;
       }
     }
-    throw ArgumentError('Invalid PKPassType value: $jsonValue');
+    return PkPassType.any;
   }
 
-  // Method to convert the enum case back to a string for JSON serialization
-  String toJson() {
-    return value;
-  }
+  /// Method to convert the enum case back to a string for JSON serialization
+  String toJson() => value;
 
   @override
-  String toString() {
-    return value; // Return the string representation of the integer value
-  }
+  String toString() => value;
 }

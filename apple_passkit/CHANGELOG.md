@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Fix issues with reading added passes ([102](https://github.com/ueman/passkit/issues/102) and [103](https://github.com/ueman/passkit/issues/103))
+
 ## 1.1.1
 
 * Update readme and pubspec meta data
