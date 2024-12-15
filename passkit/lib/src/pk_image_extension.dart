@@ -4,15 +4,15 @@ import 'package:passkit/src/pk_image.dart';
 extension PkImageX on PkImage {
   void writeToArchive(Archive archive, String name) {
     if (image1 != null) {
-      archive.addFile(ArchiveFile('$name.png', image1!.lengthInBytes, image1));
+      archive.addFile(ArchiveFile('$name.png', image1!.lengthInBytes, image1!));
     }
     if (image2 != null) {
       archive
-          .addFile(ArchiveFile('$name@2x.png', image2!.lengthInBytes, image2));
+          .addFile(ArchiveFile('$name@2x.png', image2!.lengthInBytes, image2!));
     }
     if (image3 != null) {
       archive
-          .addFile(ArchiveFile('$name@3x.png', image3!.lengthInBytes, image3));
+          .addFile(ArchiveFile('$name@3x.png', image3!.lengthInBytes, image3!));
     }
 
     if (localizedImages != null) {

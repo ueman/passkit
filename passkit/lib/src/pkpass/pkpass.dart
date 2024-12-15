@@ -329,7 +329,7 @@ class PkPass {
     }
 
     final pkpass = ZipEncoder().encode(archive);
-    return pkpass == null ? null : Uint8List.fromList(pkpass);
+    return Uint8List.fromList(pkpass);
   }
 
   PkPass copyWith({

@@ -105,9 +105,9 @@ class PkOrder {
         path.replaceAll('.$fileExtension', '@3x.$fileExtension');
 
     return PkImage(
-      image1: _archive.findFile(path)?.content as Uint8List?,
-      image2: _archive.findFile(twoXResPath)?.content as Uint8List?,
-      image3: _archive.findFile(threeXResPath)?.content as Uint8List?,
+      image1: _archive.findFile(path)?.content,
+      image2: _archive.findFile(twoXResPath)?.content,
+      image3: _archive.findFile(threeXResPath)?.content,
     );
   }
 
@@ -207,7 +207,7 @@ class PkOrder {
     }
 
     final pkOrder = ZipEncoder().encode(archive);
-    return pkOrder == null ? null : Uint8List.fromList(pkOrder);
+    return Uint8List.fromList(pkOrder);
   }
 
   PkOrder copyWith({

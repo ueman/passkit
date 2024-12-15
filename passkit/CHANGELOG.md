@@ -1,3 +1,8 @@
+## 1.1.0
+
+- Require `archive: ^4.0.0`
+- Allow `intl: ">=0.18.0 <0.21.0"`
+
 ## 1.0.0
 
 - This version is identical to 0.0.12
