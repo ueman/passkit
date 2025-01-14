@@ -72,9 +72,12 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
             result(ErrorCodes.empty)
             return
         }
-        let vc = PKAddPassesViewController(pass: pkPass)!
+        let vc = CustomPKAddPassesViewController(pass: pkPass)!
+        vc.onViewDidDisappearCompletion = {
+            result(nil)
+        }
+        
         present(vc)
-        result(nil)
     }
     
     private func addPassesFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -83,9 +86,12 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
             result(ErrorCodes.empty)
             return
         }
-        let vc = PKAddPassesViewController(passes: pkPasses)!
+        let vc = CustomPKAddPassesViewController(passes: pkPasses)!
+        vc.onViewDidDisappearCompletion = {
+            result(nil)
+        }
+        
         present(vc)
-        result(nil)
     }
     
     private func addPassesWithoutFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -146,4 +152,14 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
 
 enum ErrorCodes {
     static let empty = FlutterError(code: "empty", message: "Received data for PKPass was empty", details: nil)
+}
+
+
+class CustomPKAddPassesViewController : PKAddPassesViewController {
+    var onViewDidDisappearCompletion: (() -> Void)?
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        onViewDidDisappearCompletion?()
+    }
 }
