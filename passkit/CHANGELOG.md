@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Require `pointycastle: ^4.0.0`
+
 ## 1.1.0
 
 - Require `archive: ^4.0.0`
