@@ -1,8 +1,8 @@
 import 'package:app/db/preferences.dart';
+import 'package:app/l10n/app_localizations.dart';
 import 'package:app/widgets/app_version.dart';
 import 'package:app/widgets/show_about_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {

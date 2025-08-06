@@ -1,9 +1,9 @@
 import 'package:app/import_order/import_order_page.dart';
 import 'package:app/import_pass/import_page.dart';
+import 'package:app/l10n/app_localizations.dart';
 import 'package:app/router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:path/path.dart';
 
 Future<void> pickPass(BuildContext context) async {

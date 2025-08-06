@@ -5,11 +5,11 @@ import 'dart:typed_data';
 import 'package:app/db/db.dart';
 import 'package:app/db/pass_entry.dart';
 import 'package:app/home/pass_list_notifier.dart';
+import 'package:app/l10n/app_localizations.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/router.dart';
 import 'package:content_resolver/content_resolver.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 

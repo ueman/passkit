@@ -2,6 +2,7 @@ import 'package:app/home/pass_list_notifier.dart';
 import 'package:app/import_order/import_order_page.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/import_pass/pick_pass.dart';
+import 'package:app/l10n/app_localizations.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/router.dart';
 import 'package:app/widgets/app_icon.dart';
@@ -9,7 +10,6 @@ import 'package:app/widgets/pass_list_tile.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 
 class HomePage extends StatefulWidget {

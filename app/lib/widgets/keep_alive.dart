@@ -86,10 +86,10 @@ class _FullScreenBrightnessWidgetState
   }
 
   Future<void> _setFullBrightness() async {
-    await ScreenBrightness().setScreenBrightness(1.0);
+    await ScreenBrightness().setApplicationScreenBrightness(1.0);
   }
 
   Future<void> _resetScreenBrightness() async {
-    await ScreenBrightness().resetScreenBrightness();
+    await ScreenBrightness().resetApplicationScreenBrightness();
   }
 }

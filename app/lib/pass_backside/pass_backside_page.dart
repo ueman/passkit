@@ -5,13 +5,13 @@ import 'dart:io';
 import 'package:app/db/db.dart';
 import 'package:app/db/pass_entry.dart';
 import 'package:app/home/pass_list_notifier.dart';
+import 'package:app/l10n/app_localizations.dart';
 import 'package:app/pass_backside/app_metadata_tile.dart';
 import 'package:app/pass_backside/placemark_tile.dart';
 import 'package:app/web_service/app_meta_data_client.dart';
 import 'package:app/web_service/app_metadata.dart';
 import 'package:app/widgets/squircle.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:passkit/passkit.dart';
@@ -236,7 +236,9 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
 
   void _sharePass() {
     final data = widget.pass.sourceData!;
-    Share.shareXFiles([XFile.fromData(data)]);
+    SharePlus.instance.share(
+      ShareParams(files: [XFile.fromData(data)]),
+    );
   }
 
   void _sharePassAsImage() async {
@@ -248,8 +250,16 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
       await File(p.join(dir.path, '$name.png')).writeAsBytes(imageData!);
     } else {
       if (imageData != null) {
-        await Share.shareXFiles(
-          [XFile.fromData(imageData, name: 'pass.png', mimeType: 'image/png')],
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [
+              XFile.fromData(
+                imageData,
+                name: 'pass.png',
+                mimeType: 'image/png',
+              ),
+            ],
+          ),
         );
       }
     }
