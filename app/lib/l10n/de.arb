@@ -3,5 +3,7 @@
   "appName": "Cards",
   "import": "Importiere eine neue Pass-Datei",
   "importPass": "Importieren",
-  "pickPasses": "Wähle einen Pass"
+  "pickPasses": "Wähle einen Pass",
+  "deletePass": "Pass löschen",
+  "deletePassConfirmation": "Möchtest du diesen Pass wirklich löschen?"
 }

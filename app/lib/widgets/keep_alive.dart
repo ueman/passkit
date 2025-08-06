@@ -6,8 +6,8 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 /// Useful for showing the pass in a detail view.
-class KeepAlive extends StatelessWidget {
-  const KeepAlive({super.key, required this.child});
+class KeepAliveAndBright extends StatelessWidget {
+  const KeepAliveAndBright({super.key, required this.child});
 
   final Widget child;
 

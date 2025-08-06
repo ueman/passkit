@@ -175,6 +175,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update'**
   String get updateButton;
+
+  /// No description provided for @deletePass.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete pass'**
+  String get deletePass;
+
+  /// No description provided for @deletePassConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you really want to delete this pass?'**
+  String get deletePassConfirmation;
 }
 
 class _AppLocalizationsDelegate

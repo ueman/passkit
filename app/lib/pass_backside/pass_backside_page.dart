@@ -10,15 +10,10 @@ import 'package:app/pass_backside/app_metadata_tile.dart';
 import 'package:app/pass_backside/placemark_tile.dart';
 import 'package:app/web_service/app_meta_data_client.dart';
 import 'package:app/web_service/app_metadata.dart';
-import 'package:app/widgets/squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:passkit/passkit.dart';
-import 'package:passkit_ui/passkit_ui.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PassBackSidePageArgs {
@@ -111,111 +106,110 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
     final backfields = PassBacksidePage._backfieldsForPassType(widget.pass);
     final associatedStoreIdentifiers =
         widget.pass.pass.associatedStoreIdentifiers;
-    final sharingAllowed = !(widget.pass.pass.sharingProhibited ?? false);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: widget.pass.icon != null
-            ? Squircle(
-                radius: 10,
-                child: Image.memory(
-                  widget.pass.icon!.fromMultiplier(3),
-                  fit: BoxFit.contain,
-                  height: kToolbarHeight *
-                      (2 / 3), // unscientific calculation, but looks good
-                ),
-              )
-            : null,
-        actions: [
-          if (sharingAllowed)
-            IconButton(
-              icon: Icon(Icons.adaptive.share),
-              onPressed: _sharePass,
+    return ListView(
+      children: [
+        ListTile(title: Text(widget.pass.pass.description)),
+        if (backfields?.isNotEmpty ?? false) const Divider(),
+        for (final entry in (backfields ?? <FieldDict>[]))
+          ListTile(
+            title: Text(entry.label ?? ''),
+            subtitle: Linkify(
+              text: entry.formatted() ?? '',
+              onOpen: (link) => launchUrl(Uri.parse(link.url)),
             ),
-          IconButton(
-            icon: const Icon(Icons.image),
-            onPressed: _sharePassAsImage,
           ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          ListTile(title: Text(widget.pass.pass.description)),
-          if (backfields?.isNotEmpty ?? false) const Divider(),
-          for (final entry in (backfields ?? <FieldDict>[]))
-            ListTile(
-              title: Text(entry.label ?? ''),
-              subtitle: Linkify(
-                text: entry.formatted() ?? '',
-                onOpen: (link) => launchUrl(Uri.parse(link.url)),
-              ),
+        if (associatedStoreIdentifiers?.isNotEmpty ?? false) ...[
+          const Divider(),
+          ListTile(
+            title: Text(AppLocalizations.of(context).associatediOSApps),
+            subtitle: Text(
+              AppLocalizations.of(context).associatediOSAppsDisclaimer,
             ),
-          if (associatedStoreIdentifiers?.isNotEmpty ?? false) ...[
-            const Divider(),
+          ),
+          // If this associatedApps empty, it's either due to no associated apps,
+          // or the apps not being available in the users region
+          for (final app in associatedApps)
+            AppMetadataTile(
+              metadata: app,
+              onAppTap: _onAppClick,
+            ),
+          if (widget.pass.pass.appLaunchURL != null)
             ListTile(
               title: Text(AppLocalizations.of(context).associatediOSApps),
               subtitle: Text(
                 AppLocalizations.of(context).associatediOSAppsDisclaimer,
               ),
-            ),
-            // If this associatedApps empty, it's either due to no associated apps,
-            // or the apps not being available in the users region
-            for (final app in associatedApps)
-              AppMetadataTile(
-                metadata: app,
-                onAppTap: _onAppClick,
-              ),
-            if (widget.pass.pass.appLaunchURL != null)
-              ListTile(
-                title: Text(AppLocalizations.of(context).associatediOSApps),
-                subtitle: Text(
-                  AppLocalizations.of(context).associatediOSAppsDisclaimer,
-                ),
-                onTap: () {
-                  final appLaunchUrl = widget.pass.pass.appLaunchURL!;
-                  final url = Uri.parse(appLaunchUrl);
-                  launchUrl(url);
-                },
-              ),
-          ],
-          if (widget.pass.pass.locations != null &&
-              widget.pass.pass.locations!.isNotEmpty) ...[
-            const Divider(),
-            for (final placemark in relevantLocations)
-              PlacemarkTile(
-                placemark: placemark,
-                onPlacemarkTap: (_) {},
-              ),
-          ],
-          if (widget.showDelete) ...[
-            const Divider(),
-            ListTile(
-              title: Text(
-                MaterialLocalizations.of(context).deleteButtonTooltip,
-                style: const TextStyle(color: Colors.red),
-              ),
-              onTap: delete,
-            ),
-          ],
-          if (widget.pass.isWebServiceAvailable)
-            ListTile(
-              title: Text(
-                AppLocalizations.of(context).updateButton,
-                style: const TextStyle(color: Colors.green),
-              ),
-              onTap: update,
+              onTap: () {
+                final appLaunchUrl = widget.pass.pass.appLaunchURL!;
+                final url = Uri.parse(appLaunchUrl);
+                launchUrl(url);
+              },
             ),
         ],
-      ),
+        if (widget.pass.pass.locations != null &&
+            widget.pass.pass.locations!.isNotEmpty) ...[
+          const Divider(),
+          for (final placemark in relevantLocations)
+            PlacemarkTile(
+              placemark: placemark,
+              onPlacemarkTap: (_) {},
+            ),
+        ],
+        if (widget.showDelete) ...[
+          const Divider(),
+          ListTile(
+            title: Text(
+              MaterialLocalizations.of(context).deleteButtonTooltip,
+              style: const TextStyle(color: Colors.red),
+            ),
+            onTap: delete,
+          ),
+        ],
+        if (widget.pass.isWebServiceAvailable)
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context).updateButton,
+              style: const TextStyle(color: Colors.green),
+            ),
+            onTap: update,
+          ),
+      ],
     );
   }
 
   Future<void> delete() async {
-    await db.passEntryDao.deletePassEntry(widget.pass.pass.serialNumber);
-    if (mounted) {
-      await Navigator.maybePop(context);
+    bool? delete = await _showDeleteDialog();
+
+    if (delete ?? false) {
+      await db.passEntryDao.deletePassEntry(widget.pass.pass.serialNumber);
+      if (mounted) {
+        await Navigator.maybePop(context);
+      }
+      unawaited(passListNotifier.loadPasses());
     }
-    unawaited(passListNotifier.loadPasses());
+  }
+
+  Future<bool?> _showDeleteDialog() async {
+    final translations = AppLocalizations.of(context);
+    final delete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(translations.deletePass),
+        content: Text(translations.deletePassConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(MaterialLocalizations.of(context).deleteButtonTooltip),
+          ),
+        ],
+      ),
+    );
+    return delete;
   }
 
   Future<void> update() async {
@@ -232,37 +226,6 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
     );
 
     unawaited(passListNotifier.loadPasses());
-  }
-
-  void _sharePass() {
-    final data = widget.pass.sourceData!;
-    SharePlus.instance.share(
-      ShareParams(files: [XFile.fromData(data)]),
-    );
-  }
-
-  void _sharePassAsImage() async {
-    final name = widget.pass.pass.serialNumber;
-    final imageData = await exportPassAsImage(widget.pass);
-    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      final dir = await getApplicationDocumentsDirectory();
-
-      await File(p.join(dir.path, '$name.png')).writeAsBytes(imageData!);
-    } else {
-      if (imageData != null) {
-        await SharePlus.instance.share(
-          ShareParams(
-            files: [
-              XFile.fromData(
-                imageData,
-                name: 'pass.png',
-                mimeType: 'image/png',
-              ),
-            ],
-          ),
-        );
-      }
-    }
   }
 
   void _onAppClick(Uri url) {

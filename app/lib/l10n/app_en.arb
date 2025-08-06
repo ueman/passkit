@@ -19,5 +19,7 @@
   "overrideShareProhibitedFlag": "Share passes even if they disallow it",
   "reportIssue": "Report a bug",
   "noPassesToShow": "You haven't added any passes yet.",
-  "updateButton": "Update"
+  "updateButton": "Update",
+  "deletePass": "Delete pass",
+  "deletePassConfirmation": "Do you really want to delete this pass?"
 }

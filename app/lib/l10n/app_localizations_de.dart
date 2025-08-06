@@ -51,4 +51,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get updateButton => 'Update';
+
+  @override
+  String get deletePass => 'Pass löschen';
+
+  @override
+  String get deletePassConfirmation =>
+      'Möchtest du diesen Pass wirklich löschen?';
 }

@@ -3,6 +3,8 @@ import 'package:app/home/home_page.dart';
 import 'package:app/import_order/import_order_page.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/pass_backside/pass_backside_page.dart';
+import 'package:app/pass_detail/pass_detail_page.dart';
+import 'package:app/pass_detail/pass_detail_page_args.dart';
 import 'package:app/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 
@@ -39,6 +41,15 @@ Route<dynamic>? routeGenerator(RouteSettings settings) {
     '/settings' => MaterialPageRoute(
         builder: (context) {
           return const SettingsPage();
+        },
+      ),
+    '/pass' => MaterialPageRoute(
+        builder: (context) {
+          final args = settings.arguments as PassDetailPageArgs;
+          return PassDetailPage(
+            pass: args.pass,
+            showDelete: args.showDelete,
+          );
         },
       ),
     '/backside' => MaterialPageRoute(

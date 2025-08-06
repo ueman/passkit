@@ -3,7 +3,7 @@ import 'package:app/import_order/import_order_page.dart';
 import 'package:app/import_pass/import_page.dart';
 import 'package:app/import_pass/pick_pass.dart';
 import 'package:app/l10n/app_localizations.dart';
-import 'package:app/pass_backside/pass_backside_page.dart';
+import 'package:app/pass_detail/pass_detail_page_args.dart';
 import 'package:app/router.dart';
 import 'package:app/widgets/app_icon.dart';
 import 'package:app/widgets/pass_list_tile.dart';
@@ -108,9 +108,8 @@ class _HomePageState extends State<HomePage> {
                                   pass: pass,
                                   onTap: () {
                                     navigator.pushNamed(
-                                      '/backside',
-                                      arguments:
-                                          PassBackSidePageArgs(pass, true),
+                                      '/pass',
+                                      arguments: PassDetailPageArgs(pass, true),
                                     );
                                   },
                                 );
@@ -118,12 +117,15 @@ class _HomePageState extends State<HomePage> {
                                 return Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: InkWell(
-                                    child: PkPassWidget(pass: pass),
+                                    child: Hero(
+                                      tag: pass.pass.serialNumber,
+                                      child: PkPassWidget(pass: pass),
+                                    ),
                                     onTap: () {
                                       navigator.pushNamed(
-                                        '/backside',
+                                        '/pass',
                                         arguments:
-                                            PassBackSidePageArgs(pass, true),
+                                            PassDetailPageArgs(pass, true),
                                       );
                                     },
                                   ),
