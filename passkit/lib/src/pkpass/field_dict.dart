@@ -5,7 +5,7 @@ import 'package:passkit/src/pkpass/semantics.dart';
 part 'field_dict.g.dart';
 
 @JsonSerializable(includeIfNull: false)
-class FieldDict {
+class FieldDict implements ReadOnlyFieldDict {
   FieldDict({
     this.attributedValue,
     this.changeMessage,
@@ -23,9 +23,9 @@ class FieldDict {
     this.semantics,
     this.row,
   }) : assert(
-          row == null || row == 0 || row == 1,
-          'Allowed values for row are null, 0 and 1',
-        );
+         row == null || row == 0 || row == 1,
+         'Allowed values for row are null, 0 and 1',
+       );
   factory FieldDict.fromJson(Map<String, dynamic> json) =>
       _$FieldDictFromJson(json);
 
@@ -39,8 +39,9 @@ class FieldDict {
   /// This key’s value overrides the text specified by the value key.
   /// Available in iOS 7.0.
   // localizable string, ISO 8601 date as a string, or number
+  @override
   @JsonKey(name: 'attributedValue')
-  final String? attributedValue;
+  String? attributedValue;
 
   /// Optional. Format string for the alert text that is displayed when the pass
   /// is updated. The format string must contain the escape %@, which is
@@ -48,8 +49,9 @@ class FieldDict {
   /// If you don’t specify a change message, the user isn’t notified when the
   /// field changes.
   // localizable format string
+  @override
   @JsonKey(name: 'changeMessage')
-  final String? changeMessage;
+  String? changeMessage;
 
   /// Optional. Data detectors that are applied to the field’s value.
   /// Valid values are:
@@ -62,18 +64,21 @@ class FieldDict {
   ///   no data detectors.
   ///
   /// Data detectors are applied only to back fields.
+  @override
   @JsonKey(name: 'dataDetectorTypes')
-  final List<DataDetectorTypes>? dataDetectorTypes;
+  List<DataDetectorTypes>? dataDetectorTypes;
 
   /// Required. The key must be unique within the scope of the entire pass.
   /// For example, “departure-gate.”
+  @override
   @JsonKey(name: 'key')
-  final String key;
+  String key;
 
   /// Optional. Label text for the field.
   // localizable string
+  @override
   @JsonKey(name: 'label')
-  final String? label;
+  String? label;
 
   /// Optional. Alignment for the field’s contents.
   /// Must be one of the following values:
@@ -87,33 +92,39 @@ class FieldDict {
   /// appropriately based on its script direction.
   ///
   /// This key is not allowed for primary fields or back fields.
+  @override
   @JsonKey(name: 'textAlignment')
-  final PkTextAlignment textAlignment;
+  PkTextAlignment textAlignment;
 
   /// Required. Value of the field, for example, 42.
   /// This can contain a localizable string, ISO 8601 date as a string,
   /// or a number (double/int)
+  @override
   @JsonKey(name: 'value')
-  final Object? value;
+  Object? value;
 
   /// The currency code to use for the value of the field.
   /// ISO 4217 currency code as a string
+  @override
   @JsonKey(name: 'currencyCode')
-  final String? currencyCode;
+  String? currencyCode;
 
   /// The style of the date to display in the field.
+  @override
   @JsonKey(name: 'dateStyle')
-  final DateStyle? dateStyle;
+  DateStyle? dateStyle;
 
   /// The style of the time displayed in the field.
+  @override
   @JsonKey(name: 'timeStyle')
-  final DateStyle? timeStyle;
+  DateStyle? timeStyle;
 
   /// The style of the number to display in the field. Formatter styles have the
   /// same meaning as the formats with corresponding names in
   /// NumberFormatter.Style.
+  @override
   @JsonKey(name: 'numberStyle')
-  final NumberStyle? numberStyle;
+  NumberStyle? numberStyle;
 
   /// A Boolean value that controls the time zone for the time and date to
   /// display in the field. The default value is false, which displays the time
@@ -121,15 +132,17 @@ class FieldDict {
   /// date appear in the time zone associated with the date and time of value.
   ///
   /// This key doesn’t affect the pass relevance calculation.
+  @override
   @JsonKey(name: 'ignoresTimeZone')
-  final bool? ignoresTimeZone;
+  bool? ignoresTimeZone;
 
   /// A Boolean value that controls whether the date appears as a relative date.
   /// The default value is false, which displays the date as an absolute date.
   ///
   /// This key doesn’t affect the pass relevance calculation.
+  @override
   @JsonKey(name: 'isRelative')
-  final bool? isRelative;
+  bool? isRelative;
 
   /// You can augment the user-visible information on Wallet passes with
   /// machine-readable metadata known as semantic tags. The metadata in semantic
@@ -138,8 +151,9 @@ class FieldDict {
   ///
   /// An object that contains machine-readable metadata the system uses to offer
   /// a pass and suggest related actions.
+  @override
   @JsonKey(name: 'semantics')
-  final Semantics? semantics;
+  Semantics? semantics;
 
   /// A number you use to add a row to the auxiliary field in an event ticket
   /// pass type. Set the value to 1 to add an auxiliary row.
@@ -147,8 +161,9 @@ class FieldDict {
   ///
   /// Possible Values: 0, 1
   /// This field is only valid for event pass types.
+  @override
   @JsonKey(name: 'row')
-  final int? row;
+  int? row;
 
   String? formatted({String? locale}) {
     if (value == null) {
@@ -159,8 +174,10 @@ class FieldDict {
         return numberStyle!.asFormat(currencyCode, locale).format(value as num);
       }
       if (currencyCode != null) {
-        return NumberFormat.simpleCurrency(locale: locale, name: currencyCode)
-            .format(value as num);
+        return NumberFormat.simpleCurrency(
+          locale: locale,
+          name: currencyCode,
+        ).format(value as num);
       }
       return value.toString();
     }
@@ -310,15 +327,121 @@ extension on NumberStyle {
   NumberFormat asFormat(String? currency, String? locale) {
     return switch (this) {
       NumberStyle.decimal => () {
-          if (currency != null) {
-            return NumberFormat.simpleCurrency(locale: locale, name: currency);
-          }
-          return NumberFormat.decimalPattern(locale);
-        }(),
+        if (currency != null) {
+          return NumberFormat.simpleCurrency(locale: locale, name: currency);
+        }
+        return NumberFormat.decimalPattern(locale);
+      }(),
       NumberStyle.percent => NumberFormat.percentPattern(locale),
       NumberStyle.scientific => NumberFormat.scientificPattern(locale),
       // We can't easily do spellOut, so fall back to decimal
       NumberStyle.spellOut => NumberFormat.decimalPattern(locale),
     };
   }
+}
+
+abstract class ReadOnlyFieldDict {
+  /// Optional. Attributed value of the field.
+  /// The value may contain HTML markup for links. Only the <a> tag and its href
+  /// attribute are supported. For example, the following is key-value pair
+  /// specifies a link with the text “Edit my profile”:
+  /// "attributedValue": "<a href='http://example.com/customers/123'>Edit my profile</a>"
+  /// This key’s value overrides the text specified by the value key.
+  /// Available in iOS 7.0.
+  // localizable string, ISO 8601 date as a string, or number
+  String? get attributedValue;
+
+  /// Optional. Format string for the alert text that is displayed when the pass
+  /// is updated. The format string must contain the escape %@, which is
+  /// replaced with the field’s new value. For example, “Gate changed to %@.”
+  /// If you don’t specify a change message, the user isn’t notified when the
+  /// field changes.
+  // localizable format string
+  String? get changeMessage;
+
+  /// Optional. Data detectors that are applied to the field’s value.
+  /// Valid values are:
+  ///
+  /// - [DataDetectorTypes.phoneNumber]
+  /// - [DataDetectorTypes.link]
+  /// - [DataDetectorTypes.typeAddress]
+  /// - [DataDetectorTypes.calendarEvent]
+  /// - The default value is all data detectors. Provide an empty array to use
+  ///   no data detectors.
+  ///
+  /// Data detectors are applied only to back fields.
+  List<DataDetectorTypes>? get dataDetectorTypes;
+
+  /// Required. The key must be unique within the scope of the entire pass.
+  /// For example, “departure-gate.”
+  String get key;
+
+  /// Optional. Label text for the field.
+  // localizable string
+  String? get label;
+
+  /// Optional. Alignment for the field’s contents.
+  /// Must be one of the following values:
+  ///
+  /// - [PkTextAlignment.left]
+  /// - [PkTextAlignment.center]
+  /// - [PkTextAlignment.right]
+  /// - [PkTextAlignment.natural]
+  ///
+  /// The default value is natural alignment, which aligns the text
+  /// appropriately based on its script direction.
+  ///
+  /// This key is not allowed for primary fields or back fields.
+  PkTextAlignment get textAlignment;
+
+  /// Required. Value of the field, for example, 42.
+  /// This can contain a localizable string, ISO 8601 date as a string,
+  /// or a number (double/int)
+  Object? get value;
+
+  /// The currency code to use for the value of the field.
+  /// ISO 4217 currency code as a string
+  String? get currencyCode;
+
+  /// The style of the date to display in the field.
+  DateStyle? get dateStyle;
+
+  /// The style of the time displayed in the field.
+  DateStyle? get timeStyle;
+
+  /// The style of the number to display in the field. Formatter styles have the
+  /// same meaning as the formats with corresponding names in
+  /// NumberFormatter.Style.
+  NumberStyle? get numberStyle;
+
+  /// A Boolean value that controls the time zone for the time and date to
+  /// display in the field. The default value is false, which displays the time
+  /// and date using the current device’s time zone. Otherwise, the time and
+  /// date appear in the time zone associated with the date and time of value.
+  ///
+  /// This key doesn’t affect the pass relevance calculation.
+  bool? get ignoresTimeZone;
+
+  /// A Boolean value that controls whether the date appears as a relative date.
+  /// The default value is false, which displays the date as an absolute date.
+  ///
+  /// This key doesn’t affect the pass relevance calculation.
+  bool? get isRelative;
+
+  /// You can augment the user-visible information on Wallet passes with
+  /// machine-readable metadata known as semantic tags. The metadata in semantic
+  /// tags helps the system better understand Wallet passes and suggest relevant
+  /// actions for the user to take on their installed passes.
+  ///
+  /// An object that contains machine-readable metadata the system uses to offer
+  /// a pass and suggest related actions.
+  Semantics? get semantics;
+
+  /// A number you use to add a row to the auxiliary field in an event ticket
+  /// pass type. Set the value to 1 to add an auxiliary row.
+  /// Each row displays up to four fields.
+  ///
+  /// Possible Values: 0, 1
+  /// This field is only valid for event pass types.
+  int? get row;
 }

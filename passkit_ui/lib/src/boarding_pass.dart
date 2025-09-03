@@ -22,7 +22,7 @@ import 'package:passkit_ui/src/widgets/transit_types/transit_type_widget.dart';
 class BoardingPass extends StatelessWidget {
   const BoardingPass({super.key, required this.pass});
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
 
   @override
   Widget build(BuildContext context) {

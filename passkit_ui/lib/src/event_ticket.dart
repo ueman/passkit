@@ -24,7 +24,7 @@ import 'package:passkit_ui/src/widgets/thumbnail.dart';
 class EventTicket extends StatelessWidget {
   const EventTicket({super.key, required this.pass});
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class EventTicket extends StatelessWidget {
 class _ThumbnailRow extends StatelessWidget {
   const _ThumbnailRow({required this.pass, required this.passTheme});
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
   final EventTicketTheme passTheme;
 
   @override
@@ -222,7 +222,7 @@ class _StripRow extends StatelessWidget {
     required this.theme,
   });
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
   final EventTicketTheme theme;
 
   @override

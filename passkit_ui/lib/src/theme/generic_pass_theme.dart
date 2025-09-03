@@ -28,7 +28,7 @@ class GenericPassTheme extends ThemeExtension<GenericPassTheme>
     required this.logoTextStyle,
   });
 
-  factory GenericPassTheme.fromPass(PkPass pass) {
+  factory GenericPassTheme.fromPass(ReadOnlyPkPass pass) {
     final backgroundColor =
         pass.pass.backgroundColor?.toDartUiColor() ?? Colors.white;
     final foregroundColor =

@@ -24,3 +24,4 @@ packages/**/pubspec.lock
 # Exceptions
 !.vscode/launch.json
 !.vscode/tasks.json
+app/untranslated.txt

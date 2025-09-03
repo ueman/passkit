@@ -17,7 +17,7 @@ class PassDetailPage extends StatefulWidget {
     this.showDelete = false,
   });
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
   final bool showDelete;
 
   @override

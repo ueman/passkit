@@ -5,7 +5,7 @@ part 'semantics.g.dart';
 
 /// https://developer.apple.com/documentation/walletpasses/pass/supporting_semantic_tags_in_wallet_passes
 @JsonSerializable(includeIfNull: false)
-class Semantics {
+class Semantics implements ReadOnlySemantics {
   Semantics({
     this.airlineCode,
     this.artistIDs,
@@ -84,328 +84,395 @@ class Semantics {
   /// The IATA airline code, such as “EX” for flightCode “EX123”.
   /// Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'airlineCode')
-  final String? airlineCode;
+  String? airlineCode;
 
   /// An array of the Apple Music persistent ID for each artist performing at the event, in decreasing order of significance.
   /// Use this key for any type of event ticket.
   // [localizable string]
+  @override
   @JsonKey(name: 'artistIDs')
-  final List<String>? artistIDs;
+  List<String>? artistIDs;
 
   /// The unique abbreviation of the away team’s name. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'awayTeamAbbreviation')
-  final String? awayTeamAbbreviation;
+  String? awayTeamAbbreviation;
 
   /// The home location of the away team. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'awayTeamLocation')
-  final String? awayTeamLocation;
+  String? awayTeamLocation;
 
   /// The name of the away team. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'awayTeamName')
-  final String? awayTeamName;
+  String? awayTeamName;
 
   /// The current balance redeemable with the pass. Use this key only for a store card pass.
+  @override
   @JsonKey(name: 'balance')
-  final SemanticTagTypeCurrencyAmount? balance;
+  SemanticTagTypeCurrencyAmount? balance;
 
   /// A group number for boarding. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'boardingGroup')
-  final String? boardingGroup;
+  String? boardingGroup;
 
   /// A sequence number for boarding. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'boardingSequenceNumber')
-  final String? boardingSequenceNumber;
+  String? boardingSequenceNumber;
 
   /// The number of the passenger car. A train car is also called a carriage, wagon, coach, or bogie in some countries. Use this key only for a train or other rail boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'carNumber')
-  final String? carNumber;
+  String? carNumber;
 
   /// A booking or reservation confirmation number. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'confirmationNumber')
-  final String? confirmationNumber;
+  String? confirmationNumber;
 
   /// The updated date and time of arrival, if different from the originally scheduled date and time. Use this key for any type of boarding pass.
   // ISO 8601 date as string
+  @override
   @JsonKey(name: 'currentArrivalDate')
-  final DateTime? currentArrivalDate;
+  DateTime? currentArrivalDate;
 
   /// The updated date and time of boarding, if different from the originally scheduled date and time. Use this key for any type of boarding pass.
   // ISO 8601 date as string
+  @override
   @JsonKey(name: 'currentBoardingDate')
-  final DateTime? currentBoardingDate;
+  DateTime? currentBoardingDate;
 
   /// The updated departure date and time, if different from the originally scheduled date and time. Use this key for any type of boarding pass.
   // ISO 8601 date as string
+  @override
   @JsonKey(name: 'currentDepartureDate')
-  final DateTime? currentDepartureDate;
+  DateTime? currentDepartureDate;
 
   /// The IATA airport code for the departure airport, such as “MPM” or “LHR”. Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'departureAirportCode')
-  final String? departureAirportCode;
+  String? departureAirportCode;
 
   /// The full name of the departure airport, such as “Maputo International Airport”. Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'departureAirportName')
-  final String? departureAirportName;
+  String? departureAirportName;
 
   /// The gate number or letters of the departure gate, such as “1A”. Do not include the word “Gate.”
   // localizable string
+  @override
   @JsonKey(name: 'departureGate')
-  final String? departureGate;
+  String? departureGate;
 
   /// An object that represents the geographic coordinates of the transit departure location, suitable for display on a map. If possible, use precise locations, which are more useful to travelers; for example, the specific location of an airport gate. Use this key for any type of boarding pass.
+  @override
   @JsonKey(name: 'departureLocation')
-  final SemanticTagTypeLocation? departureLocation;
+  SemanticTagTypeLocation? departureLocation;
 
   /// A brief description of the departure location. For example, for a flight departing from an airport whose code is “LHR,” an appropriate description might be “London, Heathrow“. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'departureLocationDescription')
-  final String? departureLocationDescription;
+  String? departureLocationDescription;
 
   /// The name of the departure platform, such as “A”. Don’t include the word “Platform.” Use this key only for a train or other rail boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'departurePlatform')
-  final String? departurePlatform;
+  String? departurePlatform;
 
   /// The name of the departure station, such as “1st Street Station”. Use this key only for a train or other rail boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'departureStationName')
-  final String? departureStationName;
+  String? departureStationName;
 
   /// The name or letter of the departure terminal, such as “A”. Don’t include the word “Terminal.” Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'departureTerminal')
-  final String? departureTerminal;
+  String? departureTerminal;
 
   /// The IATA airport code for the destination airport, such as “MPM” or “LHR”. Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'destinationAirportCode')
-  final String? destinationAirportCode;
+  String? destinationAirportCode;
 
   /// The full name of the destination airport, such as “London Heathrow”. Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'destinationAirportName')
-  final String? destinationAirportName;
+  String? destinationAirportName;
 
   /// The gate number or letter of the destination gate, such as “1A”. Don’t include the word “Gate.” Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'destinationGate')
-  final String? destinationGate;
+  String? destinationGate;
 
   /// An object that represents the geographic coordinates of the transit departure location, suitable for display on a map. Use this key for any type of boarding pass.
+  @override
   @JsonKey(name: 'destinationLocation')
-  final SemanticTagTypeLocation? destinationLocation;
+  SemanticTagTypeLocation? destinationLocation;
 
   /// A brief description of the destination location. For example, for a flight arriving at an airport whose code is “MPM,” “Maputo“ might be an appropriate description. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'destinationLocationDescription')
-  final String? destinationLocationDescription;
+  String? destinationLocationDescription;
 
   /// The name of the destination platform, such as “A”. Don’t include the word “Platform.” Use this key only for a train or other rail boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'destinationPlatform')
-  final String? destinationPlatform;
+  String? destinationPlatform;
 
   /// The name of the destination station, such as “1st Street Station”. Use this key only for a train or other rail boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'destinationStationName')
-  final String? destinationStationName;
+  String? destinationStationName;
 
   /// The terminal name or letter of the destination terminal, such as “A”. Don’t include the word “Terminal.” Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'destinationTerminal')
-  final String? destinationTerminal;
+  String? destinationTerminal;
 
   /// The duration of the event or transit journey, in seconds. Use this key for any type of boarding pass and any type of event ticket.
+  @override
   @JsonKey(name: 'duration')
-  final num? duration;
+  num? duration;
 
   /// The date and time the event ends. Use this key for any type of event ticket.
   // ISO 8601 date as string
+  @override
   @JsonKey(name: 'eventEndDate')
-  final DateTime? eventEndDate;
+  DateTime? eventEndDate;
 
   /// The full name of the event, such as the title of a movie. Use this key for any type of event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'eventName')
-  final String? eventName;
+  String? eventName;
 
   /// The date and time the event starts. Use this key for any type of event ticket.
   // ISO 8601 date as string
+  @override
   @JsonKey(name: 'eventStartDate')
-  final DateTime? eventStartDate;
+  DateTime? eventStartDate;
 
   /// The type of event. Use this key for any type of event ticket.
   /// Possible Values: PKEventTypeGeneric, PKEventTypeLivePerformance, PKEventTypeMovie, PKEventTypeSports, PKEventTypeConference, PKEventTypeConvention, PKEventTypeWorkshop, PKEventTypeSocialGathering
+  @override
   @JsonKey(name: 'eventType')
-  final EventType? eventType;
+  EventType? eventType;
 
   /// The IATA flight code, such as “EX123”. Use this key only for airline boarding passes.
   // localizable string
+  @override
   @JsonKey(name: 'flightCode')
-  final String? flightCode;
+  String? flightCode;
 
   /// The numeric portion of the IATA flight code, such as 123 for flightCode “EX123”. Use this key only for airline boarding passes.
+  @override
   @JsonKey(name: 'flightNumber')
-  final num? flightNumber;
+  num? flightNumber;
 
   /// The genre of the performance, such as “Classical”. Use this key for any type of event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'genre')
-  final String? genre;
+  String? genre;
 
   /// The unique abbreviation of the home team’s name. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'homeTeamAbbreviation')
-  final String? homeTeamAbbreviation;
+  String? homeTeamAbbreviation;
 
   /// The home location of the home team. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'homeTeamLocation')
-  final String? homeTeamLocation;
+  String? homeTeamLocation;
 
   /// The name of the home team. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'homeTeamName')
-  final String? homeTeamName;
+  String? homeTeamName;
 
   /// The abbreviated league name for a sports event. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'leagueAbbreviation')
-  final String? leagueAbbreviation;
+  String? leagueAbbreviation;
 
   /// The unabbreviated league name for a sports event. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'leagueName')
-  final String? leagueName;
+  String? leagueName;
 
   /// The name of a frequent flyer or loyalty program. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'membershipProgramName')
-  final String? membershipProgramName;
+  String? membershipProgramName;
 
   /// The ticketed passenger’s frequent flyer or loyalty number. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'membershipProgramNumber')
-  final String? membershipProgramNumber;
+  String? membershipProgramNumber;
 
   /// The originally scheduled date and time of arrival. Use this key for any type of boarding pass.
   // ISO 8601 date as string
+  @override
   @JsonKey(name: 'originalArrivalDate')
-  final DateTime? originalArrivalDate;
+  DateTime? originalArrivalDate;
 
   /// The originally scheduled date and time of boarding. Use this key for any type of boarding pass.
   // ISO 8601 date as string
+  @override
   @JsonKey(name: 'originalBoardingDate')
-  final DateTime? originalBoardingDate;
+  DateTime? originalBoardingDate;
 
   /// The originally scheduled date and time of departure. Use this key for any type of boarding pass.
   // ISO 8601 date as string
+  @override
   @JsonKey(name: 'originalDepartureDate')
-  final DateTime? originalDepartureDate;
+  DateTime? originalDepartureDate;
 
   /// An object that represents the name of the passenger. Use this key for any type of boarding pass.
+  @override
   @JsonKey(name: 'passengerName')
-  final SemanticTagTypePersonNameComponents? passengerName;
+  SemanticTagTypePersonNameComponents? passengerName;
 
   /// An array of the full names of the performers and opening acts at the event, in decreasing order of significance. Use this key for any type of event ticket.
   // [localizable string]
+  @override
   @JsonKey(name: 'performerNames')
-  final List<String>? performerNames;
+  List<String>? performerNames;
 
   /// The priority status the ticketed passenger holds, such as “Gold” or “Silver”. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'priorityStatus')
-  final String? priorityStatus;
+  String? priorityStatus;
 
   /// An array of objects that represent the details for each seat at an event or on a transit journey. Use this key for any type of boarding pass or event ticket.
+  @override
   @JsonKey(name: 'seats')
-  final List<SemanticTagTypeSeat>? seats;
+  List<SemanticTagTypeSeat>? seats;
 
   /// The type of security screening for the ticketed passenger, such as “Priority”. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'securityScreening')
-  final String? securityScreening;
+  String? securityScreening;
 
   /// A Boolean value that determines whether the user’s device remains silent during an event or transit journey. The system may override the key and determine the length of the period of silence. Use this key for any type of boarding pass or event ticket.
+  @override
   @JsonKey(name: 'silenceRequested')
-  final bool? silenceRequested;
+  bool? silenceRequested;
 
   /// The commonly used name of the sport. Use this key only for a sports event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'sportName')
-  final String? sportName;
+  String? sportName;
 
   /// The total price for the pass. Use this key for any pass type.
+  @override
   @JsonKey(name: 'totalPrice')
-  final SemanticTagTypeCurrencyAmount? totalPrice;
+  SemanticTagTypeCurrencyAmount? totalPrice;
 
   /// The name of the transit company. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'transitProvider')
-  final String? transitProvider;
+  String? transitProvider;
 
   /// A brief description of the current boarding status for the vessel, such as “On Time” or “Delayed”. For delayed status, provide currentBoardingDate, currentDepartureDate, and currentArrivalDate where available. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'transitStatus')
-  final String? transitStatus;
+  String? transitStatus;
 
   /// A brief description that explains the reason for the current transitStatus, such as “Thunderstorms”. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'transitStatusReason')
-  final String? transitStatusReason;
+  String? transitStatusReason;
 
   /// The name of the vehicle to board, such as the name of a boat. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'vehicleName')
-  final String? vehicleName;
+  String? vehicleName;
 
   /// The identifier of the vehicle to board, such as the aircraft registration number or train number. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'vehicleNumber')
-  final String? vehicleNumber;
+  String? vehicleNumber;
 
   /// A brief description of the type of vehicle to board, such as the model and manufacturer of a plane or the class of a boat. Use this key for any type of boarding pass.
   // localizable string
+  @override
   @JsonKey(name: 'vehicleType')
-  final String? vehicleType;
+  String? vehicleType;
 
   /// The full name of the entrance, such as “Gate A”, to use to gain access to the ticketed event. Use this key for any type of event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'venueEntrance')
-  final String? venueEntrance;
+  String? venueEntrance;
 
   /// An object that represents the geographic coordinates of the venue. Use this key for any type of event ticket.
+  @override
   @JsonKey(name: 'venueLocation')
-  final SemanticTagTypeLocation? venueLocation;
+  SemanticTagTypeLocation? venueLocation;
 
   /// The full name of the venue. Use this key for any type of event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'venueName')
-  final String? venueName;
+  String? venueName;
 
   /// The phone number for enquiries about the venue’s ticketed event. Use this key for any type of event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'venuePhoneNumber')
-  final String? venuePhoneNumber;
+  String? venuePhoneNumber;
 
   /// The full name of the room where the ticketed event is to take place. Use this key for any type of event ticket.
   // localizable string
+  @override
   @JsonKey(name: 'venueRoom')
-  final String? venueRoom;
+  String? venueRoom;
 
   /// An array of objects that represent the WiFi networks associated with the event; for example, the network name and password associated with a developer conference. Use this key for any type of pass.
+  @override
   @JsonKey(name: 'wifiAccess')
-  final List<SemanticTagTypeWifiNetwork>? wifiAccess;
+  List<SemanticTagTypeWifiNetwork>? wifiAccess;
 
   Semantics copyWith({
     String? airlineCode,
@@ -580,5 +647,266 @@ enum EventType {
   workshop,
 
   @JsonValue('PKEventTypeSocialGathering')
-  socialGathering
+  socialGathering,
+}
+
+abstract class ReadOnlySemantics {
+  /// The IATA airline code, such as “EX” for flightCode “EX123”.
+  /// Use this key only for airline boarding passes.
+  // localizable string
+  String? get airlineCode;
+
+  /// An array of the Apple Music persistent ID for each artist performing at the event, in decreasing order of significance.
+  /// Use this key for any type of event ticket.
+  // [localizable string]
+  List<String>? get artistIDs;
+
+  /// The unique abbreviation of the away team’s name. Use this key only for a sports event ticket.
+  // localizable string
+  String? get awayTeamAbbreviation;
+
+  /// The home location of the away team. Use this key only for a sports event ticket.
+  // localizable string
+  String? get awayTeamLocation;
+
+  /// The name of the away team. Use this key only for a sports event ticket.
+  // localizable string
+  String? get awayTeamName;
+
+  /// The current balance redeemable with the pass. Use this key only for a store card pass.
+  SemanticTagTypeCurrencyAmount? get balance;
+
+  /// A group number for boarding. Use this key for any type of boarding pass.
+  // localizable string
+  String? get boardingGroup;
+
+  /// A sequence number for boarding. Use this key for any type of boarding pass.
+  // localizable string
+  String? get boardingSequenceNumber;
+
+  /// The number of the passenger car. A train car is also called a carriage, wagon, coach, or bogie in some countries. Use this key only for a train or other rail boarding pass.
+  // localizable string
+  String? get carNumber;
+
+  /// A booking or reservation confirmation number. Use this key for any type of boarding pass.
+  // localizable string
+  String? get confirmationNumber;
+
+  /// The updated date and time of arrival, if different from the originally scheduled date and time. Use this key for any type of boarding pass.
+  // ISO 8601 date as string
+  DateTime? get currentArrivalDate;
+
+  /// The updated date and time of boarding, if different from the originally scheduled date and time. Use this key for any type of boarding pass.
+  // ISO 8601 date as string
+  DateTime? get currentBoardingDate;
+
+  /// The updated departure date and time, if different from the originally scheduled date and time. Use this key for any type of boarding pass.
+  // ISO 8601 date as string
+  DateTime? get currentDepartureDate;
+
+  /// The IATA airport code for the departure airport, such as “MPM” or “LHR”. Use this key only for airline boarding passes.
+  // localizable string
+  String? get departureAirportCode;
+
+  /// The full name of the departure airport, such as “Maputo International Airport”. Use this key only for airline boarding passes.
+  // localizable string
+  String? get departureAirportName;
+
+  /// The gate number or letters of the departure gate, such as “1A”. Do not include the word “Gate.”
+  // localizable string
+  String? get departureGate;
+
+  /// An object that represents the geographic coordinates of the transit departure location, suitable for display on a map. If possible, use precise locations, which are more useful to travelers; for example, the specific location of an airport gate. Use this key for any type of boarding pass.
+  SemanticTagTypeLocation? get departureLocation;
+
+  /// A brief description of the departure location. For example, for a flight departing from an airport whose code is “LHR,” an appropriate description might be “London, Heathrow“. Use this key for any type of boarding pass.
+  // localizable string
+  String? get departureLocationDescription;
+
+  /// The name of the departure platform, such as “A”. Don’t include the word “Platform.” Use this key only for a train or other rail boarding pass.
+  // localizable string
+  String? get departurePlatform;
+
+  /// The name of the departure station, such as “1st Street Station”. Use this key only for a train or other rail boarding pass.
+  // localizable string
+  String? get departureStationName;
+
+  /// The name or letter of the departure terminal, such as “A”. Don’t include the word “Terminal.” Use this key only for airline boarding passes.
+  // localizable string
+  String? get departureTerminal;
+
+  /// The IATA airport code for the destination airport, such as “MPM” or “LHR”. Use this key only for airline boarding passes.
+  // localizable string
+  String? get destinationAirportCode;
+
+  /// The full name of the destination airport, such as “London Heathrow”. Use this key only for airline boarding passes.
+  // localizable string
+  String? get destinationAirportName;
+
+  /// The gate number or letter of the destination gate, such as “1A”. Don’t include the word “Gate.” Use this key only for airline boarding passes.
+  // localizable string
+  String? get destinationGate;
+
+  /// An object that represents the geographic coordinates of the transit departure location, suitable for display on a map. Use this key for any type of boarding pass.
+  SemanticTagTypeLocation? get destinationLocation;
+
+  /// A brief description of the destination location. For example, for a flight arriving at an airport whose code is “MPM,” “Maputo“ might be an appropriate description. Use this key for any type of boarding pass.
+  // localizable string
+  String? get destinationLocationDescription;
+
+  /// The name of the destination platform, such as “A”. Don’t include the word “Platform.” Use this key only for a train or other rail boarding pass.
+  // localizable string
+  String? get destinationPlatform;
+
+  /// The name of the destination station, such as “1st Street Station”. Use this key only for a train or other rail boarding pass.
+  // localizable string
+  String? get destinationStationName;
+
+  /// The terminal name or letter of the destination terminal, such as “A”. Don’t include the word “Terminal.” Use this key only for airline boarding passes.
+  // localizable string
+  String? get destinationTerminal;
+
+  /// The duration of the event or transit journey, in seconds. Use this key for any type of boarding pass and any type of event ticket.
+  num? get duration;
+
+  /// The date and time the event ends. Use this key for any type of event ticket.
+  // ISO 8601 date as string
+  DateTime? get eventEndDate;
+
+  /// The full name of the event, such as the title of a movie. Use this key for any type of event ticket.
+  // localizable string
+  String? get eventName;
+
+  /// The date and time the event starts. Use this key for any type of event ticket.
+  // ISO 8601 date as string
+  DateTime? get eventStartDate;
+
+  /// The type of event. Use this key for any type of event ticket.
+  /// Possible Values: PKEventTypeGeneric, PKEventTypeLivePerformance, PKEventTypeMovie, PKEventTypeSports, PKEventTypeConference, PKEventTypeConvention, PKEventTypeWorkshop, PKEventTypeSocialGathering
+  EventType? get eventType;
+
+  /// The IATA flight code, such as “EX123”. Use this key only for airline boarding passes.
+  // localizable string
+  String? get flightCode;
+
+  /// The numeric portion of the IATA flight code, such as 123 for flightCode “EX123”. Use this key only for airline boarding passes.
+  num? get flightNumber;
+
+  /// The genre of the performance, such as “Classical”. Use this key for any type of event ticket.
+  // localizable string
+  String? get genre;
+
+  /// The unique abbreviation of the home team’s name. Use this key only for a sports event ticket.
+  // localizable string
+  String? get homeTeamAbbreviation;
+
+  /// The home location of the home team. Use this key only for a sports event ticket.
+  // localizable string
+  String? get homeTeamLocation;
+
+  /// The name of the home team. Use this key only for a sports event ticket.
+  // localizable string
+  String? get homeTeamName;
+
+  /// The abbreviated league name for a sports event. Use this key only for a sports event ticket.
+  // localizable string
+  String? get leagueAbbreviation;
+
+  /// The unabbreviated league name for a sports event. Use this key only for a sports event ticket.
+  // localizable string
+  String? get leagueName;
+
+  /// The name of a frequent flyer or loyalty program. Use this key for any type of boarding pass.
+  // localizable string
+  String? get membershipProgramName;
+
+  /// The ticketed passenger’s frequent flyer or loyalty number. Use this key for any type of boarding pass.
+  // localizable string
+  String? get membershipProgramNumber;
+
+  /// The originally scheduled date and time of arrival. Use this key for any type of boarding pass.
+  // ISO 8601 date as string
+  DateTime? get originalArrivalDate;
+
+  /// The originally scheduled date and time of boarding. Use this key for any type of boarding pass.
+  // ISO 8601 date as string
+  DateTime? get originalBoardingDate;
+
+  /// The originally scheduled date and time of departure. Use this key for any type of boarding pass.
+  // ISO 8601 date as string
+  DateTime? get originalDepartureDate;
+
+  /// An object that represents the name of the passenger. Use this key for any type of boarding pass.
+  SemanticTagTypePersonNameComponents? get passengerName;
+
+  /// An array of the full names of the performers and opening acts at the event, in decreasing order of significance. Use this key for any type of event ticket.
+  // [localizable string]
+  List<String>? get performerNames;
+
+  /// The priority status the ticketed passenger holds, such as “Gold” or “Silver”. Use this key for any type of boarding pass.
+  // localizable string
+  String? get priorityStatus;
+
+  /// An array of objects that represent the details for each seat at an event or on a transit journey. Use this key for any type of boarding pass or event ticket.
+  List<SemanticTagTypeSeat>? get seats;
+
+  /// The type of security screening for the ticketed passenger, such as “Priority”. Use this key for any type of boarding pass.
+  // localizable string
+  String? get securityScreening;
+
+  /// A Boolean value that determines whether the user’s device remains silent during an event or transit journey. The system may override the key and determine the length of the period of silence. Use this key for any type of boarding pass or event ticket.
+  bool? get silenceRequested;
+
+  /// The commonly used name of the sport. Use this key only for a sports event ticket.
+  // localizable string
+  String? get sportName;
+
+  /// The total price for the pass. Use this key for any pass type.
+  SemanticTagTypeCurrencyAmount? get totalPrice;
+
+  /// The name of the transit company. Use this key for any type of boarding pass.
+  // localizable string
+  String? get transitProvider;
+
+  /// A brief description of the current boarding status for the vessel, such as “On Time” or “Delayed”. For delayed status, provide currentBoardingDate, currentDepartureDate, and currentArrivalDate where available. Use this key for any type of boarding pass.
+  // localizable string
+  String? get transitStatus;
+
+  /// A brief description that explains the reason for the current transitStatus, such as “Thunderstorms”. Use this key for any type of boarding pass.
+  // localizable string
+  String? get transitStatusReason;
+
+  /// The name of the vehicle to board, such as the name of a boat. Use this key for any type of boarding pass.
+  // localizable string
+  String? get vehicleName;
+
+  /// The identifier of the vehicle to board, such as the aircraft registration number or train number. Use this key for any type of boarding pass.
+  // localizable string
+  String? get vehicleNumber;
+
+  /// A brief description of the type of vehicle to board, such as the model and manufacturer of a plane or the class of a boat. Use this key for any type of boarding pass.
+  // localizable string
+  String? get vehicleType;
+
+  /// The full name of the entrance, such as “Gate A”, to use to gain access to the ticketed event. Use this key for any type of event ticket.
+  // localizable string
+  String? get venueEntrance;
+
+  /// An object that represents the geographic coordinates of the venue. Use this key for any type of event ticket.
+  SemanticTagTypeLocation? get venueLocation;
+
+  /// The full name of the venue. Use this key for any type of event ticket.
+  // localizable string
+  String? get venueName;
+
+  /// The phone number for enquiries about the venue’s ticketed event. Use this key for any type of event ticket.
+  // localizable string
+  String? get venuePhoneNumber;
+
+  /// The full name of the room where the ticketed event is to take place. Use this key for any type of event ticket.
+  // localizable string
+  String? get venueRoom;
+
+  /// An array of objects that represent the WiFi networks associated with the event; for example, the network name and password associated with a developer conference. Use this key for any type of pass.
+  List<SemanticTagTypeWifiNetwork>? get wifiAccess;
 }

@@ -23,7 +23,7 @@ class PkPassImportSource {
   final String? filePath;
   final Uint8List? bytes;
 
-  Future<PkPass> getPass() async {
+  Future<ReadOnlyPkPass> getPass() async {
     if (contentResolverPath != null) {
       final Content content =
           await ContentResolver.resolveContent(contentResolverPath!);
@@ -59,7 +59,7 @@ class ImportPassPage extends StatefulWidget {
 }
 
 class _ImportPassPageState extends State<ImportPassPage> {
-  PkPass? pass;
+  ReadOnlyPkPass? pass;
 
   @override
   void initState() {

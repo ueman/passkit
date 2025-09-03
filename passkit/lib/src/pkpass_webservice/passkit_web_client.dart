@@ -28,8 +28,8 @@ class PassKitWebClient {
   ///
   /// If [modifiedSince] is present, only updates after [modifiedSince] will be
   /// considered.
-  Future<PkPass?> getLatestVersion(
-    PkPass pass, {
+  Future<ReadOnlyPkPass?> getLatestVersion(
+    ReadOnlyPkPass pass, {
     DateTime? modifiedSince,
   }) async {
     if (!pass.isWebServiceAvailable) {
@@ -41,8 +41,12 @@ class PassKitWebClient {
 
     final identifier = pass.pass.passTypeIdentifier;
     final serial = pass.pass.serialNumber;
-    final endpoint =
-        webServiceUrl.appendPathSegments(['v1', 'passes', identifier, serial]);
+    final endpoint = webServiceUrl.appendPathSegments([
+      'v1',
+      'passes',
+      identifier,
+      serial,
+    ]);
 
     final response = await _client.get(
       endpoint,
@@ -104,25 +108,19 @@ class PassKitWebClient {
     }
     final authenticationToken = pass.pass.authenticationToken!;
 
-    final endpoint = webServiceUrl.appendPathSegments(
-      [
-        'v1',
-        'devices',
-        deviceLibraryIdentifier,
-        'registrations',
-        pass.pass.passTypeIdentifier,
-        pass.pass.serialNumber,
-      ],
-    );
+    final endpoint = webServiceUrl.appendPathSegments([
+      'v1',
+      'devices',
+      deviceLibraryIdentifier,
+      'registrations',
+      pass.pass.passTypeIdentifier,
+      pass.pass.serialNumber,
+    ]);
 
     final response = await _client.post(
       endpoint,
-      headers: {
-        'Authorization': 'ApplePass $authenticationToken',
-      },
-      body: jsonEncode({
-        'pushToken': pushToken,
-      }),
+      headers: {'Authorization': 'ApplePass $authenticationToken'},
+      body: jsonEncode({'pushToken': pushToken}),
     );
 
     switch (response.statusCode) {
@@ -160,22 +158,18 @@ class PassKitWebClient {
     }
     final authenticationToken = pass.pass.authenticationToken!;
 
-    final endpoint = webServiceUrl.appendPathSegments(
-      [
-        'v1',
-        'devices',
-        deviceLibraryIdentifier,
-        'registrations',
-        pass.pass.passTypeIdentifier,
-        pass.pass.serialNumber,
-      ],
-    );
+    final endpoint = webServiceUrl.appendPathSegments([
+      'v1',
+      'devices',
+      deviceLibraryIdentifier,
+      'registrations',
+      pass.pass.passTypeIdentifier,
+      pass.pass.serialNumber,
+    ]);
 
     final response = await _client.delete(
       endpoint,
-      headers: {
-        'Authorization': 'ApplePass $authenticationToken',
-      },
+      headers: {'Authorization': 'ApplePass $authenticationToken'},
     );
 
     switch (response.statusCode) {
@@ -212,29 +206,31 @@ class PassKitWebClient {
       throw PassKitWebServiceUnsupported();
     }
 
-    final endpoint = webServiceUrl.appendPathSegments([
-      'v1',
-      'devices',
-      deviceLibraryIdentifier,
-      'registrations',
-      pass.pass.passTypeIdentifier,
-    ]).replace(
-      queryParameters: {
-        if (previousLastUpdated != null)
-          'passesUpdatedSince': previousLastUpdated,
-      },
-    );
+    final endpoint = webServiceUrl
+        .appendPathSegments([
+          'v1',
+          'devices',
+          deviceLibraryIdentifier,
+          'registrations',
+          pass.pass.passTypeIdentifier,
+        ])
+        .replace(
+          queryParameters: {
+            if (previousLastUpdated != null)
+              'passesUpdatedSince': previousLastUpdated,
+          },
+        );
 
     final response = await _client.get(endpoint);
 
     return switch (response.statusCode) {
       200 => () {
-          final responseJson = utf8JsonDecode(response.bodyBytes)!;
-          return SerialNumbers(
-            serialNumbers: responseJson['serialNumbers'] as List<String>,
-            lastUpdated: responseJson['lastUpdated'] as String,
-          );
-        }(),
+        final responseJson = utf8JsonDecode(response.bodyBytes)!;
+        return SerialNumbers(
+          serialNumbers: responseJson['serialNumbers'] as List<String>,
+          lastUpdated: responseJson['lastUpdated'] as String,
+        );
+      }(),
       204 => null,
       401 => throw PassKitWebServiceAuthenticationError(),
       _ => throw PassKitWebServiceUnrecognizedStatusCode(response.statusCode),
@@ -260,15 +256,13 @@ class PassKitWebClient {
       throw PassKitWebServiceUnsupported();
     }
 
-    final endpoint = webServiceUrl.appendPathSegments(
-      [
-        'v1',
-        'passes',
-        pass.pass.passTypeIdentifier,
-        pass.pass.serialNumber,
-        'personalize',
-      ],
-    );
+    final endpoint = webServiceUrl.appendPathSegments([
+      'v1',
+      'passes',
+      pass.pass.passTypeIdentifier,
+      pass.pass.serialNumber,
+      'personalize',
+    ]);
 
     final response = await _client.post(
       endpoint,

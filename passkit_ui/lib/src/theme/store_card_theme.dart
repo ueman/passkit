@@ -26,7 +26,7 @@ class StoreCardTheme extends ThemeExtension<StoreCardTheme>
     required this.logoTextStyle,
   });
 
-  factory StoreCardTheme.fromPass(PkPass pass) {
+  factory StoreCardTheme.fromPass(ReadOnlyPkPass pass) {
     final backgroundColor =
         pass.pass.backgroundColor?.toDartUiColor() ?? Colors.white;
     final foregroundColor =

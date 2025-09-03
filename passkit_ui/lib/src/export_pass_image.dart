@@ -1,10 +1,9 @@
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:meta/meta.dart';
-import 'dart:ui' as ui;
-
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
 
@@ -15,7 +14,7 @@ import 'package:passkit_ui/passkit_ui.dart';
 ///   a second time with the same pass resolves that issue.
 @experimental
 Future<Uint8List?> exportPassAsImage(
-  PkPass pass, {
+  ReadOnlyPkPass pass, {
   Size logicalSize = const Size(320, 460),
   double pixelRatio = 3,
 }) async {

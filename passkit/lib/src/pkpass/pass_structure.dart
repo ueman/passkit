@@ -7,7 +7,7 @@ part 'pass_structure.g.dart';
 /// These keys are used for all pass styles and partition the fields into the
 /// various parts of the pass.
 @JsonSerializable(includeIfNull: false)
-class PassStructure {
+class PassStructure implements ReadOnlyPassStructure {
   PassStructure({
     this.auxiliaryFields,
     this.backFields,
@@ -24,36 +24,60 @@ class PassStructure {
 
   /// Optional. Additional fields to be displayed on the front of the pass.
   // array of field dictionaries
+  @override
   @JsonKey(name: 'auxiliaryFields')
-  final List<FieldDict>? auxiliaryFields;
+  List<FieldDict>? auxiliaryFields;
 
   /// Optional. Fields to be on the back of the pass.
   // array of field dictionaries
+  @override
   @JsonKey(name: 'backFields')
-  final List<FieldDict>? backFields;
+  List<FieldDict>? backFields;
 
   /// Optional. Fields to be displayed in the header on the front of the pass.
   /// Use header fields sparingly; unlike all other fields, they remain visible
   /// when a stack of passes are displayed.
   // array of field dictionaries
+  @override
   @JsonKey(name: 'headerFields')
-  final List<FieldDict>? headerFields;
+  List<FieldDict>? headerFields;
 
   /// Optional. Fields to be displayed prominently on the front of the pass.
   // array of field dictionaries
+  @override
   @JsonKey(name: 'primaryFields')
-  final List<FieldDict>? primaryFields;
+  List<FieldDict>? primaryFields;
 
   /// Optional. Fields to be displayed on the front of the pass.
   // array of field dictionaries
+  @override
   @JsonKey(name: 'secondaryFields')
-  final List<FieldDict>? secondaryFields;
+  List<FieldDict>? secondaryFields;
 
   /// Required for boarding passes; otherwise not allowed. Type of transit.
   /// Must be one of the following values: PKTransitTypeAir, PKTransitTypeBoat,
   /// PKTransitTypeBus, PKTransitTypeGeneric,PKTransitTypeTrain.
+  @override
   @JsonKey(name: 'transitType', defaultValue: TransitType.generic)
-  final TransitType transitType;
+  TransitType transitType;
+
+  PassStructure copyWith({
+    List<FieldDict>? auxiliaryFields,
+    List<FieldDict>? backFields,
+    List<FieldDict>? headerFields,
+    List<FieldDict>? primaryFields,
+    List<FieldDict>? secondaryFields,
+    TransitType? transitType,
+  }) {
+    return PassStructure(
+      auxiliaryFields: auxiliaryFields ?? this.auxiliaryFields,
+      backFields: backFields ?? this.backFields,
+      headerFields: headerFields ?? this.headerFields,
+      primaryFields: primaryFields ?? this.primaryFields,
+      secondaryFields: secondaryFields ?? this.secondaryFields,
+      transitType: transitType ?? this.transitType,
+    );
+  }
 }
 
 enum TransitType {
@@ -66,5 +90,34 @@ enum TransitType {
   @JsonValue('PKTransitTypeGeneric')
   generic,
   @JsonValue('PKTransitTypeTrain')
-  train
+  train,
+}
+
+abstract class ReadOnlyPassStructure {
+  /// Optional. Additional fields to be displayed on the front of the pass.
+  // array of field dictionaries
+  List<ReadOnlyFieldDict>? get auxiliaryFields;
+
+  /// Optional. Fields to be on the back of the pass.
+  // array of field dictionaries
+  List<ReadOnlyFieldDict>? get backFields;
+
+  /// Optional. Fields to be displayed in the header on the front of the pass.
+  /// Use header fields sparingly; unlike all other fields, they remain visible
+  /// when a stack of passes are displayed.
+  // array of field dictionaries
+  List<ReadOnlyFieldDict>? get headerFields;
+
+  /// Optional. Fields to be displayed prominently on the front of the pass.
+  // array of field dictionaries
+  List<ReadOnlyFieldDict>? get primaryFields;
+
+  /// Optional. Fields to be displayed on the front of the pass.
+  // array of field dictionaries
+  List<ReadOnlyFieldDict>? get secondaryFields;
+
+  /// Required for boarding passes; otherwise not allowed. Type of transit.
+  /// Must be one of the following values: PKTransitTypeAir, PKTransitTypeBoat,
+  /// PKTransitTypeBus, PKTransitTypeGeneric,PKTransitTypeTrain.
+  TransitType get transitType;
 }

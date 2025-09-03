@@ -24,7 +24,7 @@ class CouponTheme extends ThemeExtension<CouponTheme> implements BasePassTheme {
     required this.logoTextStyle,
   });
 
-  factory CouponTheme.fromPass(PkPass pass) {
+  factory CouponTheme.fromPass(ReadOnlyPkPass pass) {
     final backgroundColor =
         pass.pass.backgroundColor?.toDartUiColor() ?? Colors.white;
     final foregroundColor =

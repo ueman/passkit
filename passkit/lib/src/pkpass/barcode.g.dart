@@ -7,27 +7,18 @@ part of 'barcode.dart';
 // **************************************************************************
 
 Barcode _$BarcodeFromJson(Map<String, dynamic> json) => Barcode(
-      altText: json['altText'] as String?,
-      format: $enumDecode(_$PkPassBarcodeTypeEnumMap, json['format']),
-      message: json['message'] as String,
-      messageEncoding: json['messageEncoding'] as String,
-    );
+  altText: json['altText'] as String?,
+  format: $enumDecode(_$PkPassBarcodeTypeEnumMap, json['format']),
+  message: json['message'] as String,
+  messageEncoding: json['messageEncoding'] as String,
+);
 
-Map<String, dynamic> _$BarcodeToJson(Barcode instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('altText', instance.altText);
-  val['format'] = _$PkPassBarcodeTypeEnumMap[instance.format]!;
-  val['message'] = instance.message;
-  val['messageEncoding'] = instance.messageEncoding;
-  return val;
-}
+Map<String, dynamic> _$BarcodeToJson(Barcode instance) => <String, dynamic>{
+  'altText': ?instance.altText,
+  'format': _$PkPassBarcodeTypeEnumMap[instance.format]!,
+  'message': instance.message,
+  'messageEncoding': instance.messageEncoding,
+};
 
 const _$PkPassBarcodeTypeEnumMap = {
   PkPassBarcodeType.qr: 'PKBarcodeFormatQR',

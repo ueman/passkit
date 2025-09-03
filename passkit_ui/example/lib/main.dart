@@ -26,7 +26,7 @@ class AppBody extends StatefulWidget {
 }
 
 class _AppBodyState extends State<AppBody> {
-  List<PkPass>? pkPasses;
+  List<ReadOnlyPkPass>? pkPasses;
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _AppBodyState extends State<AppBody> {
   }
 }
 
-Future<PkPass> loadPass(String path) async {
+Future<ReadOnlyPkPass> loadPass(String path) async {
   final passData = await rootBundle.load(path);
   final list = passData.buffer.asUint8List(
     passData.offsetInBytes,

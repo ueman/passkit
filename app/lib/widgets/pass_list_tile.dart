@@ -6,7 +6,7 @@ import 'package:passkit_ui/passkit_ui.dart';
 class PassListTile extends StatelessWidget {
   const PassListTile({super.key, required this.pass, this.onTap});
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
   final VoidCallback? onTap;
 
   @override

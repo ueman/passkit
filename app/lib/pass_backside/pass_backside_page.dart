@@ -19,7 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 class PassBackSidePageArgs {
   PassBackSidePageArgs(this.pass, this.showDelete);
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
   final bool showDelete;
 }
 
@@ -30,13 +30,13 @@ class PassBacksidePage extends StatefulWidget {
     required this.showDelete,
   });
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
   final bool showDelete;
 
   @override
   State<PassBacksidePage> createState() => _PassBacksidePageState();
 
-  static List<FieldDict>? _backfieldsForPassType(PkPass pass) {
+  static List<FieldDict>? _backfieldsForPassType(ReadOnlyPkPass pass) {
     return switch (pass.type) {
       PassType.boardingPass => pass.pass.boardingPass?.backFields,
       PassType.coupon => pass.pass.coupon?.backFields,

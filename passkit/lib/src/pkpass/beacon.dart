@@ -5,7 +5,7 @@ part 'beacon.g.dart';
 /// Information about a location beacon.
 /// Available in iOS 7.0.
 @JsonSerializable(includeIfNull: false)
-class Beacon {
+class Beacon implements ReadOnlyBeacon {
   Beacon({
     this.major,
     this.minor,
@@ -18,23 +18,27 @@ class Beacon {
 
   /// Optional. Major identifier of a Bluetooth Low Energy location beacon.
   // 16-bit unsigned integer
+  @override
   @JsonKey(name: 'major')
-  final int? major;
+  int? major;
 
   /// Optional. Minor identifier of a Bluetooth Low Energy location beacon.
   // 16-bit unsigned integer
+  @override
   @JsonKey(name: 'minor')
-  final int? minor;
+  int? minor;
 
   /// Required. Unique identifier of a Bluetooth Low Energy location beacon.
+  @override
   @JsonKey(name: 'proximityUUID')
-  final String proximityUUID;
+  String proximityUUID;
 
   /// Optional. Text displayed on the lock screen when the pass is currently
   /// relevant. For example, a description of the nearby location such as
   /// “Store nearby on 1st and Main.”
+  @override
   @JsonKey(name: 'relevantText')
-  final String? relevantText;
+  String? relevantText;
 
   /// Converts this instance to a JSON object
   Map<String, dynamic> toJson() => _$BeaconToJson(this);
@@ -52,4 +56,22 @@ class Beacon {
       relevantText: relevantText ?? this.relevantText,
     );
   }
+}
+
+abstract class ReadOnlyBeacon {
+  /// Optional. Major identifier of a Bluetooth Low Energy location beacon.
+  // 16-bit unsigned integer
+  int? get major;
+
+  /// Optional. Minor identifier of a Bluetooth Low Energy location beacon.
+  // 16-bit unsigned integer
+  int? get minor;
+
+  /// Required. Unique identifier of a Bluetooth Low Energy location beacon.
+  String get proximityUUID;
+
+  /// Optional. Text displayed on the lock screen when the pass is currently
+  /// relevant. For example, a description of the nearby location such as
+  /// “Store nearby on 1st and Main.”
+  String? get relevantText;
 }

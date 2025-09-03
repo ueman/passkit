@@ -19,24 +19,16 @@ OrderLineItem _$OrderLineItemFromJson(Map<String, dynamic> json) =>
       sku: json['sku'] as String?,
     );
 
-Map<String, dynamic> _$OrderLineItemToJson(OrderLineItem instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('image', instance.image);
-  writeNotNull('price', instance.price);
-  val['quantity'] = instance.quantity;
-  writeNotNull('subtitle', instance.subtitle);
-  val['title'] = instance.title;
-  writeNotNull('gtin', instance.gtin);
-  writeNotNull('sku', instance.sku);
-  return val;
-}
+Map<String, dynamic> _$OrderLineItemToJson(OrderLineItem instance) =>
+    <String, dynamic>{
+      'image': ?instance.image,
+      'price': ?instance.price,
+      'quantity': instance.quantity,
+      'subtitle': ?instance.subtitle,
+      'title': instance.title,
+      'gtin': ?instance.gtin,
+      'sku': ?instance.sku,
+    };
 
 OrderCurrencyAmount _$OrderCurrencyAmountFromJson(Map<String, dynamic> json) =>
     OrderCurrencyAmount(
@@ -45,8 +37,8 @@ OrderCurrencyAmount _$OrderCurrencyAmountFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$OrderCurrencyAmountToJson(
-        OrderCurrencyAmount instance) =>
-    <String, dynamic>{
-      'amount': instance.amount,
-      'currency': instance.currency,
-    };
+  OrderCurrencyAmount instance,
+) => <String, dynamic>{
+  'amount': instance.amount,
+  'currency': instance.currency,
+};

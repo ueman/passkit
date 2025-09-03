@@ -1,3 +1,4 @@
+import 'package:app/create_pass/create_pass_page.dart';
 import 'package:app/db/preferences.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/widgets/app_version.dart';
@@ -47,6 +48,17 @@ class _SettingsPageState extends State<SettingsPage> {
                 'https://github.com/ueman/passkit/issues/new?template=app_bug_report.yaml',
               );
               launchUrl(bugReportUrl);
+            },
+          ),
+          ListTile(
+            title: const Text('Create Pass'),
+            leading: const Icon(Icons.add),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => const CreatePassPage(),
+                ),
+              );
             },
           ),
           ListTile(

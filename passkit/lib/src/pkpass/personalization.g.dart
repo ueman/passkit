@@ -10,10 +10,12 @@ Personalization _$PersonalizationFromJson(Map<String, dynamic> json) =>
     Personalization(
       description: json['description'] as String,
       termsAndConditions: json['termsAndConditions'] as String?,
-      requiredPersonalizationFields: (json['requiredPersonalizationFields']
-              as List<dynamic>)
-          .map((e) => $enumDecode(_$RequiredPersonalizationFieldsEnumMap, e))
-          .toList(),
+      requiredPersonalizationFields:
+          (json['requiredPersonalizationFields'] as List<dynamic>)
+              .map(
+                (e) => $enumDecode(_$RequiredPersonalizationFieldsEnumMap, e),
+              )
+              .toList(),
     );
 
 Map<String, dynamic> _$PersonalizationToJson(Personalization instance) =>

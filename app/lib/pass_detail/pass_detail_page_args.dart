@@ -3,6 +3,6 @@ import 'package:passkit/passkit.dart';
 class PassDetailPageArgs {
   PassDetailPageArgs(this.pass, this.showDelete);
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
   final bool showDelete;
 }

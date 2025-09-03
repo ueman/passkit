@@ -14,7 +14,7 @@ void main() {
       skipSignatureVerification: true,
     );
 
-    final createdPass = og.write(
+    final createdPass = (og as PkPass).write(
       certificatePem: null,
       privateKeyPem: null,
     )!;

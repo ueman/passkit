@@ -9,7 +9,7 @@ import 'package:passkit_ui/src/widgets/thumbnail.dart';
 class Generic extends StatelessWidget {
   const Generic({super.key, required this.pass});
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
 
   @override
   Widget build(BuildContext context) {

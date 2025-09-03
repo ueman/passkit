@@ -34,7 +34,7 @@ import 'package:pkcs7/pkcs7.dart';
 /// manifest.json
 /// pass.json
 /// signature
-class PkPass {
+class PkPass implements ReadOnlyPkPass {
   PkPass({
     required this.pass,
     this.manifest,
@@ -60,7 +60,7 @@ class PkPass {
   /// signed with an out of date [Apple WWDR](https://developer.apple.com/help/account/reference/wwdr-intermediate-certificates/)
   /// certificate.
   // TODO(any): Provide an async method for this.
-  static PkPass fromBytes(
+  static ReadOnlyPkPass fromBytes(
     final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
@@ -78,8 +78,9 @@ class PkPass {
     if (!skipChecksumVerification) {
       archive.checkSha1Checksums(manifest);
       if (!skipSignatureVerification) {
-        final manifestContent =
-            archive.findFile('manifest.json')!.binaryContent;
+        final manifestContent = archive
+            .findFile('manifest.json')!
+            .binaryContent;
         final signatureContent = archive.findFile('signature')!.binaryContent;
 
         if (!verifySignature(
@@ -133,7 +134,7 @@ class PkPass {
   // TODO(ueman): Detect whether it's maybe just a single pass, and then
   // gracefully fall back to just parsing the PkPass file.
   // TODO(ueman): Provide an async method for this.
-  static List<PkPass> passesFromBytes(
+  static List<ReadOnlyPkPass> passesFromBytes(
     final Uint8List bytes, {
     bool skipChecksumVerification = false,
     bool skipSignatureVerification = false,
@@ -144,8 +145,9 @@ class PkPass {
     }
     ZipDecoder decoder = ZipDecoder();
     final archive = decoder.decodeBytes(bytes);
-    final pkPasses =
-        archive.files.where((file) => file.name.endsWith('.pkpass')).toList();
+    final pkPasses = archive.files
+        .where((file) => file.name.endsWith('.pkpass'))
+        .toList();
     return pkPasses
         .map(
           (file) => fromBytes(
@@ -159,13 +161,16 @@ class PkPass {
   }
 
   /// Data of the PkPass
-  final PassData pass;
+  @override
+  PassData pass;
 
   /// Mapping of files to their respective checksums. Typically not relevant for
   /// users of this package.
-  final Map<String, dynamic>? manifest;
+  @override
+  Map<String, dynamic>? manifest;
 
   /// The [PassType] of this PkPass.
+  @override
   PassType get type {
     if (pass.boardingPass != null) {
       return PassType.boardingPass;
@@ -186,30 +191,37 @@ class PkPass {
   }
 
   /// The image displayed as the background of the front of the pass.
-  final PkImage? background;
+  @override
+  PkImage? background;
 
   /// The image displayed on the front of the pass near the barcode.
-  final PkImage? footer;
+  @override
+  PkImage? footer;
 
   /// The pass’s icon. This is displayed in notifications and in emails that
   /// have a pass attached, and on the lock screen.
   /// When it is displayed, the icon gets a shine effect and rounded corners.
-  final PkImage? icon;
+  @override
+  PkImage? icon;
 
   /// The image displayed on the front of the pass in the top left.
-  final PkImage? logo;
+  @override
+  PkImage? logo;
 
   /// The image displayed behind the primary fields on the front of the pass.
-  final PkImage? strip;
+  @override
+  PkImage? strip;
 
   /// An additional image displayed on the front of the pass.
   /// For example, on a membership card, the thumbnail could be used
   /// to a picture of the cardholder.
-  final PkImage? thumbnail;
+  @override
+  PkImage? thumbnail;
 
   /// Use a 150 x 40 point png file.
   /// This logo is displayed at the top of the signup form.
-  final PkImage? personalizationLogo;
+  @override
+  PkImage? personalizationLogo;
 
   /// This file specifies the personal information requested by the signup form.
   /// It also contains a description of the program and (optionally) the
@@ -217,10 +229,12 @@ class PkPass {
   ///
   /// Learn more at
   /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/PassPersonalization.html#//apple_ref/doc/uid/TP40012195-CH12-SW2
-  final Personalization? personalization;
+  @override
+  Personalization? personalization;
 
   /// List of available languages. Each value is a language identifier as
   /// described in https://developer.apple.com/documentation/xcode/choosing-localization-regions-and-scripts
+  @override
   Iterable<String> get availableLanguages => languageData?.keys ?? [];
 
   /// Translations for this PkPass.
@@ -228,13 +242,16 @@ class PkPass {
   /// pairs.
   /// The language identifier looks as described in
   /// https://developer.apple.com/documentation/xcode/choosing-localization-regions-and-scripts
-  final Map<String, Map<String, String>>? languageData;
+  @override
+  Map<String, Map<String, String>>? languageData;
 
   /// The bytes of this PkPass
   /// Returns `null` when this instance wasn't read from a file.
-  final Uint8List? sourceData;
+  @override
+  Uint8List? sourceData;
 
   /// Indicates whether a webservices is available.
+  @override
   bool get isWebServiceAvailable => pass.webServiceURL != null;
 
   /// Creates a PkPass file. If this instance was created via [PkPass.fromBytes]
@@ -270,11 +287,7 @@ class PkPass {
     final archive = Archive();
 
     final passContent = utf8JsonEncode(pass.toJson());
-    final passFile = ArchiveFile(
-      'pass.json',
-      passContent.length,
-      passContent,
-    );
+    final passFile = ArchiveFile('pass.json', passContent.length, passContent);
     archive.addFile(passFile);
 
     if (personalization != null) {
@@ -301,8 +314,10 @@ class PkPass {
 
       for (final entry in translationEntries) {
         final name = '${entry.key}.lproj/pass.strings';
-        final localizationFile =
-            ArchiveFile.string(name, toStringsFile(entry.value));
+        final localizationFile = ArchiveFile.string(
+          name,
+          toStringsFile(entry.value),
+        );
         archive.addFile(localizationFile);
       }
     }
@@ -361,6 +376,70 @@ class PkPass {
       sourceData: sourceData ?? this.sourceData,
     );
   }
+}
+
+abstract class ReadOnlyPkPass {
+  /// Data of the PkPass
+  ReadOnlyPassData get pass;
+
+  /// Mapping of files to their respective checksums. Typically not relevant for
+  /// users of this package.
+  Map<String, dynamic>? get manifest;
+
+  /// The [PassType] of this PkPass.
+  PassType get type;
+
+  /// The image displayed as the background of the front of the pass.
+  PkImage? get background;
+
+  /// The image displayed on the front of the pass near the barcode.
+  PkImage? get footer;
+
+  /// The pass’s icon. This is displayed in notifications and in emails that
+  /// have a pass attached, and on the lock screen.
+  /// When it is displayed, the icon gets a shine effect and rounded corners.
+  PkImage? get icon;
+
+  /// The image displayed on the front of the pass in the top left.
+  PkImage? get logo;
+
+  /// The image displayed behind the primary fields on the front of the pass.
+  PkImage? get strip;
+
+  /// An additional image displayed on the front of the pass.
+  /// For example, on a membership card, the thumbnail could be used
+  /// to a picture of the cardholder.
+  PkImage? get thumbnail;
+
+  /// Use a 150 x 40 point png file.
+  /// This logo is displayed at the top of the signup form.
+  PkImage? get personalizationLogo;
+
+  /// This file specifies the personal information requested by the signup form.
+  /// It also contains a description of the program and (optionally) the
+  /// program’s terms and conditions.
+  ///
+  /// Learn more at
+  /// https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/PassPersonalization.html#//apple_ref/doc/uid/TP40012195-CH12-SW2
+  ReadOnlyPersonalization? get personalization;
+
+  /// List of available languages. Each value is a language identifier as
+  /// described in https://developer.apple.com/documentation/xcode/choosing-localization-regions-and-scripts
+  Iterable<String> get availableLanguages;
+
+  /// Translations for this PkPass.
+  /// Consists of a mapping of language identifier to translation key-value
+  /// pairs.
+  /// The language identifier looks as described in
+  /// https://developer.apple.com/documentation/xcode/choosing-localization-regions-and-scripts
+  Map<String, Map<String, String>>? get languageData;
+
+  /// The bytes of this PkPass
+  /// Returns `null` when this instance wasn't read from a file.
+  Uint8List? get sourceData;
+
+  /// Indicates whether a webservices is available.
+  bool get isWebServiceAvailable;
 }
 
 // This is intentionally not exposed to keep this an implementation detail.

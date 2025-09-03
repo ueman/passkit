@@ -7,60 +7,48 @@ part of 'field_dict.dart';
 // **************************************************************************
 
 FieldDict _$FieldDictFromJson(Map<String, dynamic> json) => FieldDict(
-      attributedValue: json['attributedValue'] as String?,
-      changeMessage: json['changeMessage'] as String?,
-      dataDetectorTypes: (json['dataDetectorTypes'] as List<dynamic>?)
-          ?.map((e) => $enumDecode(_$DataDetectorTypesEnumMap, e))
-          .toList(),
-      key: json['key'] as String,
-      label: json['label'] as String?,
-      textAlignment: $enumDecodeNullable(
-              _$PkTextAlignmentEnumMap, json['textAlignment']) ??
-          PkTextAlignment.natural,
-      value: json['value'],
-      currencyCode: json['currencyCode'] as String?,
-      dateStyle: $enumDecodeNullable(_$DateStyleEnumMap, json['dateStyle']),
-      timeStyle: $enumDecodeNullable(_$DateStyleEnumMap, json['timeStyle']),
-      numberStyle:
-          $enumDecodeNullable(_$NumberStyleEnumMap, json['numberStyle']),
-      ignoresTimeZone: json['ignoresTimeZone'] as bool?,
-      isRelative: json['isRelative'] as bool?,
-      semantics: json['semantics'] == null
-          ? null
-          : Semantics.fromJson(json['semantics'] as Map<String, dynamic>),
-      row: (json['row'] as num?)?.toInt(),
-    );
+  attributedValue: json['attributedValue'] as String?,
+  changeMessage: json['changeMessage'] as String?,
+  dataDetectorTypes: (json['dataDetectorTypes'] as List<dynamic>?)
+      ?.map((e) => $enumDecode(_$DataDetectorTypesEnumMap, e))
+      .toList(),
+  key: json['key'] as String,
+  label: json['label'] as String?,
+  textAlignment:
+      $enumDecodeNullable(_$PkTextAlignmentEnumMap, json['textAlignment']) ??
+      PkTextAlignment.natural,
+  value: json['value'],
+  currencyCode: json['currencyCode'] as String?,
+  dateStyle: $enumDecodeNullable(_$DateStyleEnumMap, json['dateStyle']),
+  timeStyle: $enumDecodeNullable(_$DateStyleEnumMap, json['timeStyle']),
+  numberStyle: $enumDecodeNullable(_$NumberStyleEnumMap, json['numberStyle']),
+  ignoresTimeZone: json['ignoresTimeZone'] as bool?,
+  isRelative: json['isRelative'] as bool?,
+  semantics: json['semantics'] == null
+      ? null
+      : Semantics.fromJson(json['semantics'] as Map<String, dynamic>),
+  row: (json['row'] as num?)?.toInt(),
+);
 
-Map<String, dynamic> _$FieldDictToJson(FieldDict instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('attributedValue', instance.attributedValue);
-  writeNotNull('changeMessage', instance.changeMessage);
-  writeNotNull(
-      'dataDetectorTypes',
-      instance.dataDetectorTypes
-          ?.map((e) => _$DataDetectorTypesEnumMap[e]!)
-          .toList());
-  val['key'] = instance.key;
-  writeNotNull('label', instance.label);
-  val['textAlignment'] = _$PkTextAlignmentEnumMap[instance.textAlignment]!;
-  writeNotNull('value', instance.value);
-  writeNotNull('currencyCode', instance.currencyCode);
-  writeNotNull('dateStyle', _$DateStyleEnumMap[instance.dateStyle]);
-  writeNotNull('timeStyle', _$DateStyleEnumMap[instance.timeStyle]);
-  writeNotNull('numberStyle', _$NumberStyleEnumMap[instance.numberStyle]);
-  writeNotNull('ignoresTimeZone', instance.ignoresTimeZone);
-  writeNotNull('isRelative', instance.isRelative);
-  writeNotNull('semantics', instance.semantics);
-  writeNotNull('row', instance.row);
-  return val;
-}
+Map<String, dynamic> _$FieldDictToJson(FieldDict instance) => <String, dynamic>{
+  'attributedValue': ?instance.attributedValue,
+  'changeMessage': ?instance.changeMessage,
+  'dataDetectorTypes': ?instance.dataDetectorTypes
+      ?.map((e) => _$DataDetectorTypesEnumMap[e]!)
+      .toList(),
+  'key': instance.key,
+  'label': ?instance.label,
+  'textAlignment': _$PkTextAlignmentEnumMap[instance.textAlignment]!,
+  'value': ?instance.value,
+  'currencyCode': ?instance.currencyCode,
+  'dateStyle': ?_$DateStyleEnumMap[instance.dateStyle],
+  'timeStyle': ?_$DateStyleEnumMap[instance.timeStyle],
+  'numberStyle': ?_$NumberStyleEnumMap[instance.numberStyle],
+  'ignoresTimeZone': ?instance.ignoresTimeZone,
+  'isRelative': ?instance.isRelative,
+  'semantics': ?instance.semantics,
+  'row': ?instance.row,
+};
 
 const _$DataDetectorTypesEnumMap = {
   DataDetectorTypes.phoneNumber: 'PKDataDetectorTypePhoneNumber',

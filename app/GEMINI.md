@@ -36,9 +36,12 @@ The following commands are available for this project:
 *   `flutter run`: Runs the application.
 *   `flutter test`: Runs the project's tests.
 *   `flutter build apk`: Builds an Android APK.
+*   `flutter analyze`: Lint and analyze for issues.
+
+Make sure to run `flutter analzye` before running `flutter run`.
 
 # Translations
 
-* Do not add texts directly in the source code
+* Do not add texts/strings directly in the source code
 * Add translations to the arb files
 * After adding new translations make sure to run `flutter gen-l10n`

@@ -16,12 +16,11 @@ OrderProvider _$OrderProviderFromJson(Map<String, dynamic> json) =>
       url: Uri.parse(json['url'] as String),
     );
 
-Map<String, dynamic> _$OrderProviderToJson(OrderProvider instance) =>
-    <String, dynamic>{
-      'displayName': instance.displayName,
-      'trackingLogoNameDarkColorScheme':
-          instance.trackingLogoNameDarkColorScheme,
-      'trackingLogoNameLightColorScheme':
-          instance.trackingLogoNameLightColorScheme,
-      'url': instance.url.toString(),
-    };
+Map<String, dynamic> _$OrderProviderToJson(
+  OrderProvider instance,
+) => <String, dynamic>{
+  'displayName': instance.displayName,
+  'trackingLogoNameDarkColorScheme': instance.trackingLogoNameDarkColorScheme,
+  'trackingLogoNameLightColorScheme': instance.trackingLogoNameLightColorScheme,
+  'url': instance.url.toString(),
+};

@@ -25,7 +25,7 @@ import 'package:passkit_ui/src/widgets/strip_image.dart';
 class StoreCard extends StatelessWidget {
   const StoreCard({super.key, required this.pass});
 
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
 
   @override
   Widget build(BuildContext context) {

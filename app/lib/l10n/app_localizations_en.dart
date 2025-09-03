@@ -58,4 +58,88 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deletePassConfirmation =>
       'Do you really want to delete this pass?';
+
+  @override
+  String get createPass => 'Create Pass';
+
+  @override
+  String get passType => 'Pass Type';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get enterDescription => 'Please enter a description';
+
+  @override
+  String get pickIcon => 'Pick Icon';
+
+  @override
+  String get foregroundColor => 'Foreground Color';
+
+  @override
+  String get backgroundColor => 'Background Color';
+
+  @override
+  String get labelColor => 'Label Color';
+
+  @override
+  String get headerFieldLabel => 'Header Field Label';
+
+  @override
+  String get primaryFieldLabel => 'Primary Field Label';
+
+  @override
+  String get secondaryFieldLabel => 'Secondary Field Label';
+
+  @override
+  String get auxiliaryFieldLabel => 'Auxiliary Field Label';
+
+  @override
+  String get transitType => 'Transit Type';
+
+  @override
+  String get passSaved => 'Pass saved!';
+
+  @override
+  String get pickAColor => 'Pick a color';
+
+  @override
+  String get selectColor => 'Select color';
+
+  @override
+  String get selectColorShade => 'Select color shade';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get pickLogo => 'Pick Logo';
+
+  @override
+  String get pickThumbnail => 'Pick Thumbnail';
+
+  @override
+  String get pickStrip => 'Pick Strip';
+
+  @override
+  String get pickBackground => 'Pick Background';
+
+  @override
+  String get pickPassImageTitle => 'Pick Pass Image';
+
+  @override
+  String get assetType => 'Asset Type';
+
+  @override
+  String get chooseImage => 'Choose Image';
+
+  @override
+  String get useImage => 'Use Image';
+
+  @override
+  String get noImageSelected => 'No image selected';
 }

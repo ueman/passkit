@@ -32,7 +32,7 @@ class EventTicketTheme extends ThemeExtension<EventTicketTheme>
     required this.logoTextStyle,
   });
 
-  factory EventTicketTheme.fromPass(PkPass pass) {
+  factory EventTicketTheme.fromPass(ReadOnlyPkPass pass) {
     final backgroundColor =
         pass.pass.backgroundColor?.toDartUiColor() ?? Colors.white;
     final foregroundColor =

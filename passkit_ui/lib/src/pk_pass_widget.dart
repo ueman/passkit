@@ -22,7 +22,7 @@ class PkPassWidget extends StatelessWidget {
   });
 
   /// The pass that's visualized by this widget.
-  final PkPass pass;
+  final ReadOnlyPkPass pass;
 
   @override
   Widget build(BuildContext context) {

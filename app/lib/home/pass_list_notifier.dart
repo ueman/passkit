@@ -5,7 +5,7 @@ import 'package:passkit/passkit.dart';
 final passListNotifier = PassListNotifier();
 
 class PassListNotifier extends ChangeNotifier {
-  List<PkPass>? passes;
+  List<ReadOnlyPkPass>? passes;
 
   Future<void> loadPasses() async {
     final dbPasses = await db.passEntryDao.findAll();

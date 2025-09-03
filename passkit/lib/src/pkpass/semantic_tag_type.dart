@@ -4,24 +4,23 @@ part 'semantic_tag_type.g.dart';
 
 /// An object that contains information required to connect to a WiFi network.
 @JsonSerializable(includeIfNull: false)
-class SemanticTagTypeWifiNetwork {
+class SemanticTagTypeWifiNetwork implements ReadOnlySemanticTagTypeWifiNetwork {
   SemanticTagTypeWifiNetwork({required this.password, required this.ssid});
   factory SemanticTagTypeWifiNetwork.fromJson(Map<String, dynamic> json) =>
       _$SemanticTagTypeWifiNetworkFromJson(json);
   Map<String, dynamic> toJson() => _$SemanticTagTypeWifiNetworkToJson(this);
 
   /// The password for the WiFi network.
+  @override
   @JsonKey(name: 'password')
-  final String password;
+  String password;
 
   /// The name for the WiFi network.
+  @override
   @JsonKey(name: 'ssid')
-  final String ssid;
+  String ssid;
 
-  SemanticTagTypeWifiNetwork copyWith({
-    String? password,
-    String? ssid,
-  }) {
+  SemanticTagTypeWifiNetwork copyWith({String? password, String? ssid}) {
     return SemanticTagTypeWifiNetwork(
       password: password ?? this.password,
       ssid: ssid ?? this.ssid,
@@ -31,7 +30,8 @@ class SemanticTagTypeWifiNetwork {
 
 /// An object that represents an amount of money and type of currency.
 @JsonSerializable(includeIfNull: false)
-class SemanticTagTypeCurrencyAmount {
+class SemanticTagTypeCurrencyAmount
+    implements ReadOnlySemanticTagTypeCurrencyAmount {
   SemanticTagTypeCurrencyAmount({
     required this.amount,
     required this.currencyCode,
@@ -43,13 +43,15 @@ class SemanticTagTypeCurrencyAmount {
   Map<String, dynamic> toJson() => _$SemanticTagTypeCurrencyAmountToJson(this);
 
   /// The amount of money.
+  @override
   @JsonKey(name: 'amount')
-  final String? amount;
+  String? amount;
 
   /// The currency code for amount.
   // ISO 4217 currency code as a string
+  @override
   @JsonKey(name: 'currencyCode')
-  final String? currencyCode;
+  String? currencyCode;
 
   SemanticTagTypeCurrencyAmount copyWith({
     String? amount,
@@ -64,7 +66,7 @@ class SemanticTagTypeCurrencyAmount {
 
 /// An object that represents the coordinates of a location.
 @JsonSerializable(includeIfNull: false)
-class SemanticTagTypeLocation {
+class SemanticTagTypeLocation implements ReadOnlySemanticTagTypeLocation {
   SemanticTagTypeLocation({required this.latitude, required this.longitude});
 
   factory SemanticTagTypeLocation.fromJson(Map<String, dynamic> json) =>
@@ -73,17 +75,16 @@ class SemanticTagTypeLocation {
   Map<String, dynamic> toJson() => _$SemanticTagTypeLocationToJson(this);
 
   /// The latitude, in degrees.
+  @override
   @JsonKey(name: 'latitude')
-  final double latitude;
+  double latitude;
 
   /// The longitude, in degrees.
+  @override
   @JsonKey(name: 'longitude')
-  final double longitude;
+  double longitude;
 
-  SemanticTagTypeLocation copyWith({
-    double? latitude,
-    double? longitude,
-  }) {
+  SemanticTagTypeLocation copyWith({double? latitude, double? longitude}) {
     return SemanticTagTypeLocation(
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -94,7 +95,7 @@ class SemanticTagTypeLocation {
 /// An object that represents the identification of a seat for a transit journey
 /// or an event.
 @JsonSerializable(includeIfNull: false)
-class SemanticTagTypeSeat {
+class SemanticTagTypeSeat implements ReadOnlySemanticTagTypeSeat {
   SemanticTagTypeSeat({
     this.seatDescription,
     this.seatIdentifier,
@@ -111,33 +112,39 @@ class SemanticTagTypeSeat {
 
   /// A description of the seat, such as “A flat bed seat”.
   // localizable string
+  @override
   @JsonKey(name: 'seatDescription')
-  final String? seatDescription;
+  String? seatDescription;
 
   /// The identifier code for the seat.
   // localizable string
+  @override
   @JsonKey(name: 'seatIdentifier')
-  final String? seatIdentifier;
+  String? seatIdentifier;
 
   /// The number of the seat.
   // localizable string
+  @override
   @JsonKey(name: 'seatNumber')
-  final String? seatNumber;
+  String? seatNumber;
 
   /// The row that contains the seat.
   // localizable string
+  @override
   @JsonKey(name: 'seatRow')
-  final String? seatRow;
+  String? seatRow;
 
   /// The section that contains the seat.
   // localizable string
+  @override
   @JsonKey(name: 'seatSection')
-  final String? seatSection;
+  String? seatSection;
 
   /// The type of seat, such as “Reserved seating”.
   // localizable string
+  @override
   @JsonKey(name: 'seatType')
-  final String? seatType;
+  String? seatType;
 
   SemanticTagTypeSeat copyWith({
     String? seatDescription,
@@ -160,7 +167,8 @@ class SemanticTagTypeSeat {
 
 /// An object that represents the coordinates of a location.
 @JsonSerializable(includeIfNull: false)
-class SemanticTagTypePersonNameComponents {
+class SemanticTagTypePersonNameComponents
+    implements ReadOnlySemanticTagTypePersonNameComponents {
   SemanticTagTypePersonNameComponents({
     this.familyName,
     this.givenName,
@@ -173,39 +181,45 @@ class SemanticTagTypePersonNameComponents {
 
   factory SemanticTagTypePersonNameComponents.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$SemanticTagTypePersonNameComponentsFromJson(json);
+  ) => _$SemanticTagTypePersonNameComponentsFromJson(json);
 
   Map<String, dynamic> toJson() =>
       _$SemanticTagTypePersonNameComponentsToJson(this);
 
   /// The person’s family name or last name.
+  @override
   @JsonKey(name: 'familyName')
-  final String? familyName;
+  String? familyName;
 
   /// The person’s given name; also called the forename or first name in some countries.
+  @override
   @JsonKey(name: 'givenName')
-  final String? givenName;
+  String? givenName;
 
   /// The person’s middle name.
+  @override
   @JsonKey(name: 'middleName')
-  final String? middleName;
+  String? middleName;
 
   /// The prefix for the person’s name, such as “Dr”.
+  @override
   @JsonKey(name: 'namePrefix')
-  final String? namePrefix;
+  String? namePrefix;
 
   /// The suffix for the person’s name, such as “Junior”.
+  @override
   @JsonKey(name: 'nameSuffix')
-  final String? nameSuffix;
+  String? nameSuffix;
 
   /// The person’s nickname.
+  @override
   @JsonKey(name: 'nickname')
-  final String? nickname;
+  String? nickname;
 
   /// The phonetic representation of the person’s name.
+  @override
   @JsonKey(name: 'phoneticRepresentation')
-  final String? phoneticRepresentation;
+  String? phoneticRepresentation;
 
   SemanticTagTypePersonNameComponents copyWith({
     String? familyName,
@@ -227,4 +241,78 @@ class SemanticTagTypePersonNameComponents {
           phoneticRepresentation ?? this.phoneticRepresentation,
     );
   }
+}
+
+abstract class ReadOnlySemanticTagTypeWifiNetwork {
+  /// The password for the WiFi network.
+  String get password;
+
+  /// The name for the WiFi network.
+  String get ssid;
+}
+
+abstract class ReadOnlySemanticTagTypeCurrencyAmount {
+  /// The amount of money.
+  String? get amount;
+
+  /// The currency code for amount.
+  // ISO 4217 currency code as a string
+  String? get currencyCode;
+}
+
+abstract class ReadOnlySemanticTagTypeLocation {
+  /// The latitude, in degrees.
+  double get latitude;
+
+  /// The longitude, in degrees.
+  double get longitude;
+}
+
+abstract class ReadOnlySemanticTagTypeSeat {
+  /// A description of the seat, such as “A flat bed seat”.
+  // localizable string
+  String? get seatDescription;
+
+  /// The identifier code for the seat.
+  // localizable string
+  String? get seatIdentifier;
+
+  /// The number of the seat.
+  // localizable string
+  String? get seatNumber;
+
+  /// The row that contains the seat.
+  // localizable string
+  String? get seatRow;
+
+  /// The section that contains the seat.
+  // localizable string
+  String? get seatSection;
+
+  /// The type of seat, such as “Reserved seating”.
+  // localizable string
+  String? get seatType;
+}
+
+abstract class ReadOnlySemanticTagTypePersonNameComponents {
+  /// The person’s family name or last name.
+  String? get familyName;
+
+  /// The person’s given name; also called the forename or first name in some countries.
+  String? get givenName;
+
+  /// The person’s middle name.
+  String? get middleName;
+
+  /// The prefix for the person’s name, such as “Dr”.
+  String? get namePrefix;
+
+  /// The suffix for the person’s name, such as “Junior”.
+  String? get nameSuffix;
+
+  /// The person’s nickname.
+  String? get nickname;
+
+  /// The phonetic representation of the person’s name.
+  String? get phoneticRepresentation;
 }

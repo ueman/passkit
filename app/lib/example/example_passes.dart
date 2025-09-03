@@ -15,7 +15,7 @@ class ExamplePasses extends StatefulWidget {
 }
 
 class _ExamplePassesState extends State<ExamplePasses> {
-  List<PkPass> passes = [];
+  List<ReadOnlyPkPass> passes = [];
 
   @override
   void initState() {

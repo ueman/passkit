@@ -187,6 +187,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Do you really want to delete this pass?'**
   String get deletePassConfirmation;
+
+  /// No description provided for @createPass.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Pass'**
+  String get createPass;
+
+  /// No description provided for @passType.
+  ///
+  /// In en, this message translates to:
+  /// **'Pass Type'**
+  String get passType;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @enterDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a description'**
+  String get enterDescription;
+
+  /// No description provided for @pickIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Icon'**
+  String get pickIcon;
+
+  /// No description provided for @foregroundColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Foreground Color'**
+  String get foregroundColor;
+
+  /// No description provided for @backgroundColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Background Color'**
+  String get backgroundColor;
+
+  /// No description provided for @labelColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Label Color'**
+  String get labelColor;
+
+  /// No description provided for @headerFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Header Field Label'**
+  String get headerFieldLabel;
+
+  /// No description provided for @primaryFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Field Label'**
+  String get primaryFieldLabel;
+
+  /// No description provided for @secondaryFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary Field Label'**
+  String get secondaryFieldLabel;
+
+  /// No description provided for @auxiliaryFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Auxiliary Field Label'**
+  String get auxiliaryFieldLabel;
+
+  /// No description provided for @transitType.
+  ///
+  /// In en, this message translates to:
+  /// **'Transit Type'**
+  String get transitType;
+
+  /// No description provided for @passSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Pass saved!'**
+  String get passSaved;
+
+  /// No description provided for @pickAColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a color'**
+  String get pickAColor;
+
+  /// No description provided for @selectColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select color'**
+  String get selectColor;
+
+  /// No description provided for @selectColorShade.
+  ///
+  /// In en, this message translates to:
+  /// **'Select color shade'**
+  String get selectColorShade;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @pickLogo.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Logo'**
+  String get pickLogo;
+
+  /// No description provided for @pickThumbnail.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Thumbnail'**
+  String get pickThumbnail;
+
+  /// No description provided for @pickStrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Strip'**
+  String get pickStrip;
+
+  /// No description provided for @pickBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Background'**
+  String get pickBackground;
+
+  /// No description provided for @pickPassImageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Pass Image'**
+  String get pickPassImageTitle;
+
+  /// No description provided for @assetType.
+  ///
+  /// In en, this message translates to:
+  /// **'Asset Type'**
+  String get assetType;
+
+  /// No description provided for @chooseImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Image'**
+  String get chooseImage;
+
+  /// No description provided for @useImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Image'**
+  String get useImage;
+
+  /// No description provided for @noImageSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No image selected'**
+  String get noImageSelected;
 }
 
 class _AppLocalizationsDelegate

@@ -19,20 +19,11 @@ OrderReturnInfo _$OrderReturnInfoFromJson(Map<String, dynamic> json) =>
       returnPolicyDescription: json['returnPolicyDescription'] as String?,
     );
 
-Map<String, dynamic> _$OrderReturnInfoToJson(OrderReturnInfo instance) {
-  final val = <String, dynamic>{
-    'returnPolicyURL': instance.returnPolicyURL.toString(),
-    'displayCountdown': instance.displayCountdown,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('returnDeadline', instance.returnDeadline?.toIso8601String());
-  writeNotNull('returnManagementURL', instance.returnManagementURL?.toString());
-  writeNotNull('returnPolicyDescription', instance.returnPolicyDescription);
-  return val;
-}
+Map<String, dynamic> _$OrderReturnInfoToJson(OrderReturnInfo instance) =>
+    <String, dynamic>{
+      'returnPolicyURL': instance.returnPolicyURL.toString(),
+      'displayCountdown': instance.displayCountdown,
+      'returnDeadline': ?instance.returnDeadline?.toIso8601String(),
+      'returnManagementURL': ?instance.returnManagementURL?.toString(),
+      'returnPolicyDescription': ?instance.returnPolicyDescription,
+    };

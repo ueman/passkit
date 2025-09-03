@@ -25,7 +25,7 @@ class BoardingPassTheme extends ThemeExtension<BoardingPassTheme>
     required this.logoTextStyle,
   });
 
-  factory BoardingPassTheme.fromPass(PkPass pass) {
+  factory BoardingPassTheme.fromPass(ReadOnlyPkPass pass) {
     final backgroundColor =
         pass.pass.backgroundColor?.toDartUiColor() ?? Colors.white;
     final foregroundColor =
