@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:app/l10n/app_localizations.dart';
@@ -32,8 +33,8 @@ const Map<PassAssetType, _PassAssetSpec> _specs = {
 };
 
 class PassImageResult {
-  PassImageResult({required this.type, required this.image});
-  final PassAssetType type;
+  PassImageResult({required this.image});
+
   final PkImage image;
 }
 
@@ -53,7 +54,9 @@ class PickPassImageDialog extends StatefulWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 760, maxHeight: 760),
           child: PickPassImageDialog(
-              initialType: initialType, allowedTypes: allowedTypes),
+            initialType: initialType,
+            allowedTypes: allowedTypes,
+          ),
         ),
       ),
     );
@@ -84,8 +87,8 @@ class _PickPassImageDialogState extends State<PickPassImageDialog> {
   Future<void> _pickImage() async {
     final result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result == null) return;
-    final bytes = result.files.first.bytes;
-    if (bytes == null) return;
+    final bytes = result.files.first.bytes ??
+        await File(result.files.first.path!).readAsBytes();
     setState(() {
       _sourceBytes = bytes;
       _croppedBytes = null;
@@ -121,7 +124,6 @@ class _PickPassImageDialogState extends State<PickPassImageDialog> {
       final image3 = encode(decoded, sizes[2]);
 
       final result = PassImageResult(
-        type: _type,
         image: PkImage(image1: image1, image2: image2, image3: image3),
       );
       if (mounted) Navigator.of(context).pop(result);
@@ -151,9 +153,13 @@ class _PickPassImageDialogState extends State<PickPassImageDialog> {
         children: [
           Row(
             children: [
-              Text(l10n.pickPassImageTitle,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w600)),
+              Text(
+                l10n.pickPassImageTitle,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -164,25 +170,6 @@ class _PickPassImageDialogState extends State<PickPassImageDialog> {
           const SizedBox(height: 8),
           Row(
             children: [
-              Expanded(
-                child: DropdownButtonFormField<PassAssetType>(
-                  value: _type,
-                  decoration: InputDecoration(labelText: l10n.assetType),
-                  onChanged: (val) => setState(() {
-                    _type = val!;
-                    _croppedBytes = null;
-                  }),
-                  items: (widget.allowedTypes ?? PassAssetType.values.toSet())
-                      .map(
-                        (t) => DropdownMenuItem(
-                          value: t,
-                          child: Text(_labelFor(t)),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-              const SizedBox(width: 12),
               ElevatedButton.icon(
                 onPressed: _pickImage,
                 icon: const Icon(Icons.file_open),
@@ -210,7 +197,8 @@ class _PickPassImageDialogState extends State<PickPassImageDialog> {
                       onCropped: (cropResult) {
                         if (cropResult is CropSuccess) {
                           setState(
-                              () => _croppedBytes = cropResult.croppedImage);
+                            () => _croppedBytes = cropResult.croppedImage,
+                          );
                           final c = _cropCompleter;
                           if (c != null && !c.isCompleted) {
                             c.complete(cropResult.croppedImage);
@@ -219,8 +207,6 @@ class _PickPassImageDialogState extends State<PickPassImageDialog> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  _SpecBar(spec: spec),
                 ],
               ),
             ),
@@ -240,7 +226,8 @@ class _PickPassImageDialogState extends State<PickPassImageDialog> {
                     ? const SizedBox(
                         height: 16,
                         width: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2))
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
                     : const Icon(Icons.check),
                 label: Text(l10n.useImage),
               ),
@@ -248,46 +235,6 @@ class _PickPassImageDialogState extends State<PickPassImageDialog> {
           ),
         ],
       ),
-    );
-  }
-
-  String _labelFor(PassAssetType t) {
-    final l10n = AppLocalizations.of(context);
-    switch (t) {
-      case PassAssetType.icon:
-        return l10n.pickIcon;
-      case PassAssetType.logo:
-        return l10n.pickLogo;
-      case PassAssetType.thumbnail:
-        return l10n.pickThumbnail;
-      case PassAssetType.strip:
-        return l10n.pickStrip;
-      case PassAssetType.background:
-        return l10n.pickBackground;
-    }
-  }
-}
-
-class _SpecBar extends StatelessWidget {
-  const _SpecBar({required this.spec});
-  final _PassAssetSpec spec;
-
-  @override
-  Widget build(BuildContext context) {
-    final sizes = spec.sizes;
-    String fmt(Size s) => '${s.width.toInt()}x${s.height.toInt()}';
-    return Row(
-      children: [
-        Text('Aspect ${spec.aspectRatio.toStringAsFixed(3)}'),
-        const SizedBox(width: 12),
-        const Text('•'),
-        const SizedBox(width: 12),
-        Text('1x ${fmt(sizes[0])}'),
-        const SizedBox(width: 8),
-        Text('2x ${fmt(sizes[1])}'),
-        const SizedBox(width: 8),
-        Text('3x ${fmt(sizes[2])}'),
-      ],
     );
   }
 }

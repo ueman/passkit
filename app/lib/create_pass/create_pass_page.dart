@@ -190,7 +190,7 @@ class _CreatePassPageState extends State<CreatePassPage> {
       );
       if (res == null) return;
       setState(() {
-        switch (res.type) {
+        switch (t) {
           case PassAssetType.icon:
             _pass = _pass.copyWith(icon: res.image);
             break;

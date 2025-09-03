@@ -1,12 +1,5 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-- Source: `lib/` with feature folders (e.g., `home/`, `import_pass/`, `pass_detail/`, `db/`, `widgets/`). Routing lives in `lib/router.dart`.
-- Data: Floor persistence in `lib/db/` (`*.dart` + generated `*.g.dart`).
-- Localization: ARB files in `lib/l10n/`; generated code in `lib/l10n/app_localizations.dart`.
-- Assets: `assets/` (including `assets/examples/`). Configure via `pubspec.yaml`.
-- Platforms: `android/`, `macos/`. Tests live in `test/`.
-
 ## Build, Test, and Development Commands
 - Install deps: `flutter pub get`
 - Generate code (Floor): `dart run build_runner build --delete-conflicting-outputs`

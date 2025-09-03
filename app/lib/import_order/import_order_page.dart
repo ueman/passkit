@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:app/content_resolver/content_resolver.dart';
 import 'package:app/l10n/app_localizations.dart';
-import 'package:content_resolver/content_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 // ignore: implementation_imports
@@ -11,9 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class PkOrderImportSource {
   PkOrderImportSource({this.contentResolverPath, this.bytes, this.filePath})
-      : assert(
-          contentResolverPath != null || bytes != null || filePath != null,
-        );
+    : assert(contentResolverPath != null || bytes != null || filePath != null);
 
   final String? contentResolverPath;
   final Uint8List? bytes;
@@ -21,10 +19,10 @@ class PkOrderImportSource {
 
   Future<PkOrder> getOrder() async {
     if (contentResolverPath != null) {
-      final Content content =
-          await ContentResolver.resolveContent(contentResolverPath!);
+      final data = await fromPath(contentResolverPath!);
+
       return PkOrder.fromBytes(
-        content.data,
+        data,
         skipChecksumVerification: true,
         skipSignatureVerification: true,
       );

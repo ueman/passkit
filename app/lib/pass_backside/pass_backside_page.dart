@@ -10,6 +10,7 @@ import 'package:app/pass_backside/app_metadata_tile.dart';
 import 'package:app/pass_backside/placemark_tile.dart';
 import 'package:app/web_service/app_meta_data_client.dart';
 import 'package:app/web_service/app_metadata.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
@@ -67,15 +68,17 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
       return;
     }
     final locale = Localizations.localeOf(context);
-    final associatedApps = await AppMetadataClient()
-        .loadAppMetaData(associatedStoreIds, locale: locale);
+    final associatedApps = await AppMetadataClient().loadAppMetaData(
+      associatedStoreIds,
+      locale: locale,
+    );
     setState(() {
       this.associatedApps = associatedApps;
     });
   }
 
   Future<void> _loadRelevantLocations() async {
-    if (!(Platform.isAndroid || Platform.isIOS)) {
+    if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) {
       return;
     }
     final locations = widget.pass.pass.locations;
@@ -130,10 +133,7 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
           // If this associatedApps empty, it's either due to no associated apps,
           // or the apps not being available in the users region
           for (final app in associatedApps)
-            AppMetadataTile(
-              metadata: app,
-              onAppTap: _onAppClick,
-            ),
+            AppMetadataTile(metadata: app, onAppTap: _onAppClick),
           if (widget.pass.pass.appLaunchURL != null)
             ListTile(
               title: Text(AppLocalizations.of(context).associatediOSApps),
@@ -151,10 +151,7 @@ class _PassBacksidePageState extends State<PassBacksidePage> {
             widget.pass.pass.locations!.isNotEmpty) ...[
           const Divider(),
           for (final placemark in relevantLocations)
-            PlacemarkTile(
-              placemark: placemark,
-              onPlacemarkTap: (_) {},
-            ),
+            PlacemarkTile(placemark: placemark, onPlacemarkTap: (_) {}),
         ],
         if (widget.showDelete) ...[
           const Divider(),

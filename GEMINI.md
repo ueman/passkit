@@ -13,7 +13,7 @@ This project is a Flutter application for managing PassKit files. It allows user
 *   **Floor:** A persistence library for SQLite databases.
 *   **PassKit:** A library for working with PassKit files.
 
-## Project Structure
+## Project Structure of the app folder
 
 The project is structured as follows:
 

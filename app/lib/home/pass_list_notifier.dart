@@ -8,6 +8,11 @@ class PassListNotifier extends ChangeNotifier {
   List<ReadOnlyPkPass>? passes;
 
   Future<void> loadPasses() async {
+    if (kIsWeb) {
+      passes = [];
+      notifyListeners();
+      return;
+    }
     final dbPasses = await db.passEntryDao.findAll();
     passes = dbPasses.map((p) {
       return PkPass.fromBytes(

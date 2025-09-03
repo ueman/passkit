@@ -18,8 +18,10 @@ funding:
   - https://github.com/sponsors/ueman
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
+  sdk: ">=3.6.0 <4.0.0"
   flutter: ">=3.22.0"
+
+resolution: workspace
 
 dependencies:
   barcode: ^2.0.0
@@ -34,6 +36,6 @@ dependencies:
   passkit: ^1.0.0
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter

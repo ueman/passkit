@@ -7,5 +7,11 @@ extension FlutterColor on css.Color {
 }
 
 extension CssColor on Color {
-  css.Color toCssColor() => css.Color.createRgba(red, green, blue);
+  css.Color toCssColor() {
+    return css.Color.createRgba(
+      (r * 255.0).round() & 0xff,
+      (g * 255.0).round() & 0xff,
+      (b * 255.0).round() & 0xff,
+    );
+  }
 }

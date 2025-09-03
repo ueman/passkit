@@ -26,8 +26,8 @@ extension PasskitServerExtension on Router {
 
 /// Pass delivery
 ///
-/// GET /v1/passes/<typeID>/<serial#>
-/// Header: Authorization: ApplePass <authenticationToken>
+/// `GET /v1/passes/<typeID>/<serial#>`
+/// `Header: Authorization: ApplePass <authenticationToken>`
 ///
 /// server response:
 /// --> if auth token is correct: 200, with pass data payload
@@ -59,7 +59,7 @@ Function getLatestVersion(PassKitBackend backend) {
 ///
 /// log an error or unexpected server behavior, to help with server debugging
 /// POST /v1/log
-/// JSON payload: { "description" : <human-readable description of error> }
+/// JSON payload: `{ "description" : <human-readable description of error> }`
 ///
 /// server response: 200
 Function logMessages(PassKitBackend backend) {
@@ -77,8 +77,8 @@ Function logMessages(PassKitBackend backend) {
 /// Registration
 /// register a device to receive push notifications for a pass
 ///
-/// POST /v1/devices/<deviceID>/registrations/<typeID>/<serial#>
-/// Header: Authorization: ApplePass <authenticationToken>
+/// `POST /v1/devices/<deviceID>/registrations/<typeID>/<serial#>`
+/// `Header: Authorization: ApplePass <authenticationToken>`
 /// JSON payload:
 /// ```json
 /// { "pushToken" : <push token, which the server needs to send push notifications to this device> }
@@ -136,8 +136,8 @@ Function setupNotifications(PassKitBackend backend) {
 ///
 /// unregister a device to receive push notifications for a pass
 ///
-/// DELETE /v1/devices/<deviceID>/registrations/<passTypeID>/<serial#>
-/// Header: Authorization: ApplePass <authenticationToken>
+/// `DELETE /v1/devices/<deviceID>/registrations/<passTypeID>/<serial#>`
+/// `Header: Authorization: ApplePass <authenticationToken>`
 ///
 /// server action: if the authentication token is correct, disassociate the
 ///                device from this pass
@@ -174,12 +174,12 @@ Function stopNotifications(PassKitBackend backend) {
 /// Get all serial numbers associated with a device for passes that need an update
 /// Optionally with a query limiter to scope the last update since
 ///
-/// GET /v1/devices/<deviceID>/registrations/<typeID>
-/// GET /v1/devices/<deviceID>/registrations/<typeID>?passesUpdatedSince=<tag>
+/// `GET /v1/devices/<deviceID>/registrations/<typeID>`
+/// `GET /v1/devices/<deviceID>/registrations/<typeID>?passesUpdatedSince=<tag>`
 ///
 /// server action: figure out which passes associated with this device have been modified since the supplied tag (if no tag provided, all associated serial #s)
 /// server response:
-/// --> if there are matching passes: 200, with JSON payload: { "lastUpdated" : <new tag>, "serialNumbers" : [ <array of serial #s> ] }
+/// --> if there are matching passes: 200, with JSON payload: `{ "lastUpdated" : <new tag>, "serialNumbers" : [ <array of serial #s> ] }`
 /// --> if there are no matching passes: 204
 /// --> if unknown device identifier: 404
 Function getListOfUpdatablePasses(PassKitBackend backend) {

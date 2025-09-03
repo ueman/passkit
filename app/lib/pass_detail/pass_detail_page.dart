@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app/pass_backside/pass_backside_page.dart';
 import 'package:app/widgets/keep_alive.dart';
 import 'package:app/widgets/squircle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:passkit/passkit.dart';
 import 'package:passkit_ui/passkit_ui.dart';
@@ -41,7 +42,8 @@ class _PassDetailPageState extends State<PassDetailPage> {
                   child: Image.memory(
                     widget.pass.icon!.fromMultiplier(3),
                     fit: BoxFit.contain,
-                    height: kToolbarHeight *
+                    height:
+                        kToolbarHeight *
                         (2 / 3), // unscientific calculation, but looks good
                   ),
                 ),
@@ -82,10 +84,7 @@ class _PassDetailPageState extends State<PassDetailPage> {
                 ),
               ),
             ),
-            PassBacksidePage(
-              pass: widget.pass,
-              showDelete: widget.showDelete,
-            ),
+            PassBacksidePage(pass: widget.pass, showDelete: widget.showDelete),
           ],
         ),
       ),
@@ -94,12 +93,11 @@ class _PassDetailPageState extends State<PassDetailPage> {
 
   void _sharePass() {
     final data = widget.pass.sourceData!;
-    SharePlus.instance.share(
-      ShareParams(files: [XFile.fromData(data)]),
-    );
+    SharePlus.instance.share(ShareParams(files: [XFile.fromData(data)]));
   }
 
   void _sharePassAsImage() async {
+    if (kIsWeb) return;
     final name = widget.pass.pass.serialNumber;
     final imageData = await exportPassAsImage(widget.pass);
     if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
