@@ -18,7 +18,7 @@ public class ApplePasskitPlugin: NSObject, FlutterPlugin {
       case "addPasses":
           addPassesWithoutFlow(call, result)
       case "addPassesViewController":
-          addPassFlow(call, result)
+          addPassesFlow(call, result)
       case "addPassViewController":
           addPassFlow(call, result)
       case "getPasses":
