@@ -1,3 +1,7 @@
+## 1.3.1
+
+* Fix adding multiple passes
+
 ## 1.3.0
 
 * `addPass(...)` now returns after the ViewController has closed
