@@ -79,3 +79,4 @@ if you're up for a challenge.
 ## Further references
 
 - [Full Stack Dart with Apple Passkit, Dart Frog and Flutter](https://www.youtube.com/live/FUDhgGmygKM?si=4nIR7SOYTIwYNJP4&t=27233) in Spanish by [Marcos Sevilla](https://github.com/marcossevilla)
+- [Building a Full-Stack App for Apple Wallet Passes | Fluttercon EU 2025](https://www.youtube.com/watch?v=m7QC7wN4pzM) in English by [Marcos Sevilla](https://github.com/marcossevilla)
